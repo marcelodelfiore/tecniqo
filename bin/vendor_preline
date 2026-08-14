@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+require "fileutils"
+require "json"
+
+APP_ROOT = File.expand_path("..", __dir__)
+PACKAGE_PATH = File.join(APP_ROOT, "package.json")
+SOURCE_PATH = File.join(APP_ROOT, "node_modules/preline/dist/preline.js")
+VENDOR_PATH = File.join(APP_ROOT, "vendor/javascript/preline.js")
+IMPORTMAP_PATH = File.join(APP_ROOT, "config/importmap.rb")
+
+version = JSON.parse(File.read(PACKAGE_PATH)).dig("dependencies", "preline")
+abort "Preline must use an exact semantic version in package.json." unless version&.match?(/\A\d+\.\d+\.\d+\z/)
+abort "Run npm ci before vendoring Preline." unless File.file?(SOURCE_PATH)
+
+FileUtils.cp(SOURCE_PATH, VENDOR_PATH)
+
+importmap = File.read(IMPORTMAP_PATH)
+pin = %(pin "preline", to: "preline.js" # @#{version})
+updated_importmap = importmap.sub(/^pin "preline".*$/, pin)
+abort "Could not find the Preline importmap pin." if updated_importmap == importmap && !importmap.include?(pin)
+
+File.write(IMPORTMAP_PATH, updated_importmap)
+puts "Vendored Preline #{version}."

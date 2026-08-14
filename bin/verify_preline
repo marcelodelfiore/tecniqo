@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require "json"
+require "fileutils"
+
+APP_ROOT = File.expand_path("..", __dir__)
+PACKAGE_PATH = File.join(APP_ROOT, "package.json")
+SOURCE_PATH = File.join(APP_ROOT, "node_modules/preline/dist/preline.js")
+VENDOR_PATH = File.join(APP_ROOT, "vendor/javascript/preline.js")
+IMPORTMAP_PATH = File.join(APP_ROOT, "config/importmap.rb")
+
+version = JSON.parse(File.read(PACKAGE_PATH)).dig("dependencies", "preline")
+expected_pin = %(pin "preline", to: "preline.js" # @#{version})
+
+abort "Run npm ci before verifying Preline." unless File.file?(SOURCE_PATH)
+abort "Vendored Preline differs from package-lock.json. Run npm run vendor:preline." unless FileUtils.compare_file(SOURCE_PATH, VENDOR_PATH)
+abort "Importmap does not identify Preline #{version}. Run npm run vendor:preline." unless File.readlines(IMPORTMAP_PATH, chomp: true).include?(expected_pin)
+
+puts "Vendored Preline #{version} matches the locked npm package."

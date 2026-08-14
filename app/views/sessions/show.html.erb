@@ -1,0 +1,19 @@
+<div>
+  <h1 class="font-bold text-4xl">Sessions#show</h1>
+  <p>Find me in app/views/sessions/show.html.erb</p>
+</div>
+<% content_for :title, 'Confirm sign in' %>
+
+<div class="space-y-6">
+  <div class="space-y-2">
+    <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Confirm sign in</h1>
+    <p class="text-sm text-gray-600">
+      Continue to securely finish signing in. This link can only be used once.
+    </p>
+  </div>
+
+  <%= button_to 'Continue to dashboard',
+        consume_magic_session_path(token: @raw_token),
+        method: :post,
+        class: 'inline-flex w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2' %>
+</div>

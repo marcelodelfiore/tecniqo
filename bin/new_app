@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+
+require "fileutils"
+
+TEMPLATE_ROOT = File.expand_path("..", __dir__)
+DESTINATION_ROOT = File.expand_path("..", TEMPLATE_ROOT)
+EXCLUDED_ENTRIES = %w[.git .bundle log node_modules storage tmp].freeze
+
+requested_name = ARGV[0]
+display_name = ARGV[1]
+
+abort "This command must run from an unmodified base-app template." unless File.file?(File.join(TEMPLATE_ROOT, ".base-app-template"))
+
+unless requested_name&.match?(/\A[a-zA-Z][a-zA-Z0-9_-]*\z/)
+  abort <<~USAGE
+    Usage: bin/new_app APP_NAME ["Display Name"]
+    Example: bin/new_app invoice_tracker "Invoice Tracker"
+  USAGE
+end
+
+identifier = requested_name
+  .gsub(/([A-Z]+)([A-Z][a-z])/, "\\1_\\2")
+  .gsub(/([a-z\d])([A-Z])/, "\\1_\\2")
+  .tr("-", "_")
+  .downcase
+
+constant_name = identifier.split("_").map(&:capitalize).join
+display_name ||= identifier.split("_").map(&:capitalize).join(" ")
+destination = File.join(DESTINATION_ROOT, identifier.tr("_", "-"))
+
+abort "Destination already exists: #{destination}" if File.exist?(destination)
+
+puts "Creating #{display_name} in #{destination}..."
+FileUtils.mkdir(destination)
+
+Dir.children(TEMPLATE_ROOT).each do |entry|
+  next if EXCLUDED_ENTRIES.include?(entry)
+  next if entry.start_with?(".env")
+
+  FileUtils.cp_r(File.join(TEMPLATE_ROOT, entry), destination, preserve: true)
+end
+
+%w[log storage tmp tmp/pids tmp/storage].each do |directory|
+  path = File.join(destination, directory)
+  FileUtils.mkdir_p(path)
+  FileUtils.touch(File.join(path, ".keep"))
+end
+
+bootstrap = File.join(destination, "bin/bootstrap")
+success = system(bootstrap, constant_name, display_name, chdir: destination)
+
+unless success
+  abort <<~ERROR
+    Application files were copied, but bootstrap failed.
+    Inspect the partial application at #{destination}; it was not deleted automatically.
+  ERROR
+end
+
+
+puts
+puts "Created #{display_name}."
+puts "Next steps:"
+puts "  cd #{destination}"
+puts "  bin/setup"
+puts "  bin/dev"

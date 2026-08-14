@@ -1,0 +1,11 @@
+{
+  "name": "base-app-1-assets",
+  "private": true,
+  "scripts": {
+    "vendor:preline": "bin/vendor_preline",
+    "verify:preline": "bin/verify_preline"
+  },
+  "dependencies": {
+    "preline": "4.2.0"
+  }
+}

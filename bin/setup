@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+require "fileutils"
+
+APP_ROOT = File.expand_path("..", __dir__)
+
+def system!(*args)
+  system(*args, exception: true)
+end
+
+Dir.chdir(APP_ROOT) do
+  puts "== Installing gems =="
+  system("bundle", "check") || system!("bundle", "install")
+
+  puts "\n== Preparing database =="
+  system!("bin/rails db:prepare")
+
+  unless ARGV.include?("--skip-checks")
+    puts "\n== Running specs =="
+    system!("bundle exec rspec")
+
+    puts "\n== Running RuboCop =="
+    system!("bin/rubocop")
+  end
+end

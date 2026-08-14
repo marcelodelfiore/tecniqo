@@ -1,0 +1,74 @@
+#!/usr/bin/env ruby
+
+require "fileutils"
+require "bundler/setup"
+require "active_support/encrypted_file"
+
+APP_ROOT = File.expand_path("..", __dir__)
+TEMPLATE_MARKER = File.join(APP_ROOT, ".base-app-template")
+SOURCE_CONSTANT = "Tecniqo"
+SOURCE_NAME = "Técniqo"
+SOURCE_IDENTIFIER = "tecniqo"
+
+target_constant = ARGV[0]
+target_name = ARGV[1] || target_constant&.gsub(/([a-z\d])([A-Z])/, "\\1 \\2")
+
+unless target_constant&.match?(/\A[A-Z][A-Za-z0-9]*\z/)
+  abort "Usage: bin/bootstrap AppConstantName \"Application Name\""
+end
+
+abort "This application has already been bootstrapped." unless File.file?(TEMPLATE_MARKER)
+
+target_identifier = target_constant
+  .gsub(/([A-Z]+)([A-Z][a-z])/, "\\1_\\2")
+  .gsub(/([a-z\d])([A-Z])/, "\\1_\\2")
+  .downcase
+
+replacements = {
+  SOURCE_CONSTANT => target_constant,
+  SOURCE_NAME => target_name,
+  SOURCE_IDENTIFIER => target_identifier
+}
+
+files = %w[
+  README.md
+  Dockerfile
+  bin/bootstrap
+  config/application.rb
+  config/database.yml
+  config/deploy.yml
+  app/views/pwa/manifest.json.erb
+]
+
+Dir.chdir(APP_ROOT) do
+  current_application = File.read("config/application.rb")
+  if current_application.include?(target_constant) && !current_application.include?(SOURCE_CONSTANT)
+    abort "This application is already bootstrapped as #{target_constant}."
+  end
+
+  files.each do |path|
+    content = File.read(path)
+    replacements.each { |source, target| content = content.gsub(source, target) }
+    File.write(path, content)
+  end
+
+  FileUtils.rm_f("config/master.key")
+  FileUtils.rm_f("config/credentials.yml.enc")
+
+  key_path = File.join(APP_ROOT, "config/master.key")
+  credentials_path = File.join(APP_ROOT, "config/credentials.yml.enc")
+  File.write(key_path, ActiveSupport::EncryptedFile.generate_key)
+  File.chmod(0o600, key_path)
+
+  encrypted_credentials = ActiveSupport::EncryptedFile.new(
+    content_path: credentials_path,
+    key_path: key_path,
+    env_key: "RAILS_MASTER_KEY",
+    raise_if_missing_key: true
+  )
+  encrypted_credentials.write("--- {}\n")
+  FileUtils.rm_f(TEMPLATE_MARKER)
+
+  puts "Bootstrapped #{target_name} (#{target_constant}, #{target_identifier})."
+  puts "Next: review README.md, configure APP_HOST and MAILER_FROM, then run bin/setup."
+end

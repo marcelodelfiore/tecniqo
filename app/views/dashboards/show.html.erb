@@ -1,0 +1,32 @@
+<% content_for :title, 'Dashboard' %>
+
+<div class="space-y-6">
+  <%= render 'shared/page_header',
+      title: 'Dashboard',
+      subtitle: 'Your authenticated area is working correctly.' %>
+
+  <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <%= render 'shared/stat_card',
+        label: 'Current user',
+        value: Current.user.email,
+        hint: 'Signed-in session user' %>
+
+    <%= render 'shared/stat_card',
+        label: 'Session status',
+        value: 'Active',
+        hint: 'Passwordless authentication is working' %>
+
+    <%= render 'shared/stat_card',
+        label: 'Starter kit',
+        value: 'Ready',
+        hint: 'Base shell and auth baseline are in place' %>
+  </div>
+
+  <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <h2 class="text-lg font-semibold text-gray-900">Next steps</h2>
+    <p class="mt-2 text-sm text-gray-600">
+      This dashboard is the first protected page of your starter kit.
+      Future apps can replace or extend it with domain-specific content.
+    </p>
+  </div>
+</div>
