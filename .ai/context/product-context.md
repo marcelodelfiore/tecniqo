@@ -1,58 +1,62 @@
 # Product Context
 
-## Users and stakeholders
+The detailed source of product truth is [`docs/business-analysis.md`](../../docs/business-analysis.md).
+The canonical workflow is
+[`docs/scenarios/001-corrective-maintenance-return-visit.md`](../../docs/scenarios/001-corrective-maintenance-return-visit.md).
 
-| Group | Need | Important behavior |
+## Users and responsibilities
+
+| Group | Primary responsibility | Expected experience |
 |---|---|---|
-| Application developer | Start a new Rails product quickly | Copies, bootstraps, verifies, then changes the domain |
-| Derived-app user | Secure and understandable sign-in | Receives and confirms a short-lived email link |
+| Founder | Platform support, diagnostics, and early operation | Exceptional cross-platform access |
+| Administrator | Organization configuration and master data | Configuration and organizational views |
+| Supervisor | Work creation, assignment, scheduling, and monitoring | Operational overview and work coordination |
+| Technician | Assigned field execution and technical capture | Mobile-first `My Work` and current-job actions |
+| Engineer / Technical Reviewer | Clarification, validation, approval, and revision | Technical review queue and approved work |
 
-## Core workflows
+A person may hold multiple organization responsibilities. Founder is not one of them.
 
-### Create a derived application
+## Core workflow
 
-1. Run `bin/new_app` with the new technical and display names.
-2. Let it create a sibling copy and invoke `bin/bootstrap` there.
-3. Run setup and validation.
-4. Replace starter screens and context with product-specific behavior.
+The canonical corrective-maintenance scenario spans Work Order creation, assignment,
+one or more field executions, event-based time capture, structured findings and
+measurements, evidence, a return visit, engineering clarification, approval, a
+technical revision, and report issuance.
 
-### Sign in
-
-1. Submit an email address.
-2. Receive a single-use link without account-existence disclosure.
-3. Open a confirmation page and explicitly continue.
-4. Enter the authenticated dashboard.
-
-## Domain language
+## Core domain language
 
 | Term | Meaning |
 |---|---|
-| Starter | This source repository before copying |
-| Derived application | An independent product created from a copy |
-| Bootstrap | One-time rename and credential-rotation operation |
-| New-app command | Outer command that copies the starter and invokes bootstrap |
-| Magic link | A short-lived bearer credential delivered by email |
+| User | A global authenticated identity |
+| Organization | A maintenance company and tenant boundary |
+| Membership | A user's relationship to one Organization |
+| Role | An organization responsibility attached to a Membership |
+| Founder | A platform-level privilege outside organization roles |
+| Work Order | Overall requested job, potentially spanning multiple visits |
+| Execution | One actual field visit or work period |
+| Policy | Contextual answer to whether an actor may perform an action on a resource |
 
-## Business rules
+## Product and UX principles
 
-- Submitting an unknown email creates a user by default.
-- A new magic link revokes previous active links for that user.
-- Links expire after 15 minutes and are consumed once.
-- Derived applications are independent; fixes do not propagate automatically.
+- Workflow over database; users perform business actions rather than edit states.
+- Progressive complexity and defaults over mandatory configuration.
+- Capture context once and derive metadata from normal actions.
+- Structured facts remain authoritative beneath a simple interface.
+- Complexity follows responsibility; navigation may differ by role.
+- Field-facing workflows use mobile usability as the stricter acceptance criterion.
+- New UI is responsive, accessible, touch-friendly, and compatible with Turbo.
+- Rails HTML + Turbo + Stimulus remains the primary UI; do not introduce a parallel SPA.
+- Técniqo will be the web core of future thin Hotwire Native iOS/Android shells with
+  native navigation and selected bridge integrations.
 
 ## Product boundaries
 
-The starter owns initial authentication, application shell, setup, and quality gates.
-It does not define authorization, tenancy, billing, domain behavior, or a production
-vendor configuration.
-
-## UX principles
-
-- Give the same issuance response whether an account existed or was created.
-- Require explicit confirmation before consuming emailed credentials.
-- Keep starter UI neutral and easy to replace.
+The MVP owns operational context, field execution, structured engineering facts,
+evidence traceability, review, revisions, and report foundations. Advanced AI,
+offline operation, native shells, inventory, accounting, ERP, and routing are deferred.
 
 ## Open product questions
 
-- Each derived application must decide whether automatic registration is acceptable.
-- Each derived application must choose production mail, storage, and observability providers.
+- Should production sign-in auto-register unknown email addresses, or require invitations?
+- What organization selection behavior should apply when a multi-organization user signs in?
+- Which future field capabilities need native bridge components or offline support?

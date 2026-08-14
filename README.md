@@ -6,7 +6,7 @@ to evolve independently—not consumed as a framework or kept synchronized upstr
 
 ## Included defaults
 
-- Rails 8.1 and Ruby 3.4.8
+- Rails 8.1 and Ruby 4.0.6
 - PostgreSQL
 - passwordless email authentication with single-use, 15-minute magic links
 - scanner-safe confirmation before a link is consumed
@@ -23,7 +23,7 @@ requirements differ.
 
 ## Prerequisites
 
-- Ruby 3.4.8
+- Ruby 4.0.6
 - PostgreSQL
 - a local SMTP catcher listening on `127.0.0.1:1025` (Mailpit is recommended)
 - Node.js 24 only for updating or verifying vendored Preline; it is not needed at runtime

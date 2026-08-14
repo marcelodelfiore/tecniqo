@@ -2,7 +2,7 @@
 
 ## Current objective
 
-Maintain Base App 1 as a secure, reproducible source for independently copied Rails applications.
+Phase 1 — Identity, Organization, Roles, and Authorization Foundation.
 
 ## Current branch
 
@@ -10,54 +10,63 @@ Maintain Base App 1 as a secure, reproducible source for independently copied Ra
 
 ## Current state
 
-The starter has a scanner-safe and rate-limited magic-link flow, atomic token
-consumption, asynchronous delivery, database constraints, a tested sibling-app
-creation command and one-time bootstrap, aligned Ruby tooling, PostgreSQL-backed
-GitHub tests, and populated AI context.
+The Rails application runs on Ruby 4.0.6 and provides tested passwordless authentication,
+a global User identity, `Current.user`, PostgreSQL, RSpec, and a responsive
+Tailwind/Preline/Hotwire shell.
+Organization, membership roles, current-organization selection, and Pundit are not yet
+implemented. ADR 0001 defines their intended boundaries.
 
 ## In progress
 
-- Review and commit the starter-hardening changes.
+- Human review of the Phase 1 research and architecture decision.
 
 ## Next actions
 
-1. Configure and exercise a real production SMTP provider in a derived application.
-2. Add product-specific authorization and observability only when requirements exist.
-3. Periodically run `bin/ci` and update the locked dependencies.
+1. Approve a focused implementation slice adding Pundit and the Organization,
+   Membership, and fixed membership-role persistence foundation.
+2. Define invitations/provisioning and whether unknown-email auto-registration remains valid.
+3. Implement current-organization establishment and foundational policies/scopes with
+   cross-tenant, unauthorized, multi-role, and Founder tests.
+
+Do not start Customer → Site → Asset until this foundation is implemented and validated.
 
 ## Acceptance criteria for the current activity
 
-- [x] `bin/new_app` copy/rename workflow rotates credentials and passes a smoke test.
-- [x] Authentication resists link scanners, replay, concurrent consumption, and basic abuse.
-- [x] Tests, lint, dependency audits, importmap audit, and Brakeman pass.
-- [x] AI context describes the repository without placeholders.
+- [x] Existing repository, authentication, product docs, scenario, UI, and tests assessed.
+- [x] Pundit and CanCanCan researched and a recommendation recorded.
+- [x] Identity, multi-role membership, tenancy, Founder, policy, and integrity decisions recorded.
+- [x] Responsive Rails/Hotwire Native readiness recorded.
+- [x] No speculative business-domain models or native applications introduced.
 
-## Important findings
+## Important findings and decisions
 
-- GitHub CI previously omitted RSpec.
-- The prior mailer generated `/session?token=...`, not the routed magic-link URL.
-- The old lockfile contained known vulnerabilities; patched versions are now locked.
-- Preline 4.2.0 is locked through npm, vendored locally, and verified byte-for-byte in CI.
-
-## Decisions made
-
-- Derived applications are independent copies rather than downstream-synchronized templates.
-- Magic-link GET requests validate and confirm; POST requests consume and authenticate.
-- Rails' cache-backed rate limiter protects issuance by both IP and normalized email.
-- `bin/new_app` copies into the parent folder; `bin/bootstrap` performs the destructive rename only in that fresh copy.
+- Authentication is secure, compact, and separate from the missing authorization layer.
+- Pundit 2.5.2 fits `Current.user` and explicit contextual policy/scoping requirements.
+- Organization is the tenant; one global User may have multiple Memberships and roles.
+- Founder remains a platform-level User capability and centralized policy exception.
+- Fixed MVP role values avoid speculative editable permission infrastructure.
+- The last active administrator needs transactional protection in the implementation slice.
+- Root `.ai/` is operational; `docs/.ai/` and `docs/docs/decisions/` are copied artifacts.
 
 ## Risks and blockers
 
-- Production SMTP/storage/host values remain deployment-specific by design.
-- Preline updates must commit `package.json`, `package-lock.json`, the importmap pin, and the vendor file together.
+- User provisioning/invitations and current-organization selection behavior need a product
+  decision before management UI is exposed.
+- Adding Pundit is a production dependency and implementing authorization is a security
+  boundary; both belong in the next explicitly approved code slice.
 
 ## Validation status
 
-- Last command: `bin/ci`
-- Result: passed (53 RSpec examples, lint, npm/importmap/gem audits, and Brakeman)
-- Additional: bootstrap smoke test and `bin/rails zeitwerk:check` passed
+- Documentation review and repository inspection: complete.
+- Ruby 4.0.6 `bundle exec rspec`: 53 examples, 0 failures.
+- Ruby 4.0.6 `bin/rubocop`: 48 files, no offenses.
+- Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
+- Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings. The `bin/brakeman` wrapper could not
+  complete its network-backed latest-version check in the restricted environment.
+- `git diff --check`: passed.
 
 ## Handoff note
 
-Review the working-tree diff, then commit it as the hardened starter baseline. No commit
-has been created by the agent.
+Review ADR 0001. The next code task should implement only the documented Phase 1
+persistence and authorization foundation, then prove tenant isolation before adding
+Customer, Site, or Asset.

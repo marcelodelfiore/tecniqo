@@ -2,41 +2,45 @@
 
 ## Project
 
-- **Name:** Base App 1
-- **Description:** An opinionated Rails starter copied to create the author's applications.
-- **Current stage:** Hardening
-- **Repository role:** Starter monolith
+- **Name:** Técniqo
+- **Description:** Industrial Maintenance Engineering Platform for maintenance service companies.
+- **Current stage:** MVP foundation
+- **Repository role:** Rails monolith and primary web application
 
 ## Why it exists
 
-Repeated applications need the same secure authentication, UI shell, development
-workflow, and production foundations. This repository makes those decisions once so
-work on a derived application can begin with its domain rather than infrastructure.
+Técniqo connects field maintenance work to structured engineering facts, traceable
+evidence, technical review, revisions, and customer-facing reports. Expected field
+service functionality captures the context required by that technical process; it is
+not the product's strategic endpoint.
 
 ## Primary outcomes
 
-1. A copied application can be safely renamed and booted with minimal manual work.
-2. Shared defaults are secure, tested, understandable, and Rails-native.
-3. Humans and AI agents begin with accurate operational and architectural context.
+1. Make field capture fast while retaining rich operational and engineering context.
+2. Preserve evidence-backed technical history across visits, reviews, and revisions.
+3. Build a reliable dataset for engineering intelligence and future AI assistance.
 
-## Non-goals
+## Non-goals for the current phase
 
-- Remaining synchronized with applications after they are copied.
-- Providing every feature a Rails product might eventually need.
-- Being an unopinionated or public universal Rails template.
+- Generating the complete maintenance domain or generic CRUD screens.
+- Native iOS/Android shells, advanced offline/PWA behavior, or AI integration.
+- ERP, accounting, inventory, route optimization, or arbitrary workflow builders.
 
 ## Current development focus
 
-Make copying, authentication, validation, and documentation reliable enough to
-replicate into future applications.
+Phase 1 — Identity, Organization, Roles, and Authorization Foundation.
 
 ## Success criteria
 
-- `bin/bootstrap MyProduct "My Product"` produces a freshly named application.
-- Local and GitHub CI exercise tests, lint, autoloading, and security checks.
-- Magic-link requests resist replay, concurrency, link scanners, and basic abuse.
+- Existing passwordless authentication remains intact.
+- Organization tenancy, multi-role membership, and Founder privilege have explicit,
+  testable boundaries before business-domain tables are introduced.
+- New UI remains responsive, Turbo-compatible, and ready to serve future thin
+  Hotwire Native shells.
 
 ## Important constraints
 
-- Prefer Rails 8 built-ins and existing dependencies.
-- Keep the starter small and easy to remove or adapt.
+- Organization is the tenant boundary; cross-organization access must be difficult by default.
+- Founder is a platform-level exception, not an organization role.
+- Implement realistic vertical slices; do not map every domain noun directly to a model.
+- Multiple executions per Work Order and multiple participants per execution are MVP requirements.
