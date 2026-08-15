@@ -12,6 +12,7 @@ en:
       event_immutable: "cannot be changed or removed"
       last_execution_participant: "cannot remove the only participant"
       participant_has_events: "cannot remove a participant who recorded field events"
+      evidence_immutable: "cannot be changed or removed after acceptance"
   app:
     tagline: "Industrial maintenance engineering"
   locales:
@@ -164,6 +165,21 @@ en:
       recorded: "%{event} recorded."
       unable_to_execute: "Unable-to-execute outcome recorded."
       invalid_transition: "That action is not valid for the visit's current state."
+    evidences:
+      created: "Evidence uploaded and fingerprinted."
+  evidences:
+    title: "Evidence"
+    empty: "No evidence has been uploaded for this visit."
+    upload: "Upload original evidence"
+    description_optional: "Optional description"
+  evidence_types:
+    photo: "Photo"
+    thermogram: "Thermogram"
+    audio: "Audio"
+    video: "Video"
+    document: "Document"
+    technical_file: "Technical file"
+    other: "Other"
   home:
     eyebrow: "Maintenance engineering platform"
     description: "Connect field maintenance work to structured engineering facts, evidence, review, and reports."

@@ -8,6 +8,8 @@
 - **Background jobs/cache/cable:** Solid Queue, Solid Cache, Solid Cable
 - **Frontend:** server-rendered ERB, Turbo 2, Stimulus, Importmaps, Tailwind CSS 4, Preline 4.2
 - **Infrastructure:** Docker and Kamal baseline; PWA scaffolding retained
+- **Evidence storage:** Active Storage with private provider-neutral S3 configuration;
+  Garage 2.3.0 is the initial Compose/Kamal backend
 - **Tests:** RSpec 3.13 / RSpec Rails 8 with Factory Bot
 - **Observability:** Rails logging; provider undecided
 
@@ -115,6 +117,10 @@ tenant-sensitive rules than explicit policies and scopes.
 - ADR 0006 records event/state, occurrence timestamp, participant, and visit-scheduling decisions.
 
 ## Local environment
+
+Garage is optional for normal tests. Copy `.env.example`, set its secrets, run
+`docker compose up -d garage`, and select `ACTIVE_STORAGE_SERVICE=evidence_s3` to test
+the S3 path. The persistence smoke test is in `docs/evidence-storage.md`.
 
 Prerequisites are Ruby 4.0.6, PostgreSQL, and an SMTP catcher such as Mailpit on `127.0.0.1:1025`.
 Node.js 24 is required for Preline maintenance and the complete CI pipeline.

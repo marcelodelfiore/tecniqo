@@ -10,9 +10,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_040000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "assets", force: :cascade do |t|
     t.string "asset_type", default: "other", null: false
@@ -64,6 +92,33 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_040000) do
     t.index "organization_id, lower((name)::text)", name: "index_customers_on_organization_and_lower_name", unique: true
     t.index ["id", "organization_id"], name: "index_customers_on_id_and_organization_id", unique: true
     t.index ["organization_id"], name: "index_customers_on_organization_id"
+  end
+
+  create_table "evidences", force: :cascade do |t|
+    t.datetime "accepted_at", null: false
+    t.bigint "byte_size", null: false
+    t.datetime "captured_at"
+    t.string "content_type", null: false
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "evidence_type", null: false
+    t.bigint "execution_id", null: false
+    t.string "integrity_algorithm", default: "SHA-256", null: false
+    t.string "integrity_digest", null: false
+    t.bigint "organization_id", null: false
+    t.string "original_filename", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "uploaded_by_membership_id", null: false
+    t.index ["execution_id", "organization_id"], name: "index_evidences_on_execution_id_and_organization_id"
+    t.index ["execution_id"], name: "index_evidences_on_execution_id"
+    t.index ["id", "organization_id"], name: "index_evidences_on_id_and_organization_id", unique: true
+    t.index ["integrity_digest"], name: "index_evidences_on_integrity_digest"
+    t.index ["organization_id"], name: "index_evidences_on_organization_id"
+    t.index ["uploaded_by_membership_id", "organization_id"], name: "idx_on_uploaded_by_membership_id_organization_id_16187e70a2"
+    t.index ["uploaded_by_membership_id"], name: "index_evidences_on_uploaded_by_membership_id"
+    t.check_constraint "byte_size > 0", name: "evidences_positive_byte_size"
+    t.check_constraint "integrity_algorithm::text = 'SHA-256'::text", name: "evidences_sha256_algorithm"
+    t.check_constraint "length(integrity_digest::text) = 64", name: "evidences_sha256_digest_length"
   end
 
   create_table "execution_events", force: :cascade do |t|
@@ -256,6 +311,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_040000) do
     t.check_constraint "sequence_number > 0", name: "work_orders_sequence_number_check"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assets", "organizations"
   add_foreign_key "assets", "sites", column: ["site_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "assignments", "memberships", column: ["membership_id", "organization_id"], primary_key: ["id", "organization_id"]
@@ -263,6 +320,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_040000) do
   add_foreign_key "assignments", "users", column: "assigned_by_id"
   add_foreign_key "assignments", "work_orders", column: ["work_order_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "customers", "organizations"
+  add_foreign_key "evidences", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "evidences", "memberships", column: ["uploaded_by_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "evidences", "organizations"
   add_foreign_key "execution_events", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "execution_events", "memberships", column: ["actor_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "execution_events", "organizations"

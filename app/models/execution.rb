@@ -34,6 +34,7 @@ class Execution < ApplicationRecord
   has_many :participant_memberships, through: :execution_participants, source: :membership
   has_many :execution_events, -> { chronological }, dependent: :restrict_with_exception,
                                                     inverse_of: :execution
+  has_many :evidences, dependent: :restrict_with_exception
 
   normalizes :outcome_note, with: ->(value) { value.to_s.strip.presence }
 

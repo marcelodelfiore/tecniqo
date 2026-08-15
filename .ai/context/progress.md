@@ -2,11 +2,26 @@
 
 ## Current milestone
 
-- **Name:** Phase 5 — Structured Technical Field Capture
-- **Status:** Planning
-- **Target outcome:** Simple, traceable capture of findings, measurements, evidence, actions, materials, and recommendations
+- **Name:** Phase 4.5 — Secure Evidence Storage
+- **Status:** Complete and validated
+- **Target outcome:** Private, immutable, verifiable originals through provider-independent Active Storage
 
 ## Completed
+
+### 2026-08-15 — Implement secure provider-independent Evidence storage
+
+- Added Active Storage and provider-neutral private S3 configuration with Garage 2.3.0
+  as the first Compose/Kamal backend.
+- Added immutable Execution-owned Evidence with automatic authenticated Membership
+  provenance, original metadata, SHA-256, allowlisted types/sizes, and tenant constraints.
+- Disabled default Active Storage routes and added explicit Pundit-authorized upload and
+  streamed-original endpoints.
+- Documented provider migration, independent backup, the media catalog, deferred direct
+  uploads/malware scanning, and future authenticity/Hotwire Native paths.
+- Validation: 242 RSpec examples and RuboCop passed; direct Brakeman reported zero
+  warnings; Bundler/NPM/Importmap audits passed. Garage upload/download and SHA-256 were
+  verified before and after container restart. `bin/ci` passed through Importmap Audit
+  and stopped only at its existing Brakeman latest-version gate (8.0.5 locked; 8.0.6 latest).
 
 ### 2026-08-15 — Implement Execution → Participants → Execution Events
 

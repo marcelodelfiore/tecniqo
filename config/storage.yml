@@ -6,6 +6,20 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
+# Provider-neutral S3 contract. Garage is the first deployment backend, but
+# switching providers only requires changing these values and copying objects.
+evidence_s3:
+  service: S3
+  access_key_id: <%= ENV["EVIDENCE_STORAGE_ACCESS_KEY"] %>
+  secret_access_key: <%= ENV["EVIDENCE_STORAGE_SECRET_KEY"] %>
+  region: <%= ENV.fetch("EVIDENCE_STORAGE_REGION", "garage") %>
+  bucket: <%= ENV.fetch("EVIDENCE_STORAGE_BUCKET", "tecniqo-evidence") %>
+  endpoint: <%= ENV["EVIDENCE_STORAGE_ENDPOINT"] %>
+  force_path_style: <%= ActiveModel::Type::Boolean.new.cast(ENV.fetch("EVIDENCE_STORAGE_FORCE_PATH_STYLE", "true")) %>
+  http_open_timeout: 5
+  http_read_timeout: 60
+  retry_limit: 3
+
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
 #   service: S3

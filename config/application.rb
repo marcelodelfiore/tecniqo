@@ -30,6 +30,10 @@ module Tecniqo
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
+
+    # Evidence downloads must pass through Técniqo authorization. Active
+    # Storage's permanent signed-id controllers are intentionally unavailable.
+    config.active_storage.draw_routes = false
     config.x.application_name = ENV.fetch("APPLICATION_NAME", "Técniqo")
 
     # Configuration for the application, engines, and railties goes here.

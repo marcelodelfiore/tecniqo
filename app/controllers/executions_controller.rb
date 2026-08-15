@@ -8,6 +8,9 @@ class ExecutionsController < ApplicationController
   def show
     authorize @execution
     @events = @execution.execution_events.includes(actor_membership: :user)
+    @evidences = policy_scope(Evidence).where(execution: @execution)
+                                       .includes(:uploaded_by_membership, original_attachment: :blob)
+                                       .order(created_at: :desc)
     @participants = @execution.execution_participants.includes(membership: :user)
     @eligible_participants = policy_scope(Membership,
                                           policy_scope_class: ExecutionParticipantPolicy::EligibleScope)

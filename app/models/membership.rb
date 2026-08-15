@@ -9,6 +9,8 @@ class Membership < ApplicationRecord
   has_many :execution_participants, dependent: :restrict_with_exception
   has_many :participating_executions, through: :execution_participants, source: :execution
   has_many :execution_events, foreign_key: :actor_membership_id, dependent: :restrict_with_exception
+  has_many :uploaded_evidences, class_name: "Evidence", foreign_key: :uploaded_by_membership_id,
+                                dependent: :restrict_with_exception
   has_many :recorded_execution_outcomes, class_name: "Execution",
                                            foreign_key: :outcome_recorded_by_membership_id,
                                            dependent: :restrict_with_exception

@@ -1,5 +1,13 @@
 # Architecture and Engineering Conventions
 
+## Phase 4.5 evidence storage
+
+Evidence is an Execution-owned, tenant-bound domain record. Its immutable original uses
+Active Storage; Garage is only the first private S3-compatible provider. Accepted
+Evidence snapshots original metadata and an independent SHA-256. Default Active Storage
+routes are disabled and downloads use a Pundit-authorized endpoint. See ADR 0007 and
+`docs/evidence-storage.md`.
+
 ## System overview
 
 Técniqo is a conventional Rails monolith. PostgreSQL is the system of record;

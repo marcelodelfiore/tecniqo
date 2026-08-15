@@ -2,13 +2,18 @@
 
 ## Current objective
 
-Plan Phase 5 — structured technical field capture.
+Phase 4.5 — secure, provider-independent immutable Evidence storage — is implemented
+and validated. Phase 5 structured technical field capture remains deferred.
 
 ## Current branch
 
 `main`
 
 ## Current state
+
+Phase 4 is smoke-tested. Phase 4.5 uses an Execution-owned Evidence record, Active
+Storage, independent SHA-256 fingerprints, authorized private delivery, and Garage as
+replaceable S3-compatible infrastructure.
 
 The Rails application runs on Ruby 4.0.6 and provides tested passwordless authentication,
 a global User identity, `Current.user`, PostgreSQL, RSpec, and a responsive
@@ -121,7 +126,7 @@ Phase 4 responsive browser smoke testing and acceptance review are complete.
 
 ## Validation status
 
-- Ruby 4.0.6 `bundle exec rspec`: 230 examples, 0 failures.
+- Ruby 4.0.6 `bundle exec rspec`: 242 examples, 0 failures.
 - Ruby 4.0.6 `bin/rubocop`: 147 files, no offenses.
 - Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
 - Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings.
@@ -130,7 +135,7 @@ Phase 4 responsive browser smoke testing and acceptance review are complete.
 - `bin/rails db:migrate:status`: all migrations up.
 - Development seeds ran twice successfully, confirming idempotent Phase 4 demo data.
 - `git diff --check`: passed.
-- `bin/ci`: setup, 230 tests, style, JavaScript setup, Preline, NPM, gem, and Importmap
+- `bin/ci`: setup, 242 tests, style, JavaScript setup, Preline, NPM, gem, and Importmap
   audits passed; the wrapper stopped only because locked Brakeman 8.0.5 is not latest 8.0.6.
   Direct `bundle exec brakeman --no-pager` completed with no warnings.
 

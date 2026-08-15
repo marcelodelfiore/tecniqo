@@ -12,6 +12,7 @@ es:
       event_immutable: "no puede modificarse ni eliminarse"
       last_execution_participant: "no permite eliminar al único participante"
       participant_has_events: "no permite eliminar a un participante que registró eventos de campo"
+      evidence_immutable: "no puede modificarse ni eliminarse después de aceptarse"
   app:
     tagline: "Ingeniería de mantenimiento industrial"
   locales:
@@ -164,6 +165,21 @@ es:
       recorded: "%{event} registrado."
       unable_to_execute: "Imposibilidad de ejecución registrada."
       invalid_transition: "Esta acción no es válida para el estado actual de la visita."
+    evidences:
+      created: "Evidencia enviada e identificada con huella digital."
+  evidences:
+    title: "Evidencias"
+    empty: "No se ha enviado evidencia para esta visita."
+    upload: "Enviar evidencia original"
+    description_optional: "Descripción opcional"
+  evidence_types:
+    photo: "Foto"
+    thermogram: "Termograma"
+    audio: "Audio"
+    video: "Video"
+    document: "Documento"
+    technical_file: "Archivo técnico"
+    other: "Otro"
   home:
     eyebrow: "Plataforma de ingeniería de mantenimiento"
     description: "Conecta el trabajo de mantenimiento en campo con datos de ingeniería estructurados, evidencia, revisión e informes."

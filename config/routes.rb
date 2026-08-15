@@ -24,6 +24,9 @@ Rails.application.routes.draw do
   resources :work_orders, except: :destroy do
     resource :assignment, only: :create
     resources :executions, only: %i[show create] do
+      resources :evidences, only: :create do
+        get :original, on: :member
+      end
       resources :participants, controller: "execution_participants", only: %i[create destroy]
       post :arrive, to: "execution_events#arrive"
       post :start_work, to: "execution_events#start_work"

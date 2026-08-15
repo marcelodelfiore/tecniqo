@@ -1,0 +1,26 @@
+services:
+  garage:
+    image: dxflrs/garage:v2.3.0
+    command: /garage server --single-node --default-bucket
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3900:3900"
+      - "127.0.0.1:3903:3903"
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?set GARAGE_RPC_SECRET}
+      GARAGE_DEFAULT_ACCESS_KEY: ${EVIDENCE_STORAGE_ACCESS_KEY:?set EVIDENCE_STORAGE_ACCESS_KEY}
+      GARAGE_DEFAULT_SECRET_KEY: ${EVIDENCE_STORAGE_SECRET_KEY:?set EVIDENCE_STORAGE_SECRET_KEY}
+      GARAGE_DEFAULT_BUCKET: ${EVIDENCE_STORAGE_BUCKET:-tecniqo-evidence}
+    volumes:
+      - ./config/garage.toml:/etc/garage.toml:ro
+      - garage-metadata:/var/lib/garage/meta
+      - garage-data:/var/lib/garage/data
+    healthcheck:
+      test: ["CMD", "/garage", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  garage-metadata:
+  garage-data:
