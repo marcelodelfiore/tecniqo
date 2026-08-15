@@ -3,11 +3,24 @@
 ## Current milestone
 
 - **Name:** Phase 1 — Identity, Organization, Roles, and Authorization Foundation
-- **Status:** Persistence and tenant-context authorization implemented; membership administration pending
+- **Status:** Invitation acceptance implemented; issuance and membership administration pending
 - **Target outcome:** Explicit, testable tenant isolation and contextual authorization on
   top of the existing authentication system
 
 ## Completed
+
+### 2026-08-15 — Adopt invitation-only provisioning and implement acceptance
+
+- Recorded invitation-only ordinary account provisioning in ADR 0002.
+- Unknown emails and legacy identities without membership history no longer create Users or
+  receive sign-in tokens; generic responses preserve account privacy, and Founder is exempt.
+- Added digest-only, seven-day, single-use Organization invitations with revocation,
+  fixed-role database constraints, and secure GET-confirm/POST-accept semantics.
+- Invitation acceptance atomically creates/reuses User, creates/reactivates Membership,
+  grants roles, consumes the invitation, and signs in the user.
+- Added Mailpit-compatible multipart invitation delivery and focused model, mailer, request,
+  database-constraint, and authentication regression coverage.
+- Validation: 107 RSpec examples passed; RuboCop, Zeitwerk, Brakeman, and diff checks passed.
 
 ### 2026-08-15 — Establish validated tenant context and foundational authorization
 
@@ -60,12 +73,12 @@
 
 ## In progress
 
-- Product decision for invitation/provisioning behavior and planning membership administration.
+- Authorized invitation issuance and membership administration planning.
 
 ## Planned
 
-- Implement membership administration with last-active-Administrator protection after
-  provisioning behavior is decided.
+- Implement Administrator-authorized invitation issuance and reissuance UI.
+- Implement membership administration with last-active-Administrator protection.
 - Add resource-specific tenant policies/scopes with each future vertical slice.
 - After Phase 1 passes security checks, begin the Customer → Site → Asset vertical slice.
 
@@ -73,8 +86,7 @@
 
 | Item | Impact | Priority | Evidence | Intended action |
 |---|---|---|---|---|
-| Unknown emails auto-register | May bypass intended organization invitation lifecycle | P1 | `SessionsController#create` | Decide provisioning before membership management UI |
-| No tenant/authorization layer | Product records cannot yet be safely introduced | P0 | schema and controllers | Implement approved Phase 1 foundation next |
+| Invitation issuance has no UI | Administrators cannot yet onboard members without console access | P0 | Invitation model/mailer | Add authorized issuance next |
 | Starter copy remains in UI | Product identity/navigation is incomplete | P2 | layouts/home/dashboard | Replace within the first relevant UI slice |
 | Generator text remains in token confirmation | Duplicate/irrelevant sign-in content | P2 | `app/views/sessions/show.html.erb` | Fix in a focused authentication UI cleanup |
 | Duplicate copied documentation trees | Agents may edit the wrong context/ADR path | P2 | `docs/.ai/`, `docs/docs/decisions/` | Clean up only with separate approval |

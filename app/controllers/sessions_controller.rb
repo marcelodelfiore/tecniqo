@@ -19,10 +19,13 @@ class SessionsController < ApplicationController
       return render :new, status: :unprocessable_content
     end
 
-    user = User.find_or_create_by!(email: email)
+    user = User.find_by(email: email)
+    user = nil unless user&.founder? || user&.memberships&.exists?
 
-    _login_token, raw_token = LoginToken.issue_for!(user)
-    AuthMailer.magic_link(user, raw_token).deliver_later
+    if user
+      _login_token, raw_token = LoginToken.issue_for!(user)
+      AuthMailer.magic_link(user, raw_token).deliver_later
+    end
 
     redirect_to new_session_path, notice: "Check your email for your sign-in link."
   end

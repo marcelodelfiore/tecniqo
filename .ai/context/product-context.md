@@ -55,8 +55,12 @@ The MVP owns operational context, field execution, structured engineering facts,
 evidence traceability, review, revisions, and report foundations. Advanced AI,
 offline operation, native shells, inventory, accounting, ERP, and routing are deferred.
 
+## Accepted onboarding decisions
+
+- Ordinary account provisioning is invitation-only; unknown emails do not auto-register.
+- A sole available Organization is selected automatically; multiple options require an
+  explicit choice, and Founder still selects a tenant for normal workflows.
+
 ## Open product questions
 
-- Should production sign-in auto-register unknown email addresses, or require invitations?
-- What organization selection behavior should apply when a multi-organization user signs in?
 - Which future field capabilities need native bridge components or offline support?

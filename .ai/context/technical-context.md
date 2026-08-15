@@ -22,8 +22,12 @@ Authentication is custom, passwordless, and must be preserved:
 - the Rails session stores `user_id`, and `ApplicationController` assigns `Current.user`;
 - issuance is rate-limited by IP and normalized email and delivery uses Active Job.
 
-The current sign-in flow creates an unknown `User` automatically. Revisit that product
-rule before organization invitations are exposed; do not silently change it.
+Ordinary provisioning is invitation-only. Unknown emails and legacy Users without
+membership history receive the generic sign-in response but no token or email; Founder is
+the explicit exception. Invitation tokens also store only a SHA-256 digest, expire after
+seven days, and use a no-store GET confirmation plus CSRF-protected POST acceptance. The
+POST atomically creates/reuses the User, activates Membership, grants invited roles, and
+establishes the session. ADR 0002 records this decision.
 
 ## Authorization foundation
 
@@ -49,7 +53,7 @@ tenant-sensitive rules than explicit policies and scopes.
 
 ## Local environment
 
-Prerequisites are Ruby 4.0.6, PostgreSQL, and an SMTP catcher on `127.0.0.1:1025`.
+Prerequisites are Ruby 4.0.6, PostgreSQL, and an SMTP catcher such as Mailpit on `127.0.0.1:1025`.
 Node.js 24 is required for Preline maintenance and the complete CI pipeline.
 
 ```sh

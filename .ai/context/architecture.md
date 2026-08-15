@@ -51,6 +51,15 @@ authorization. One available organization is selected automatically; an ambiguou
 requires the organization-selection route. Founder may select any organization but still
 selects a tenant for normal workflows. A broader organization-switching UI remains deferred.
 
+## Invitation-only provisioning
+
+Ordinary Users enter the system through an Organization invitation; unknown sign-in emails
+do not create identities. Invitations carry a normalized email, fixed role values, expiry,
+revocation/acceptance state, and only a digest of the emailed token. Acceptance creates or
+reuses the global User and establishes Membership plus roles atomically. Invitation issuance
+must be authorized to the selected Organization and remains part of the membership-management
+slice. Founder provisioning stays outside this organization workflow. See ADR 0002.
+
 ## Role representation and data integrity
 
 For MVP, use a fixed role vocabulary in application code and a membership-role join

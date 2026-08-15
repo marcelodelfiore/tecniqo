@@ -1,0 +1,16 @@
+<% content_for :title, "Accept invitation" %>
+
+<div class="space-y-6">
+  <div class="space-y-2">
+    <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Join <%= @invitation.organization.name %></h1>
+    <p class="text-sm text-gray-600">
+      Accept this invitation for <strong><%= @invitation.email %></strong>.
+    </p>
+  </div>
+
+  <%= form_with url: consume_invitation_path, method: :post do |form| %>
+    <%= form.hidden_field :token, value: @raw_token %>
+    <%= form.submit "Accept invitation",
+          class: "inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-blue-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+  <% end %>
+</div>

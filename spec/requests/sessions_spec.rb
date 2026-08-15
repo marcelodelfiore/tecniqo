@@ -36,12 +36,12 @@ RSpec.describe "Sessions", type: :request do
       expect(response.body).to include("Please enter your email.")
     end
 
-    it "creates a user when the normalized email does not exist" do
+    it "does not create a user when the normalized email does not exist" do
       expect do
         post session_path, params: { email: "  NEW_USER@EXAMPLE.COM  " }
-      end.to change(User, :count).by(1)
+      end.not_to change(User, :count)
 
-      expect(User.find_by(email: "new_user@example.com")).to be_present
+      expect(User.find_by(email: "new_user@example.com")).to be_nil
     end
 
     it "does not create a duplicate user" do
@@ -52,11 +52,38 @@ RSpec.describe "Sessions", type: :request do
       end.not_to change(User, :count)
     end
 
-    it "issues a login token and enqueues its email" do
+    it "issues a login token and enqueues its email for a known user" do
+      user = create(:user, email: "mailer_test@example.com")
+      create(:membership, user: user)
+
       expect do
         post session_path, params: { email: "mailer_test@example.com" }
       end.to change(LoginToken, :count).by(1)
         .and have_enqueued_mail(AuthMailer, :magic_link)
+    end
+
+    it "does not issue a token or email for an unknown user" do
+      expect do
+        post session_path, params: { email: "unknown@example.com" }
+      end.not_to change(LoginToken, :count)
+
+      expect(enqueued_jobs).to be_empty
+    end
+
+    it "does not issue a token for a legacy user without membership history" do
+      create(:user, email: "orphan@example.com")
+
+      expect do
+        post session_path, params: { email: "orphan@example.com" }
+      end.not_to change(LoginToken, :count)
+    end
+
+    it "allows a Founder to sign in without a membership" do
+      create(:user, email: "founder@example.com", founder: true)
+
+      expect do
+        post session_path, params: { email: "founder@example.com" }
+      end.to change(LoginToken, :count).by(1)
     end
 
     it "redirects back to the login page without revealing account existence" do
