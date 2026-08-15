@@ -10,9 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_15_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "action_performeds", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description", null: false
+    t.bigint "execution_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "recorded_at", null: false
+    t.bigint "recorded_by_membership_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["execution_id", "recorded_at", "id"], name: "index_action_performeds_on_chronology"
+    t.index ["execution_id"], name: "index_action_performeds_on_execution_id"
+    t.index ["id", "execution_id", "organization_id"], name: "index_action_performeds_on_id_execution_and_org", unique: true
+    t.index ["organization_id"], name: "index_action_performeds_on_organization_id"
+    t.index ["recorded_by_membership_id", "organization_id"], name: "index_action_performeds_on_recorder_and_org"
+    t.index ["recorded_by_membership_id"], name: "index_action_performeds_on_recorded_by_membership_id"
+    t.check_constraint "btrim(description) <> ''::text", name: "action_performeds_description_present"
+  end
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
@@ -94,6 +111,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
     t.index ["organization_id"], name: "index_customers_on_organization_id"
   end
 
+  create_table "evidence_references", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "evidence_id", null: false
+    t.bigint "execution_id", null: false
+    t.bigint "organization_id", null: false
+    t.string "role", default: "supporting", null: false
+    t.bigint "technical_record_id", null: false
+    t.string "technical_record_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["evidence_id", "execution_id", "organization_id"], name: "index_evidence_references_on_evidence_execution_org"
+    t.index ["evidence_id"], name: "index_evidence_references_on_evidence_id"
+    t.index ["execution_id", "organization_id"], name: "index_evidence_references_on_execution_id_and_organization_id"
+    t.index ["execution_id"], name: "index_evidence_references_on_execution_id"
+    t.index ["organization_id"], name: "index_evidence_references_on_organization_id"
+    t.index ["technical_record_type", "technical_record_id", "evidence_id", "role"], name: "index_evidence_references_on_record_evidence_and_role", unique: true
+    t.check_constraint "role::text = ANY (ARRAY['supporting'::character varying, 'before'::character varying, 'after'::character varying]::text[])", name: "evidence_references_role_check"
+    t.check_constraint "technical_record_type::text = ANY (ARRAY['Finding'::character varying, 'Measurement'::character varying, 'ActionPerformed'::character varying, 'MaterialUsed'::character varying, 'Recommendation'::character varying]::text[])", name: "evidence_references_record_type_check"
+  end
+
   create_table "evidences", force: :cascade do |t|
     t.datetime "accepted_at", null: false
     t.bigint "byte_size", null: false
@@ -111,6 +147,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
     t.bigint "uploaded_by_membership_id", null: false
     t.index ["execution_id", "organization_id"], name: "index_evidences_on_execution_id_and_organization_id"
     t.index ["execution_id"], name: "index_evidences_on_execution_id"
+    t.index ["id", "execution_id", "organization_id"], name: "index_evidences_on_id_execution_and_organization", unique: true
     t.index ["id", "organization_id"], name: "index_evidences_on_id_and_organization_id", unique: true
     t.index ["integrity_digest"], name: "index_evidences_on_integrity_digest"
     t.index ["organization_id"], name: "index_evidences_on_organization_id"
@@ -184,6 +221,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
     t.check_constraint "visit_number > 0", name: "executions_visit_number_check"
   end
 
+  create_table "findings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description", null: false
+    t.bigint "execution_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "recorded_at", null: false
+    t.bigint "recorded_by_membership_id", null: false
+    t.string "severity", default: "significant", null: false
+    t.datetime "updated_at", null: false
+    t.index ["execution_id", "recorded_at", "id"], name: "index_findings_on_chronology"
+    t.index ["execution_id"], name: "index_findings_on_execution_id"
+    t.index ["id", "execution_id", "organization_id"], name: "index_findings_on_id_execution_and_org", unique: true
+    t.index ["organization_id"], name: "index_findings_on_organization_id"
+    t.index ["recorded_by_membership_id", "organization_id"], name: "index_findings_on_recorder_and_org"
+    t.index ["recorded_by_membership_id"], name: "index_findings_on_recorded_by_membership_id"
+    t.check_constraint "btrim(description) <> ''::text", name: "findings_description_present"
+    t.check_constraint "severity::text = ANY (ARRAY['minor'::character varying, 'significant'::character varying, 'critical'::character varying]::text[])", name: "findings_severity_check"
+  end
+
   create_table "invitations", force: :cascade do |t|
     t.datetime "accepted_at"
     t.datetime "created_at", null: false
@@ -214,6 +270,48 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
     t.index ["user_id"], name: "index_login_tokens_on_user_id"
   end
 
+  create_table "materials_used", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description", null: false
+    t.bigint "execution_id", null: false
+    t.bigint "organization_id", null: false
+    t.decimal "quantity", precision: 14, scale: 3, null: false
+    t.datetime "recorded_at", null: false
+    t.bigint "recorded_by_membership_id", null: false
+    t.string "unit", null: false
+    t.datetime "updated_at", null: false
+    t.index ["execution_id", "recorded_at", "id"], name: "index_materials_used_on_chronology"
+    t.index ["execution_id"], name: "index_materials_used_on_execution_id"
+    t.index ["id", "execution_id", "organization_id"], name: "index_materials_used_on_id_execution_and_org", unique: true
+    t.index ["organization_id"], name: "index_materials_used_on_organization_id"
+    t.index ["recorded_by_membership_id", "organization_id"], name: "index_materials_used_on_recorder_and_org"
+    t.index ["recorded_by_membership_id"], name: "index_materials_used_on_recorded_by_membership_id"
+    t.check_constraint "btrim(description) <> ''::text", name: "materials_used_description_present"
+    t.check_constraint "quantity > 0::numeric", name: "materials_used_positive_quantity"
+    t.check_constraint "unit::text = ANY (ARRAY['piece'::character varying, 'm'::character varying, 'cm'::character varying, 'mm'::character varying, 'kg'::character varying, 'g'::character varying, 'L'::character varying, 'mL'::character varying]::text[])", name: "materials_used_unit_check"
+  end
+
+  create_table "measurements", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "execution_id", null: false
+    t.string "measurement_point", null: false
+    t.bigint "organization_id", null: false
+    t.string "quantity", null: false
+    t.datetime "recorded_at", null: false
+    t.bigint "recorded_by_membership_id", null: false
+    t.string "unit", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "value", precision: 18, scale: 6, null: false
+    t.index ["execution_id", "recorded_at", "id"], name: "index_measurements_on_chronology"
+    t.index ["execution_id"], name: "index_measurements_on_execution_id"
+    t.index ["id", "execution_id", "organization_id"], name: "index_measurements_on_id_execution_and_org", unique: true
+    t.index ["organization_id"], name: "index_measurements_on_organization_id"
+    t.index ["recorded_by_membership_id", "organization_id"], name: "index_measurements_on_recorder_and_org"
+    t.index ["recorded_by_membership_id"], name: "index_measurements_on_recorded_by_membership_id"
+    t.check_constraint "btrim(measurement_point::text) <> ''::text", name: "measurements_point_present"
+    t.check_constraint "quantity::text = 'voltage'::text AND unit::text = 'mV'::text OR quantity::text = 'voltage'::text AND unit::text = 'V'::text OR quantity::text = 'voltage'::text AND unit::text = 'kV'::text OR quantity::text = 'current'::text AND unit::text = 'mA'::text OR quantity::text = 'current'::text AND unit::text = 'A'::text OR quantity::text = 'frequency'::text AND unit::text = 'Hz'::text OR quantity::text = 'resistance'::text AND unit::text = 'ohm'::text OR quantity::text = 'resistance'::text AND unit::text = 'kohm'::text OR quantity::text = 'resistance'::text AND unit::text = 'Mohm'::text OR quantity::text = 'insulation_resistance'::text AND unit::text = 'kohm'::text OR quantity::text = 'insulation_resistance'::text AND unit::text = 'Mohm'::text OR quantity::text = 'insulation_resistance'::text AND unit::text = 'Gohm'::text OR quantity::text = 'continuity'::text AND unit::text = 'ohm'::text OR quantity::text = 'temperature'::text AND unit::text = 'degC'::text", name: "measurements_quantity_unit_check"
+  end
+
   create_table "membership_roles", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "membership_id", null: false
@@ -242,6 +340,23 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
     t.datetime "updated_at", null: false
     t.bigint "work_order_sequence", default: 0, null: false
     t.check_constraint "work_order_sequence >= 0", name: "organizations_work_order_sequence_check"
+  end
+
+  create_table "recommendations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description", null: false
+    t.bigint "execution_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "recorded_at", null: false
+    t.bigint "recorded_by_membership_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["execution_id", "recorded_at", "id"], name: "index_recommendations_on_chronology"
+    t.index ["execution_id"], name: "index_recommendations_on_execution_id"
+    t.index ["id", "execution_id", "organization_id"], name: "index_recommendations_on_id_execution_and_org", unique: true
+    t.index ["organization_id"], name: "index_recommendations_on_organization_id"
+    t.index ["recorded_by_membership_id", "organization_id"], name: "index_recommendations_on_recorder_and_org"
+    t.index ["recorded_by_membership_id"], name: "index_recommendations_on_recorded_by_membership_id"
+    t.check_constraint "btrim(description) <> ''::text", name: "recommendations_description_present"
   end
 
   create_table "service_types", force: :cascade do |t|
@@ -311,6 +426,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
     t.check_constraint "sequence_number > 0", name: "work_orders_sequence_number_check"
   end
 
+  add_foreign_key "action_performeds", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "action_performeds", "memberships", column: ["recorded_by_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "action_performeds", "organizations"
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "assets", "organizations"
@@ -320,6 +438,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
   add_foreign_key "assignments", "users", column: "assigned_by_id"
   add_foreign_key "assignments", "work_orders", column: ["work_order_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "customers", "organizations"
+  add_foreign_key "evidence_references", "evidences", column: ["evidence_id", "execution_id", "organization_id"], primary_key: ["id", "execution_id", "organization_id"]
+  add_foreign_key "evidence_references", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "evidence_references", "organizations"
   add_foreign_key "evidences", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "evidences", "memberships", column: ["uploaded_by_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "evidences", "organizations"
@@ -334,12 +455,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_142537) do
   add_foreign_key "executions", "organizations"
   add_foreign_key "executions", "users", column: "created_by_id"
   add_foreign_key "executions", "work_orders", column: ["work_order_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "findings", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "findings", "memberships", column: ["recorded_by_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "findings", "organizations"
   add_foreign_key "invitations", "organizations"
   add_foreign_key "invitations", "users", column: "invited_by_id"
   add_foreign_key "login_tokens", "users"
+  add_foreign_key "materials_used", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "materials_used", "memberships", column: ["recorded_by_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "materials_used", "organizations"
+  add_foreign_key "measurements", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "measurements", "memberships", column: ["recorded_by_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "measurements", "organizations"
   add_foreign_key "membership_roles", "memberships"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
+  add_foreign_key "recommendations", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "recommendations", "memberships", column: ["recorded_by_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "recommendations", "organizations"
   add_foreign_key "service_types", "organizations"
   add_foreign_key "sites", "customers", column: ["customer_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "sites", "organizations"

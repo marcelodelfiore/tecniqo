@@ -1,0 +1,2 @@
+class MeasurementPolicy < TechnicalRecordPolicy
+end

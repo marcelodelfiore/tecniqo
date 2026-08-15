@@ -1,0 +1,84 @@
+<%= form_with scope: record.model_name.param_key, url: technical_record_form_path(@work_order, @execution, record),
+              method: record.persisted? ? :patch : :post, class: "space-y-5" do |form| %>
+  <%= render "shared/form_errors", object: record %>
+
+  <% case record %>
+  <% when Finding %>
+    <div>
+      <%= form.label :description, t("technical_records.fields.finding_description"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.text_area :description, value: record.description, required: true, rows: 4, autofocus: true, class: "block w-full rounded-xl border border-gray-300 px-3 py-2.5" %>
+    </div>
+    <fieldset>
+      <legend class="mb-2 text-sm font-medium text-gray-700"><%= t("technical_records.fields.severity") %></legend>
+      <div class="grid grid-cols-3 gap-2">
+        <% Finding::SEVERITIES.each do |severity| %>
+          <label class="flex min-h-12 cursor-pointer items-center justify-center rounded-xl border border-gray-300 px-2 text-center text-sm font-medium has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 has-[:checked]:text-blue-800">
+            <%= form.radio_button :severity, severity, checked: record.severity == severity, class: "sr-only" %>
+            <%= t("finding_severities.#{severity}") %>
+          </label>
+        <% end %>
+      </div>
+      <p class="mt-2 text-sm text-gray-500"><%= t("technical_records.fields.severity_hint") %></p>
+    </fieldset>
+  <% when Measurement %>
+    <div class="grid gap-4 sm:grid-cols-2" data-controller="measurement-units">
+      <div>
+        <%= form.label :quantity, t("technical_records.fields.quantity"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+        <%= form.select :quantity, Measurement::QUANTITY_UNITS.keys.map { |quantity| [t("measurement_quantities.#{quantity}"), quantity] }, {}, required: true, class: "min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3", data: { measurement_units_target: "quantity", action: "measurement-units#change" } %>
+      </div>
+      <div>
+        <%= form.label :value, t("technical_records.fields.value"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+        <%= form.number_field :value, value: record.value, required: true, step: :any, inputmode: "decimal", class: "min-h-12 w-full rounded-xl border border-gray-300 px-3" %>
+      </div>
+      <div>
+        <%= form.label :unit, t("technical_records.fields.unit"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+        <% unit_options = Measurement::QUANTITY_UNITS.flat_map { |quantity, units| units.map { |unit| [measurement_unit_label(unit), unit, { data: { quantity: quantity } }] } } %>
+        <%= form.select :unit, options_for_select(unit_options, record.unit), {}, required: true, class: "min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3", data: { measurement_units_target: "unit" } %>
+      </div>
+      <div>
+        <%= form.label :measurement_point, t("technical_records.fields.measurement_point"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+        <%= form.text_field :measurement_point, value: record.measurement_point, required: true, placeholder: t("technical_records.fields.measurement_point_placeholder"), class: "min-h-12 w-full rounded-xl border border-gray-300 px-3" %>
+      </div>
+    </div>
+  <% when ActionPerformed %>
+    <div>
+      <%= form.label :description, t("technical_records.fields.action_description"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.text_area :description, value: record.description, required: true, rows: 4, autofocus: true, class: "block w-full rounded-xl border border-gray-300 px-3 py-2.5" %>
+    </div>
+  <% when MaterialUsed %>
+    <div>
+      <%= form.label :description, t("technical_records.fields.material_description"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :description, value: record.description, required: true, autofocus: true, class: "min-h-12 w-full rounded-xl border border-gray-300 px-3" %>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div><%= form.label :quantity, t("technical_records.fields.material_quantity"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.number_field :quantity, value: record.quantity, required: true, min: 0, step: :any, inputmode: "decimal", class: "min-h-12 w-full rounded-xl border border-gray-300 px-3" %></div>
+      <div><%= form.label :unit, t("technical_records.fields.unit"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.select :unit, MaterialUsed::UNITS.map { |unit| [t("material_units.#{unit}"), unit] }, {}, required: true, class: "min-h-12 w-full rounded-xl border border-gray-300 bg-white px-3" %></div>
+    </div>
+  <% when Recommendation %>
+    <div>
+      <%= form.label :description, t("technical_records.fields.recommendation_description"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.text_area :description, value: record.description, required: true, rows: 4, autofocus: true, class: "block w-full rounded-xl border border-gray-300 px-3 py-2.5" %>
+    </div>
+  <% end %>
+
+  <% if @evidences.any? %>
+    <fieldset class="rounded-xl border border-gray-200 p-4">
+      <legend class="px-1 text-sm font-semibold text-gray-800"><%= t("technical_records.fields.evidence") %></legend>
+      <p class="mb-3 text-sm text-gray-500"><%= t("technical_records.fields.evidence_hint") %></p>
+      <div class="space-y-2">
+        <% selected_ids = record.evidence_references.map(&:evidence_id) %>
+        <% @evidences.each do |evidence| %>
+          <label class="flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border border-gray-200 p-3 has-[:checked]:border-blue-500 has-[:checked]:bg-blue-50">
+            <%= check_box_tag "#{record.model_name.param_key}[evidence_ids][]", evidence.id, evidence.id.in?(selected_ids), class: "size-5 rounded border-gray-300 text-blue-600" %>
+            <span class="min-w-0"><span class="block truncate text-sm font-medium"><%= evidence.original_filename %></span><span class="block text-xs text-gray-500"><%= t("evidence_types.#{evidence.evidence_type}") %></span></span>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+  <% end %>
+
+  <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+    <%= link_to t("actions.cancel"), work_order_execution_path(@work_order, @execution), class: "inline-flex min-h-12 items-center justify-center rounded-xl px-4 font-medium text-gray-700" %>
+    <%= form.submit t(record.persisted? ? "actions.save" : "actions.add"), class: "min-h-12 rounded-xl bg-blue-700 px-5 font-semibold text-white" %>
+  </div>
+<% end %>

@@ -28,7 +28,7 @@ not the product's strategic endpoint.
 
 ## Current development focus
 
-Phase 5 planning — Findings → Measurements → Evidence → Actions → Materials/Recommendations.
+Phase 5 validation — Findings → Measurements → Evidence → Actions → Materials/Recommendations.
 
 ## Success criteria
 

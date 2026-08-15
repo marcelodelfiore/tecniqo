@@ -1,0 +1,2 @@
+class ActionPerformedPolicy < TechnicalRecordPolicy
+end

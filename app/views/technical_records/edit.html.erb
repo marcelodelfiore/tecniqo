@@ -1,0 +1,10 @@
+<% content_for :title, t("technical_records.edit_title", record: t("technical_records.types.#{@technical_record.model_name.param_key}")) %>
+<div class="mx-auto max-w-2xl space-y-6">
+  <%= render "shared/breadcrumbs", items: [
+        { label: @work_order.public_identifier, path: work_order_path(@work_order) },
+        { label: t("executions.visit", number: @execution.visit_number), path: work_order_execution_path(@work_order, @execution) },
+        { label: t("technical_records.edit_title", record: t("technical_records.types.#{@technical_record.model_name.param_key}")) }
+      ] %>
+  <%= render "shared/page_header", title: t("technical_records.edit_title", record: t("technical_records.types.#{@technical_record.model_name.param_key}")), subtitle: t("technical_records.context_automatic") %>
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><%= render "technical_records/form", record: @technical_record %></div>
+</div>

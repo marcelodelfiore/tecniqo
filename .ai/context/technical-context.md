@@ -116,6 +116,20 @@ tenant-sensitive rules than explicit policies and scopes.
   Rails time zone. Organization-specific zones remain deferred.
 - ADR 0006 records event/state, occurrence timestamp, participant, and visit-scheduling decisions.
 
+## Phase 5 structured technical record
+
+- `Finding`, `Measurement`, `ActionPerformed`, `MaterialUsed`, and `Recommendation` belong
+  directly to Execution and Organization with composite tenant foreign keys.
+- Authenticated participating Technician Membership and `recorded_at` are server-derived.
+- Measurements persist `numeric(18,6)` values and stable quantity/unit keys; the curated
+  `Measurement::QUANTITY_UNITS` map and a PostgreSQL check reject incompatible pairs.
+- `EvidenceReference` reuses immutable Execution-owned Evidence. A composite foreign key
+  enforces Evidence, Execution, and Organization consistency; unlink never deletes Evidence.
+- Participating Technicians create/edit/remove before submission. Founder, Administrator,
+  Supervisor, and Engineer read according to Execution scope without acquiring authorship.
+- The Execution page provides focused mobile-first capture and grouped responsive technical
+  presentation. ADR 0008 records vocabulary, lifecycle, and linking decisions.
+
 ## Local environment
 
 The complete containerized environment requires only Docker:

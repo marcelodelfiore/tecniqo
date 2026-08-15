@@ -1,0 +1,2 @@
+class FindingPolicy < TechnicalRecordPolicy
+end

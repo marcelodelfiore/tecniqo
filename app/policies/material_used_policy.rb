@@ -1,0 +1,2 @@
+class MaterialUsedPolicy < TechnicalRecordPolicy
+end

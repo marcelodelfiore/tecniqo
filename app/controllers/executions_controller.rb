@@ -12,6 +12,21 @@ class ExecutionsController < ApplicationController
                                        .includes(:uploaded_by_membership, original_attachment: :blob)
                                        .order(created_at: :desc)
     @participants = @execution.execution_participants.includes(membership: :user)
+    @findings = policy_scope(Finding).where(execution: @execution)
+                                     .includes(evidence_references: { evidence: { original_attachment: :blob } })
+                                     .chronological
+    @measurements = policy_scope(Measurement).where(execution: @execution)
+                                           .includes(evidence_references: { evidence: { original_attachment: :blob } })
+                                           .chronological
+    @actions_performed = policy_scope(ActionPerformed).where(execution: @execution)
+                                                       .includes(evidence_references: { evidence: { original_attachment: :blob } })
+                                                       .chronological
+    @materials_used = policy_scope(MaterialUsed).where(execution: @execution)
+                                                 .includes(evidence_references: { evidence: { original_attachment: :blob } })
+                                                 .chronological
+    @recommendations = policy_scope(Recommendation).where(execution: @execution)
+                                                     .includes(evidence_references: { evidence: { original_attachment: :blob } })
+                                                     .chronological
     @eligible_participants = policy_scope(Membership,
                                           policy_scope_class: ExecutionParticipantPolicy::EligibleScope)
   end

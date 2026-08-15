@@ -35,6 +35,12 @@ class Execution < ApplicationRecord
   has_many :execution_events, -> { chronological }, dependent: :restrict_with_exception,
                                                     inverse_of: :execution
   has_many :evidences, dependent: :restrict_with_exception
+  has_many :findings, -> { chronological }, dependent: :restrict_with_exception
+  has_many :measurements, -> { chronological }, dependent: :restrict_with_exception
+  has_many :action_performeds, -> { chronological }, dependent: :restrict_with_exception
+  has_many :materials_used, -> { chronological }, class_name: "MaterialUsed",
+                                                  dependent: :restrict_with_exception
+  has_many :recommendations, -> { chronological }, dependent: :restrict_with_exception
 
   normalizes :outcome_note, with: ->(value) { value.to_s.strip.presence }
 

@@ -2,11 +2,26 @@
 
 ## Current milestone
 
-- **Name:** Phase 4.6 — Complete Containerized Development Infrastructure
-- **Status:** Complete and validated
-- **Target outcome:** One-command Rails, PostgreSQL, Garage, and Mailpit startup
+- **Name:** Phase 5 — Structured Technical Field Capture
+- **Status:** Automated validation complete; responsive acceptance pending
+- **Target outcome:** Simple field actions produce evidence-backed structured engineering facts
 
 ## Completed
+
+### 2026-08-15 — Implement structured technical field capture
+
+- Added explicit Execution-owned Findings, Measurements, Actions Performed, Materials Used,
+  and Recommendations with server-derived tenant, Technician provenance, and timestamps.
+- Added decimal measurements with a curated electrical quantity/unit vocabulary and database
+  compatibility enforcement; Finding severity is explicitly separate from Work Order priority.
+- Added same-Execution Evidence references that reuse immutable originals across multiple facts,
+  preserve fingerprints, and distinguish unlinking from Evidence deletion.
+- Added focused mobile-first capture forms, grouped Engineer-readable presentation, Pundit
+  authorization, submission locking, factories, canonical scenario coverage, seeds, and I18n.
+- Recorded the durable domain, lifecycle, vocabulary, and Evidence-linking decisions in ADR 0008.
+- Validation: 259 RSpec examples, RuboCop, Zeitwerk, direct Brakeman, dependency audits,
+  Preline verification, migrations, idempotent seeds, and diff checks passed. Canonical CI
+  passed every step except its existing Brakeman latest-version gate (8.0.5 locked; 8.0.6 latest).
 
 ### 2026-08-15 — Add complete local Compose infrastructure
 
@@ -180,13 +195,12 @@
 
 ## In progress
 
-- Phase 5 requirements inspection and task definition.
+- Phase 5 responsive browser acceptance.
 
 ## Planned
 
-- Define Phase 5 structured-fact, evidence-linking, authorship, lifecycle, authorization, UI,
-  and test boundaries.
-- Implement Phase 5 only after its task brief and plan are reviewed.
+- Phase 6 investigation: Engineering Review, clarification/correction workflow, technical
+  revisions, and report-ready structured records.
 
 ## Known defects and technical debt
 

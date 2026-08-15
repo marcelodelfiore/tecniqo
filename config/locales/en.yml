@@ -13,6 +13,7 @@ en:
       last_execution_participant: "cannot remove the only participant"
       participant_has_events: "cannot remove a participant who recorded field events"
       evidence_immutable: "cannot be changed or removed after acceptance"
+      incompatible: "cannot be used for %{quantity}"
   app:
     tagline: "Industrial maintenance engineering"
   locales:
@@ -33,6 +34,7 @@ en:
     open_menu: "Open menu"
     close_menu: "Close menu"
   actions:
+    add: "Add"
     cancel: "Cancel"
     edit: "Edit"
     save: "Save changes"
@@ -167,6 +169,10 @@ en:
       invalid_transition: "That action is not valid for the visit's current state."
     evidences:
       created: "Evidence uploaded and fingerprinted."
+    technical_records:
+      created: "%{record} added."
+      updated: "%{record} updated."
+      destroyed: "%{record} removed."
   evidences:
     title: "Evidence"
     empty: "No evidence has been uploaded for this visit."
@@ -474,3 +480,36 @@ en:
     wrong_equipment: "Wrong equipment identification"
     production_unavailable: "Production could not stop"
     other: "Other"
+  technical_records:
+    title: "Technical record"
+    subtitle: "Structured field facts and the original evidence that supports them."
+    count: { one: "1 record", other: "%{count} records" }
+    total_evidence: { one: "1 evidence item", other: "%{count} evidence items" }
+    empty: "Nothing recorded yet."
+    add: "+ %{record}"
+    new_title: "Add %{record}"
+    edit_title: "Edit %{record}"
+    context_automatic: "Visit, asset, technician, and time are recorded automatically."
+    confirm_remove: "Remove this field record? Original evidence will not be deleted."
+    types: { finding: "Finding", measurement: "Measurement", action_performed: "Work performed", material_used: "Material used", recommendation: "Recommendation" }
+    groups: { findings: "Findings", measurements: "Measurements", actions_performed: "Work performed", materials_used: "Materials used", recommendations: "Recommendations" }
+    fields:
+      finding_description: "What did you find?"
+      severity: "Technical significance"
+      severity_hint: "This describes the finding, not the Work Order priority."
+      quantity: "What are you measuring?"
+      value: "Value"
+      unit: "Unit"
+      measurement_point: "Where / Context"
+      measurement_point_placeholder: "e.g. L1-L2 or terminal T2"
+      action_description: "What did you do?"
+      material_description: "Material description"
+      material_quantity: "Quantity"
+      recommendation_description: "What do you recommend?"
+      evidence: "Supporting evidence"
+      evidence_hint: "Select evidence already captured during this visit."
+  finding_severities: { minor: "Minor", significant: "Significant", critical: "Critical" }
+  measurement_quantities: { voltage: "Voltage", current: "Current", frequency: "Frequency", resistance: "Resistance", insulation_resistance: "Insulation resistance", continuity: "Continuity", temperature: "Temperature" }
+  measurement_units: { mV: "mV", V: "V", kV: "kV", mA: "mA", A: "A", Hz: "Hz", ohm: "Ω", kohm: "kΩ", Mohm: "MΩ", Gohm: "GΩ", degC: "°C" }
+  material_units: { piece: "piece(s)", m: "m", cm: "cm", mm: "mm", kg: "kg", g: "g", L: "L", mL: "mL" }
+  evidence_reference_roles: { supporting: "Evidence", before: "Before", after: "After" }

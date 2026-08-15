@@ -2,8 +2,7 @@
 
 ## Current objective
 
-Phase 4.6 — complete containerized development infrastructure — is implemented and
-validated. Phase 5 structured technical field capture remains deferred.
+Phase 5 — structured technical field capture — is implemented and automated validation is complete.
 
 ## Current branch
 
@@ -47,13 +46,12 @@ Phase 4 responsive browser smoke testing and acceptance review are complete.
 
 ## In progress
 
-- Developer acceptance smoke testing of the Phase 4.6 stack.
+- Developer responsive acceptance testing of Phase 5 field and Engineer views.
 
 ## Next actions
 
-1. Developer verifies `docker compose up --build`, login through Mailpit, and Evidence upload.
-2. Inspect the canonical scenario's Phase 5 technical field facts.
-3. Define Phase 5 relationships and authorization before editing domain code.
+1. Developer smoke-tests technician capture on phone and Engineer presentation on desktop.
+2. Plan Phase 6 Engineering Review and clarification without mutating submitted facts.
 
 ## Acceptance criteria for the current activity
 
@@ -125,26 +123,28 @@ Phase 4 responsive browser smoke testing and acceptance review are complete.
 
 ## Risks and blockers
 
-- None currently identified; Phase 5 domain and evidence-linking rules still require planning.
+- No implementation blocker remains; responsive browser acceptance is pending.
 - Organization-specific time zones and offline synchronization remain intentionally deferred.
 
 ## Validation status
 
-- Ruby 4.0.6 `bundle exec rspec`: 242 examples, 0 failures.
-- Ruby 4.0.6 `bin/rubocop`: 147 files, no offenses.
+- Ruby 4.0.6 `bundle exec rspec`: 259 examples, 0 failures.
+- Ruby 4.0.6 `bin/rubocop`: 187 files, no offenses.
 - Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
 - Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings.
 - `bin/bundler-audit`, `bin/importmap audit`, and `npm run verify:preline`: passed.
 - `npm audit --audit-level=high`: passed with no vulnerabilities.
 - `bin/rails db:migrate:status`: all migrations up.
-- Development seeds ran twice successfully, confirming idempotent Phase 4 demo data.
+- Development seeds ran twice successfully, preserving submitted visits and confirming
+  idempotent Phase 5 demo data for editable visits.
 - `git diff --check`: passed.
-- `bin/ci`: setup, 242 tests, style, JavaScript setup, Preline, NPM, gem, and Importmap
+- `bin/ci`: setup, 259 tests, style, JavaScript setup, Preline, NPM, gem, and Importmap
   audits passed; the wrapper stopped only because locked Brakeman 8.0.5 is not latest 8.0.6.
   Direct `bundle exec brakeman --no-pager` completed with no warnings.
 
 ## Handoff note
 
-Phases 1 through 4 are complete and accepted. Phase 5 planning is next and must add technical field
-facts without weakening the Phase 4 event history or collapsing Work Order, Assignment, Execution,
-and participant responsibilities.
+Phases 1 through 4 are complete and accepted. Phase 5 is implemented with explicit technical
+facts, structured decimal Measurements, immutable-Evidence references, participant provenance,
+and submission locking. Responsive acceptance is next; Phase 6 should investigate Engineering
+Review and clarification without silently rewriting submitted field history.

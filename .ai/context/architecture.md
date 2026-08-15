@@ -17,6 +17,20 @@ and runs Solid Queue inside Puma. PostgreSQL and Garage use named volumes; only 
 Mailpit UI, and Garage development APIs bind to localhost. Kamal remains the production
 deployment path, separate from local Compose defaults.
 
+## Phase 5 structured technical field capture
+
+Each Execution owns explicit Findings, Measurements, Actions Performed, Materials Used,
+and Recommendations. The server derives tenant, visit, participating Technician author,
+and record time. Technicians may correct or remove these facts before submission; the
+existing submitted Execution boundary locks facts and their Evidence references.
+
+Measurement uses decimal persistence and a curated, localizable electrical quantity/unit
+mapping backed by a PostgreSQL compatibility constraint. Finding severity expresses
+technical significance and never changes Work Order priority. `EvidenceReference` links
+existing immutable Execution-owned Evidence to technical facts without transferring binary
+ownership or duplicating fingerprints. A composite Evidence foreign key enforces same-tenant,
+same-Execution linking. See ADR 0008.
+
 ## System overview
 
 Técniqo is a conventional Rails monolith. PostgreSQL is the system of record;

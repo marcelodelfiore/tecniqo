@@ -24,6 +24,11 @@ Rails.application.routes.draw do
   resources :work_orders, except: :destroy do
     resource :assignment, only: :create
     resources :executions, only: %i[show create] do
+      resources :findings, except: %i[index show]
+      resources :measurements, except: %i[index show]
+      resources :action_performeds, path: "work-performed", except: %i[index show]
+      resources :materials_used, path: "materials", except: %i[index show]
+      resources :recommendations, except: %i[index show]
       resources :evidences, only: :create do
         get :original, on: :member
       end

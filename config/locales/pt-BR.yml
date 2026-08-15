@@ -13,6 +13,7 @@
       last_execution_participant: "não permite remover o único participante"
       participant_has_events: "não permite remover participante que registrou eventos de campo"
       evidence_immutable: "não pode ser alterada nem removida após a aceitação"
+      incompatible: "não pode ser usada para %{quantity}"
   app:
     tagline: "Engenharia de manutenção industrial"
   locales:
@@ -33,6 +34,7 @@
     open_menu: "Abrir menu"
     close_menu: "Fechar menu"
   actions:
+    add: "Adicionar"
     cancel: "Cancelar"
     edit: "Editar"
     save: "Salvar alterações"
@@ -167,6 +169,10 @@
       invalid_transition: "Esta ação não é válida para o estado atual da visita."
     evidences:
       created: "Evidência enviada e identificada por impressão digital."
+    technical_records:
+      created: "%{record} adicionada."
+      updated: "%{record} atualizada."
+      destroyed: "%{record} removida."
   evidences:
     title: "Evidências"
     empty: "Nenhuma evidência foi enviada para esta visita."
@@ -474,3 +480,36 @@
     wrong_equipment: "Identificação incorreta do equipamento"
     production_unavailable: "Produção não pôde parar"
     other: "Outro"
+  technical_records:
+    title: "Registro técnico"
+    subtitle: "Fatos estruturados de campo e as evidências originais que os sustentam."
+    count: { one: "1 registro", other: "%{count} registros" }
+    total_evidence: { one: "1 evidência", other: "%{count} evidências" }
+    empty: "Nada registrado ainda."
+    add: "+ %{record}"
+    new_title: "Adicionar %{record}"
+    edit_title: "Editar %{record}"
+    context_automatic: "Visita, ativo, técnico e horário são registrados automaticamente."
+    confirm_remove: "Remover este registro de campo? A evidência original não será excluída."
+    types: { finding: "Constatação", measurement: "Medição", action_performed: "Trabalho realizado", material_used: "Material utilizado", recommendation: "Recomendação" }
+    groups: { findings: "Constatações", measurements: "Medições", actions_performed: "Trabalhos realizados", materials_used: "Materiais utilizados", recommendations: "Recomendações" }
+    fields:
+      finding_description: "O que você encontrou?"
+      severity: "Significância técnica"
+      severity_hint: "Descreve a constatação, não a prioridade da Ordem de Serviço."
+      quantity: "O que você está medindo?"
+      value: "Valor"
+      unit: "Unidade"
+      measurement_point: "Onde / Contexto"
+      measurement_point_placeholder: "ex.: L1-L2 ou terminal T2"
+      action_description: "O que você fez?"
+      material_description: "Descrição do material"
+      material_quantity: "Quantidade"
+      recommendation_description: "O que você recomenda?"
+      evidence: "Evidências de apoio"
+      evidence_hint: "Selecione evidências já capturadas nesta visita."
+  finding_severities: { minor: "Menor", significant: "Significativa", critical: "Crítica" }
+  measurement_quantities: { voltage: "Tensão", current: "Corrente", frequency: "Frequência", resistance: "Resistência", insulation_resistance: "Resistência de isolação", continuity: "Continuidade", temperature: "Temperatura" }
+  measurement_units: { mV: "mV", V: "V", kV: "kV", mA: "mA", A: "A", Hz: "Hz", ohm: "Ω", kohm: "kΩ", Mohm: "MΩ", Gohm: "GΩ", degC: "°C" }
+  material_units: { piece: "peça(s)", m: "m", cm: "cm", mm: "mm", kg: "kg", g: "g", L: "L", mL: "mL" }
+  evidence_reference_roles: { supporting: "Evidência", before: "Antes", after: "Depois" }

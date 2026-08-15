@@ -1,0 +1,2 @@
+class RecommendationPolicy < TechnicalRecordPolicy
+end

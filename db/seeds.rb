@@ -73,4 +73,34 @@ if Rails.env.development? || ENV["LOAD_DEMO_DATA"] == "true"
     Execution.create_for!(work_order: work_order, created_by: founder,
                           scheduled_start: work_order.scheduled_start)
   end
+
+  execution = work_order.executions.first
+  unless execution.submitted?
+    technical_attributes = {
+      organization: organization,
+      execution: execution,
+      recorded_by_membership: technician_membership
+    }
+    Finding.find_or_create_by!(execution: execution,
+                               description: "Abnormal heating observed at contactor terminal T2.") do |record|
+      record.assign_attributes(technical_attributes.merge(severity: "significant", recorded_at: Time.current))
+    end
+    [ [ "temperature", 87.3, "degC", "Contactor terminal T2" ],
+      [ "voltage", 397, "V", "L1-L2" ] ].each do |quantity, value, unit, point|
+      Measurement.find_or_create_by!(execution: execution, quantity: quantity, measurement_point: point) do |record|
+        record.assign_attributes(technical_attributes.merge(value: value, unit: unit, recorded_at: Time.current))
+      end
+    end
+    ActionPerformed.find_or_create_by!(execution: execution,
+                                       description: "Damaged terminal replaced and connection retorqued.") do |record|
+      record.assign_attributes(technical_attributes.merge(recorded_at: Time.current))
+    end
+    MaterialUsed.find_or_create_by!(execution: execution, description: "Replacement terminal") do |record|
+      record.assign_attributes(technical_attributes.merge(quantity: 1, unit: "piece", recorded_at: Time.current))
+    end
+    Recommendation.find_or_create_by!(execution: execution,
+                                      description: "Reinspect connection during next scheduled shutdown.") do |record|
+      record.assign_attributes(technical_attributes.merge(recorded_at: Time.current))
+    end
+  end
 end
