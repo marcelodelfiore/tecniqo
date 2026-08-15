@@ -3,7 +3,9 @@
 <div class="space-y-6">
   <%= render 'shared/page_header',
       title: 'Dashboard',
-      subtitle: 'Your authenticated area is working correctly.' %>
+      subtitle: 'Your authenticated area is working correctly.',
+      action: (link_to('Manage invitations', invitations_path,
+        class: 'inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2') if policy(Invitation).index?) %>
 
   <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
     <%= render 'shared/stat_card',

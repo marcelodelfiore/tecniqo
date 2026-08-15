@@ -1,0 +1,40 @@
+<% content_for :title, "Invitations" %>
+
+<div class="space-y-6">
+  <%= render "shared/page_header",
+        title: "Invitations",
+        subtitle: "Pending invitations for #{Current.organization.name}.",
+        action: link_to("Invite member", new_invitation_path,
+          class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2") %>
+
+  <% if @invitations.any? %>
+    <div class="space-y-3">
+      <% @invitations.each do |invitation| %>
+        <article class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0">
+              <p class="truncate font-medium text-gray-900"><%= invitation.email %></p>
+              <p class="mt-1 text-sm text-gray-600">
+                <%= invitation.roles.map(&:humanize).to_sentence %>
+                · Expires <%= time_tag invitation.expires_at, invitation.expires_at.to_fs(:long) %>
+              </p>
+            </div>
+
+            <div class="flex flex-col gap-2 sm:flex-row">
+              <%= button_to "Resend", resend_invitation_path(invitation),
+                    method: :post,
+                    class: "inline-flex min-h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+              <%= button_to "Revoke", invitation_path(invitation),
+                    method: :delete,
+                    class: "inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" %>
+            </div>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render "shared/empty_state",
+          title: "No pending invitations",
+          message: "Invite a member to give them access to this organization." %>
+  <% end %>
+</div>

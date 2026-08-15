@@ -9,8 +9,12 @@ Rails.application.routes.draw do
   post "/session/confirm", to: "sessions#update", as: :consume_magic_session
   delete "/session", to: "sessions#destroy"
 
-  get "/invitation", to: "invitations#show", as: :invitation
+  get "/invitation", to: "invitations#show", as: :invitation_acceptance
   post "/invitation", to: "invitations#update", as: :consume_invitation
+
+  resources :invitations, only: %i[index new create destroy] do
+    post :resend, on: :member
+  end
 
   resource :organization_selection, only: %i[show update]
   resource :dashboard, only: %i[show]

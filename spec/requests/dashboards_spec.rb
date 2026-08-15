@@ -73,5 +73,22 @@ RSpec.describe 'Dashboard', type: :request do
       expect(response.body).to include(remaining_membership.organization.name)
       expect(response.body).not_to include(membership.organization.name)
     end
+
+    it 'shows invitation management only to Administrators' do
+      administrator = create(:membership)
+      create(:membership_role, membership: administrator, role: 'administrator')
+      sign_in(administrator.user)
+
+      get dashboard_path
+      expect(response.body).to include('Manage invitations')
+
+      delete session_path
+      technician = create(:membership)
+      create(:membership_role, membership: technician, role: 'technician')
+      sign_in(technician.user)
+
+      get dashboard_path
+      expect(response.body).not_to include('Manage invitations')
+    end
   end
 end

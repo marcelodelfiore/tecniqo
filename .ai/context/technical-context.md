@@ -27,7 +27,10 @@ membership history receive the generic sign-in response but no token or email; F
 the explicit exception. Invitation tokens also store only a SHA-256 digest, expire after
 seven days, and use a no-store GET confirmation plus CSRF-protected POST acceptance. The
 POST atomically creates/reuses the User, activates Membership, grants invited roles, and
-establishes the session. ADR 0002 records this decision.
+establishes the session. Active current-organization Administrators can issue, resend, and
+revoke invitations through the Rails UI; Founder has the same capability only inside an
+explicitly selected Organization. Delivery uses Active Job and the configured SMTP server.
+ADR 0002 records the provisioning decision.
 
 ## Authorization foundation
 

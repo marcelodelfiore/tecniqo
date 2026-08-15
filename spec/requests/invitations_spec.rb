@@ -10,7 +10,7 @@ RSpec.describe "Invitations", type: :request do
         invited_by: create(:user)
       )
 
-      get invitation_path(token: raw_token)
+      get invitation_acceptance_path(token: raw_token)
 
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(invitation.organization.name)
@@ -20,7 +20,7 @@ RSpec.describe "Invitations", type: :request do
     end
 
     it "rejects an invalid or expired invitation" do
-      get invitation_path(token: "invalid")
+      get invitation_acceptance_path(token: "invalid")
       expect(response).to redirect_to(new_session_path)
 
       invitation, raw_token = Invitation.issue_for!(
@@ -31,7 +31,7 @@ RSpec.describe "Invitations", type: :request do
       )
       invitation.update!(expires_at: 1.minute.ago)
 
-      get invitation_path(token: raw_token)
+      get invitation_acceptance_path(token: raw_token)
       expect(response).to redirect_to(new_session_path)
     end
   end

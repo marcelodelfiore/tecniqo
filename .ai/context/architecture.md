@@ -57,8 +57,10 @@ Ordinary Users enter the system through an Organization invitation; unknown sign
 do not create identities. Invitations carry a normalized email, fixed role values, expiry,
 revocation/acceptance state, and only a digest of the emailed token. Acceptance creates or
 reuses the global User and establishes Membership plus roles atomically. Invitation issuance
-must be authorized to the selected Organization and remains part of the membership-management
-slice. Founder provisioning stays outside this organization workflow. See ADR 0002.
+is policy-scoped to the selected Organization and allowed only to its active Administrators;
+Founder may issue invitations only after explicitly selecting the tenant. Resend rotates the
+token by revoking the prior invitation, while revoke preserves the invitation audit record.
+Founder provisioning itself stays outside this organization workflow. See ADR 0002.
 
 ## Role representation and data integrity
 

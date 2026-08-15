@@ -7,6 +7,7 @@ class Invitation < ApplicationRecord
   normalizes :email, with: ->(email) { email.to_s.strip.downcase }
 
   validates :email, :token_digest, :expires_at, presence: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
   validate :roles_are_valid
 
   scope :active, -> { where(accepted_at: nil, revoked_at: nil).where("expires_at > ?", Time.current) }
@@ -70,6 +71,10 @@ class Invitation < ApplicationRecord
 
   def active?
     accepted_at.nil? && revoked_at.nil? && expires_at.future?
+  end
+
+  def revoke!
+    update!(revoked_at: Time.current) if active?
   end
 
   private

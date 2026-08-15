@@ -3,11 +3,23 @@
 ## Current milestone
 
 - **Name:** Phase 1 — Identity, Organization, Roles, and Authorization Foundation
-- **Status:** Invitation acceptance implemented; issuance and membership administration pending
+- **Status:** Browser invitation workflow implemented; membership administration pending
 - **Target outcome:** Explicit, testable tenant isolation and contextual authorization on
   top of the existing authentication system
 
 ## Completed
+
+### 2026-08-15 — Add authorized invitation management UI
+
+- Added a responsive pending-invitation list and role-selection form for the selected Organization.
+- Active Administrators can issue, resend, and revoke invitations; Founder can do so only
+  within an explicitly selected tenant.
+- Resend revokes the prior token and queues a replacement email; revoke preserves the audit row.
+- Added policy-scoped loading, controller verification, email validation, and conditional
+  dashboard navigation.
+- Added request and policy coverage for rendered UI, multiple roles, queued delivery,
+  validation failures, inactive/non-Administrators, Founder, and cross-tenant IDs.
+- Validation: 129 RSpec examples passed; RuboCop, Zeitwerk, Brakeman, and diff checks passed.
 
 ### 2026-08-15 — Adopt invitation-only provisioning and implement acceptance
 
@@ -73,11 +85,10 @@
 
 ## In progress
 
-- Authorized invitation issuance and membership administration planning.
+- Membership administration and last-active-Administrator invariant planning.
 
 ## Planned
 
-- Implement Administrator-authorized invitation issuance and reissuance UI.
 - Implement membership administration with last-active-Administrator protection.
 - Add resource-specific tenant policies/scopes with each future vertical slice.
 - After Phase 1 passes security checks, begin the Customer → Site → Asset vertical slice.
@@ -86,7 +97,6 @@
 
 | Item | Impact | Priority | Evidence | Intended action |
 |---|---|---|---|---|
-| Invitation issuance has no UI | Administrators cannot yet onboard members without console access | P0 | Invitation model/mailer | Add authorized issuance next |
 | Starter copy remains in UI | Product identity/navigation is incomplete | P2 | layouts/home/dashboard | Replace within the first relevant UI slice |
 | Generator text remains in token confirmation | Duplicate/irrelevant sign-in content | P2 | `app/views/sessions/show.html.erb` | Fix in a focused authentication UI cleanup |
 | Duplicate copied documentation trees | Agents may edit the wrong context/ADR path | P2 | `docs/.ai/`, `docs/docs/decisions/` | Clean up only with separate approval |

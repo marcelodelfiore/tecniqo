@@ -12,7 +12,7 @@ RSpec.describe InvitationMailer, type: :mailer do
 
       expect(mail.to).to eq([ "person@example.com" ])
       expect(mail.subject).to eq("You're invited to Técniqo Services")
-      expect(mail.text_part.body.decoded).to include(invitation_url(token: "raw-token"))
+      expect(mail.text_part.body.decoded).to include(invitation_acceptance_url(token: "raw-token"))
     end
   end
 end
