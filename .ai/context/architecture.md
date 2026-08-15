@@ -24,7 +24,9 @@ User (global authenticated identity)
 Authentication → tenant context → membership/roles → resource policy → policy scope
 ```
 
-This is the accepted conceptual model, not an already-implemented schema.
+The Organization, Membership, fixed membership-role, and Founder persistence foundation
+is implemented. Current-organization selection and resource-specific policies/scopes are
+not yet implemented.
 
 - One User may belong to multiple Organizations.
 - A Membership represents one User's relationship with one Organization.

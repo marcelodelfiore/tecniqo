@@ -3,11 +3,27 @@
 ## Current milestone
 
 - **Name:** Phase 1 — Identity, Organization, Roles, and Authorization Foundation
-- **Status:** Architecture defined; implementation pending approval
+- **Status:** Persistence foundation implemented; tenant-context authorization pending
 - **Target outcome:** Explicit, testable tenant isolation and contextual authorization on
   top of the existing authentication system
 
 ## Completed
+
+### 2026-08-15 — Implement Phase 1 persistence and Pundit foundation
+
+- Added Organization, Membership, and fixed MembershipRole persistence with foreign keys,
+  non-null fields, unique indexes, and a PostgreSQL role-vocabulary check constraint.
+- Added the non-null Founder capability to User, defaulting to false.
+- Added explicit active/inactive membership state and restricted deletion of users or
+  organizations that retain memberships.
+- Installed Pundit 2.5.2, mapped its authorization subject to `Current.user`, and added a
+  default-deny application policy and scope.
+- Added focused factories and model/database/policy coverage while preserving the existing
+  passwordless authentication behavior.
+- Validation: 70 RSpec examples passed; RuboCop, Zeitwerk, Brakeman, Bundler Audit,
+  Importmap Audit, Preline verification, migration status, and diff checks passed.
+- Canonical `bin/ci` passed through Importmap Audit but stopped at its final version check
+  because Brakeman 8.0.5 is locked while 8.0.6 is available; the direct scan reported no warnings.
 
 ### 2026-08-14 — Upgrade Ruby runtime
 
@@ -32,13 +48,16 @@
 
 ## In progress
 
-- Human review and approval of ADR 0001 and the next implementation slice.
+- Design and implementation planning for validated current-organization context,
+  resource policies/scopes, controller verification, and denial handling.
 
 ## Planned
 
-- Implement Organization, Membership, membership roles, Founder privilege, and Pundit
-  integration with focused model, policy, scope, and request coverage.
 - Establish validated current-organization context and denial behavior.
+- Add tenant-aware policy and scope coverage, including inactive membership, cross-tenant,
+  multi-role, and Founder cases.
+- Implement membership administration with last-active-Administrator protection after
+  provisioning behavior is decided.
 - After Phase 1 passes security checks, begin the Customer → Site → Asset vertical slice.
 
 ## Known defects and technical debt

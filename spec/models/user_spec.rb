@@ -41,6 +41,12 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'platform privilege' do
+    it 'is not a Founder by default' do
+      expect(create(:user)).not_to be_founder
+    end
+  end
+
   describe 'email normalization' do
     it 'strips surrounding spaces' do
       user = create(:user, email: '  Marcelo@example.com  ')

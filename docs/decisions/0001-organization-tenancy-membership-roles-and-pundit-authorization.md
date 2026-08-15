@@ -20,7 +20,7 @@ answer them.
 
 ## Decision drivers
 
-- Make accidental cross-organization access difficult.
+- Make accidental cross-organization access not possible.
 - Support one User in multiple Organizations and multiple roles per Membership.
 - Keep Founder exceptional and auditable.
 - Separate responsibilities (roles) from contextual decisions (policies).

@@ -13,20 +13,22 @@ Phase 1 — Identity, Organization, Roles, and Authorization Foundation.
 The Rails application runs on Ruby 4.0.6 and provides tested passwordless authentication,
 a global User identity, `Current.user`, PostgreSQL, RSpec, and a responsive
 Tailwind/Preline/Hotwire shell.
-Organization, membership roles, current-organization selection, and Pundit are not yet
-implemented. ADR 0001 defines their intended boundaries.
+Organization, Membership, fixed membership-role assignments, the Founder flag, Pundit
+integration, and a default-deny application policy are implemented. Current-organization
+selection, resource policies/scopes, controller verification, and denial handling are not
+yet implemented. ADR 0001 defines their accepted boundaries.
 
 ## In progress
 
-- Human review of the Phase 1 research and architecture decision.
+- Planning the current-organization and tenant-authorization slice.
 
 ## Next actions
 
-1. Approve a focused implementation slice adding Pundit and the Organization,
-   Membership, and fixed membership-role persistence foundation.
-2. Define invitations/provisioning and whether unknown-email auto-registration remains valid.
-3. Implement current-organization establishment and foundational policies/scopes with
+1. Implement current-organization establishment and foundational policies/scopes with
    cross-tenant, unauthorized, multi-role, and Founder tests.
+2. Define invitations/provisioning and whether unknown-email auto-registration remains valid.
+3. Implement membership administration and transactional protection for the last active
+   Administrator.
 
 Do not start Customer → Site → Asset until this foundation is implemented and validated.
 
@@ -37,6 +39,7 @@ Do not start Customer → Site → Asset until this foundation is implemented an
 - [x] Identity, multi-role membership, tenancy, Founder, policy, and integrity decisions recorded.
 - [x] Responsive Rails/Hotwire Native readiness recorded.
 - [x] No speculative business-domain models or native applications introduced.
+- [x] Pundit and the Organization/Membership/fixed-role/Founder persistence foundation implemented.
 
 ## Important findings and decisions
 
@@ -45,6 +48,8 @@ Do not start Customer → Site → Asset until this foundation is implemented an
 - Organization is the tenant; one global User may have multiple Memberships and roles.
 - Founder remains a platform-level User capability and centralized policy exception.
 - Fixed MVP role values avoid speculative editable permission infrastructure.
+- Membership lifecycle is an explicit non-null active state; users and organizations with
+  memberships cannot be deleted through their associations.
 - The last active administrator needs transactional protection in the implementation slice.
 - Root `.ai/` is operational; `docs/.ai/` and `docs/docs/decisions/` are copied artifacts.
 
@@ -52,21 +57,23 @@ Do not start Customer → Site → Asset until this foundation is implemented an
 
 - User provisioning/invitations and current-organization selection behavior need a product
   decision before management UI is exposed.
-- Adding Pundit is a production dependency and implementing authorization is a security
-  boundary; both belong in the next explicitly approved code slice.
+- Current-organization establishment and resource authorization remain a security boundary;
+  tenant-owned product routes must not be introduced before that slice is complete.
 
 ## Validation status
 
-- Documentation review and repository inspection: complete.
-- Ruby 4.0.6 `bundle exec rspec`: 53 examples, 0 failures.
-- Ruby 4.0.6 `bin/rubocop`: 48 files, no offenses.
+- Ruby 4.0.6 `bundle exec rspec`: 70 examples, 0 failures.
+- Ruby 4.0.6 `bin/rubocop`: 60 files, no offenses.
 - Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
-- Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings. The `bin/brakeman` wrapper could not
-  complete its network-backed latest-version check in the restricted environment.
+- Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings.
+- `bin/bundler-audit`, `bin/importmap audit`, and `npm run verify:preline`: passed.
+- `bin/rails db:migrate:status`: all migrations up.
 - `git diff --check`: passed.
+- `bin/ci`: all steps through Importmap Audit passed; the final Brakeman wrapper stopped
+  because locked Brakeman 8.0.5 is not the latest 8.0.6. The direct 8.0.5 scan has no warnings.
 
 ## Handoff note
 
-Review ADR 0001. The next code task should implement only the documented Phase 1
-persistence and authorization foundation, then prove tenant isolation before adding
-Customer, Site, or Asset.
+The next code task should establish validated current-organization context and prove
+tenant isolation through policies, scopes, and request specs before adding Customer,
+Site, or Asset.

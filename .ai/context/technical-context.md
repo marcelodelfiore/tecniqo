@@ -25,9 +25,9 @@ Authentication is custom, passwordless, and must be preserved:
 The current sign-in flow creates an unknown `User` automatically. Revisit that product
 rule before organization invitations are exposed; do not silently change it.
 
-## Authorization direction
+## Authorization foundation
 
-- Adopt Pundit 2.5.x when the Phase 1 persistence foundation is implemented.
+- Pundit 2.5.2 is installed.
 - Include `Pundit::Authorization` and define `pundit_user` as `Current.user`.
 - Use resource policies for actions and policy scopes for collections/record loading.
 - Use `verify_authorized` / `verify_policy_scoped` in authenticated product controllers,
@@ -37,7 +37,10 @@ rule before organization invitations are exposed; do not silently change it.
 - Keep policy specs under `spec/policies`; use Pundit's RSpec support for actions and
   ordinary examples for scopes and cross-tenant isolation.
 
-Pundit is not installed yet. CanCanCan 3.6.1 was evaluated but not selected; its
+The default `ApplicationPolicy` and scope deny every action/record and reject missing
+users. Resource policies, controller verification hooks, denial handling, and
+current-organization-aware helpers remain for the next authorization slice. CanCanCan
+3.6.1 was evaluated but not selected; its
 centralized ability DSL and automatic loading offer less clarity for contextual,
 tenant-sensitive rules than explicit policies and scopes.
 
