@@ -15,6 +15,7 @@ es:
   nav:
     home: "Inicio"
     dashboard: "Panel"
+    customers: "Clientes"
     invitations: "Invitaciones"
     members: "Miembros"
     logout: "Salir"
@@ -26,14 +27,47 @@ es:
     save: "Guardar cambios"
     resend: "Reenviar"
     revoke: "Revocar"
+    search: "Buscar"
   labels:
     email: "Correo electrónico"
     roles: "Roles"
+    name: "Nombre"
+    legal_name: "Razón social"
+    business_identifier: "Identificador fiscal"
+    phone: "Teléfono"
+    notes: "Notas"
+    address: "Dirección"
+    contact_name: "Nombre del contacto"
+    asset_type: "Tipo de activo"
+    tag: "Etiqueta / Identificador"
+    manufacturer: "Fabricante"
+    model: "Modelo"
+    serial_number: "Número de serie"
   activerecord:
     attributes:
       invitation:
         email: "Correo electrónico"
         roles: "Roles"
+      customer:
+        name: "Nombre"
+        legal_name: "Razón social"
+        business_identifier: "Identificador fiscal"
+        email: "Correo electrónico"
+        phone: "Teléfono"
+        notes: "Notas"
+      site:
+        name: "Nombre"
+        address: "Dirección"
+        contact_name: "Nombre del contacto"
+        phone: "Teléfono"
+        notes: "Notas"
+      asset:
+        name: "Nombre"
+        asset_type: "Tipo de activo"
+        tag: "Etiqueta / Identificador"
+        manufacturer: "Fabricante"
+        model: "Modelo"
+        serial_number: "Número de serie"
   support:
     array:
       words_connector: ", "
@@ -68,6 +102,15 @@ es:
       updated: "Acceso del miembro actualizado."
       last_administrator: "Esta organización debe conservar al menos un Administrador activo."
       invalid_roles: "Selecciona al menos un rol válido."
+    customers:
+      created: "Cliente creado."
+      updated: "Cliente actualizado."
+    sites:
+      created: "Sitio creado."
+      updated: "Sitio actualizado."
+    assets:
+      created: "Activo creado."
+      updated: "Activo actualizado."
   home:
     eyebrow: "Plataforma de ingeniería de mantenimiento"
     description: "Conecta el trabajo de mantenimiento en campo con datos de ingeniería estructurados, evidencia, revisión e informes."
@@ -129,6 +172,64 @@ es:
     status:
       active: "Activo"
       inactive: "Inactivo"
+  customers:
+    index:
+      title: "Clientes"
+      subtitle: "Clientes operativos de %{organization}."
+      new: "Nuevo cliente"
+      search_label: "Buscar clientes"
+      search_placeholder: "Buscar por nombre del cliente"
+      sites: "Sitios"
+      assets: "Activos"
+      empty_title: "Aún no hay clientes"
+      empty_message: "Crea el primer cliente para empezar a organizar sitios y activos."
+      no_results_title: "No se encontraron clientes"
+      no_results_message: "Prueba con otro nombre de cliente."
+    new:
+      title: "Nuevo cliente"
+      subtitle: "Solo el nombre es obligatorio. Agrega otros datos cuando sean útiles."
+    edit:
+      title: "Editar cliente"
+    show:
+      sites: "Sitios"
+      sites_subtitle: "Ubicaciones físicas donde puede realizarse el mantenimiento."
+      add_site: "Agregar sitio"
+      empty_sites_title: "Aún no hay sitios"
+      empty_sites_message: "Agrega la primera ubicación física de este cliente."
+      asset_count:
+        one: "1 activo"
+        other: "%{count} activos"
+  sites:
+    new:
+      title: "Nuevo sitio"
+      subtitle: "Agrega una ubicación física para %{customer}."
+    edit:
+      title: "Editar sitio"
+    show:
+      assets: "Activos"
+      assets_subtitle: "Equipos y sistemas mantenidos en este sitio."
+      add_asset: "Agregar activo"
+      empty_assets_title: "Aún no hay activos"
+      empty_assets_message: "Registra el primer elemento mantenible de este sitio."
+      tag: "Etiqueta: %{tag}"
+  assets:
+    new:
+      title: "Nuevo activo"
+      subtitle: "Registra un equipo en %{site}. Solo el nombre es obligatorio."
+    edit:
+      title: "Editar activo"
+    show:
+      context: "%{customer} · %{site}"
+  asset_types:
+    motor: "Motor"
+    electrical_panel: "Panel eléctrico"
+    transformer: "Transformador"
+    generator: "Generador"
+    vfd: "Variador de frecuencia"
+    ups: "UPS"
+    spda: "SPDA"
+    capacitor_bank: "Banco de capacitores"
+    other: "Otro"
   mailers:
     greeting: "Hola,"
     auth:
@@ -143,6 +244,7 @@ es:
       action: "Revisar invitación"
       expiry: "Esta invitación expira en siete días y solo puede aceptarse una vez."
   shared:
+    breadcrumbs: "Ruta de navegación"
     form_errors:
       one: "1 error impidió guardar este formulario:"
       other: "%{count} errores impidieron guardar este formulario:"

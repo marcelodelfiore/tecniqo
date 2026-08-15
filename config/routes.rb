@@ -18,6 +18,12 @@ Rails.application.routes.draw do
   end
   resources :memberships, only: %i[index edit update]
 
+  resources :customers, except: :destroy do
+    resources :sites, except: %i[index destroy] do
+      resources :assets, except: %i[index destroy]
+    end
+  end
+
   resource :organization_selection, only: %i[show update]
   resource :dashboard, only: %i[show]
 end

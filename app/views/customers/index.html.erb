@@ -1,0 +1,37 @@
+<% content_for :title, t("customers.index.title") %>
+
+<div class="space-y-6">
+  <%= render "shared/page_header",
+        title: t("customers.index.title"),
+        subtitle: t("customers.index.subtitle", organization: Current.organization.name),
+        action: (link_to(t("customers.index.new"), new_customer_path,
+          class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2") if policy(Customer).create?) %>
+
+  <%= form_with url: customers_path, method: :get, class: "flex flex-col gap-3 sm:flex-row", role: "search" do |form| %>
+    <%= form.label :query, t("customers.index.search_label"), class: "sr-only" %>
+    <%= form.search_field :query, value: params[:query], placeholder: t("customers.index.search_placeholder"),
+          class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    <%= form.submit t("actions.search"), class: "inline-flex min-h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+  <% end %>
+
+  <% if @customers.any? %>
+    <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <% @customers.each do |customer| %>
+        <%= link_to customer_path(customer), class: "block rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-blue-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500" do %>
+          <h2 class="text-lg font-semibold text-gray-900"><%= customer.name %></h2>
+          <% if customer.legal_name.present? %><p class="mt-1 text-sm text-gray-600"><%= customer.legal_name %></p><% end %>
+          <dl class="mt-4 grid grid-cols-2 gap-3 border-t border-gray-100 pt-4 text-sm">
+            <div><dt class="text-gray-500"><%= t("customers.index.sites") %></dt><dd class="mt-1 font-semibold text-gray-900"><%= customer.sites_count %></dd></div>
+            <div><dt class="text-gray-500"><%= t("customers.index.assets") %></dt><dd class="mt-1 font-semibold text-gray-900"><%= customer.assets_count %></dd></div>
+          </dl>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render "shared/empty_state",
+          title: t(params[:query].present? ? "customers.index.no_results_title" : "customers.index.empty_title"),
+          message: t(params[:query].present? ? "customers.index.no_results_message" : "customers.index.empty_message"),
+          action: (link_to(t("customers.index.new"), new_customer_path,
+            class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white") if policy(Customer).create? && params[:query].blank?) %>
+  <% end %>
+</div>

@@ -124,6 +124,31 @@ changes run through `Membership#update_access!`. The transaction locks the Organ
 before the Membership, serializing all Administrator demotions/deactivations and refusing a
 change that would leave no active Administrator.
 
+## Operational context
+
+```text
+Organization
+  └── Customer
+        └── Site
+              └── Asset
+```
+
+Customer, Site, and Asset each carry direct non-null Organization ownership. Composite
+foreign keys pair each nested parent ID with `organization_id`, so Site-to-Customer and
+Asset-to-Site relationships cannot cross tenants at the database boundary. Controllers load
+every parent and resource through policy scopes and validate the actual nested association.
+
+Customer names are unique per Organization and Site names per Customer, both case-insensitively.
+Asset names and tags are deliberately not unique. Asset Type is a curated string vocabulary
+with `other` as the default and a PostgreSQL check constraint; it is not organization-configurable.
+Phase 2 has no destroy/archive route, and restrictive associations preserve future historical
+references until lifecycle semantics can be designed with Work Orders. ADR 0004 records these
+decisions.
+
+Founder, Administrator, and Supervisor may manage operational context. Engineer has read-only
+access. Technician receives no organization-wide Customer/Site/Asset scope until Work Order
+assignment supplies the contextual visibility boundary.
+
 ## Development and testing strategy
 
 - Implement vertical business slices against realistic scenarios, not table-by-table CRUD.

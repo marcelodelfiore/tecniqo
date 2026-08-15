@@ -15,6 +15,7 @@ en:
   nav:
     home: "Home"
     dashboard: "Dashboard"
+    customers: "Customers"
     invitations: "Invitations"
     members: "Members"
     logout: "Sign out"
@@ -26,14 +27,47 @@ en:
     save: "Save changes"
     resend: "Resend"
     revoke: "Revoke"
+    search: "Search"
   labels:
     email: "Email"
     roles: "Roles"
+    name: "Name"
+    legal_name: "Legal name"
+    business_identifier: "Business identifier"
+    phone: "Phone"
+    notes: "Notes"
+    address: "Address"
+    contact_name: "Contact name"
+    asset_type: "Asset type"
+    tag: "Tag / Identifier"
+    manufacturer: "Manufacturer"
+    model: "Model"
+    serial_number: "Serial number"
   activerecord:
     attributes:
       invitation:
         email: "Email"
         roles: "Roles"
+      customer:
+        name: "Name"
+        legal_name: "Legal name"
+        business_identifier: "Business identifier"
+        email: "Email"
+        phone: "Phone"
+        notes: "Notes"
+      site:
+        name: "Name"
+        address: "Address"
+        contact_name: "Contact name"
+        phone: "Phone"
+        notes: "Notes"
+      asset:
+        name: "Name"
+        asset_type: "Asset type"
+        tag: "Tag / Identifier"
+        manufacturer: "Manufacturer"
+        model: "Model"
+        serial_number: "Serial number"
   support:
     array:
       words_connector: ", "
@@ -68,6 +102,15 @@ en:
       updated: "Member access updated."
       last_administrator: "This organization must retain at least one active Administrator."
       invalid_roles: "Select at least one valid role."
+    customers:
+      created: "Customer created."
+      updated: "Customer updated."
+    sites:
+      created: "Site created."
+      updated: "Site updated."
+    assets:
+      created: "Asset created."
+      updated: "Asset updated."
   home:
     eyebrow: "Maintenance engineering platform"
     description: "Connect field maintenance work to structured engineering facts, evidence, review, and reports."
@@ -129,6 +172,64 @@ en:
     status:
       active: "Active"
       inactive: "Inactive"
+  customers:
+    index:
+      title: "Customers"
+      subtitle: "Operational customers for %{organization}."
+      new: "New customer"
+      search_label: "Search customers"
+      search_placeholder: "Search by customer name"
+      sites: "Sites"
+      assets: "Assets"
+      empty_title: "No customers yet"
+      empty_message: "Create your first customer to start organizing sites and assets."
+      no_results_title: "No customers found"
+      no_results_message: "Try another customer name."
+    new:
+      title: "New customer"
+      subtitle: "Only the name is required. Add other details when they help."
+    edit:
+      title: "Edit customer"
+    show:
+      sites: "Sites"
+      sites_subtitle: "Physical locations where maintenance work can occur."
+      add_site: "Add site"
+      empty_sites_title: "No sites yet"
+      empty_sites_message: "Add the first physical location for this customer."
+      asset_count:
+        one: "1 asset"
+        other: "%{count} assets"
+  sites:
+    new:
+      title: "New site"
+      subtitle: "Add a physical location for %{customer}."
+    edit:
+      title: "Edit site"
+    show:
+      assets: "Assets"
+      assets_subtitle: "Equipment and systems maintained at this site."
+      add_asset: "Add asset"
+      empty_assets_title: "No assets yet"
+      empty_assets_message: "Register the first maintainable item at this site."
+      tag: "Tag: %{tag}"
+  assets:
+    new:
+      title: "New asset"
+      subtitle: "Register equipment at %{site}. Only the name is required."
+    edit:
+      title: "Edit asset"
+    show:
+      context: "%{customer} · %{site}"
+  asset_types:
+    motor: "Motor"
+    electrical_panel: "Electrical panel"
+    transformer: "Transformer"
+    generator: "Generator"
+    vfd: "VFD"
+    ups: "UPS"
+    spda: "SPDA"
+    capacitor_bank: "Capacitor bank"
+    other: "Other"
   mailers:
     greeting: "Hello,"
     auth:
@@ -143,6 +244,7 @@ en:
       action: "Review invitation"
       expiry: "This invitation expires in seven days and can only be accepted once."
   shared:
+    breadcrumbs: "Breadcrumb"
     form_errors:
       one: "1 error prevented this form from being saved:"
       other: "%{count} errors prevented this form from being saved:"

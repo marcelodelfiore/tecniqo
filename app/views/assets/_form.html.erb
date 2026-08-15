@@ -1,0 +1,15 @@
+<%= form_with model: [ customer, site, asset ], class: "space-y-6" do |form| %>
+  <%= render "shared/form_errors", object: asset %>
+  <div><%= form.label :name, t("labels.name"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.text_field :name, required: true, autofocus: true, class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" %></div>
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div><%= form.label :asset_type, t("labels.asset_type"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.select :asset_type, Asset::TYPES.map { |type| [t("asset_types.#{type}"), type] }, {}, class: "block min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm" %></div>
+    <div><%= form.label :tag, t("labels.tag"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.text_field :tag, autocomplete: "off", class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+    <div><%= form.label :manufacturer, t("labels.manufacturer"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.text_field :manufacturer, autocomplete: "organization", class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+    <div><%= form.label :model, t("labels.model"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.text_field :model, autocomplete: "off", class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+    <div class="sm:col-span-2"><%= form.label :serial_number, t("labels.serial_number"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.text_field :serial_number, autocomplete: "off", class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+  </div>
+  <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+    <%= link_to t("actions.cancel"), asset.persisted? ? customer_site_asset_path(customer, site, asset) : customer_site_path(customer, site), class: "inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100" %>
+    <%= form.submit class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700" %>
+  </div>
+<% end %>

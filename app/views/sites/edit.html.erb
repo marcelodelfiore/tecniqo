@@ -1,0 +1,6 @@
+<% content_for :title, t("sites.edit.title") %>
+<div class="mx-auto max-w-2xl space-y-6">
+  <%= render "shared/breadcrumbs", items: [ { label: t("customers.index.title"), path: customers_path }, { label: @customer.name, path: customer_path(@customer) }, { label: @site.name, path: customer_site_path(@customer, @site) }, { label: t("actions.edit") } ] %>
+  <%= render "shared/page_header", title: t("sites.edit.title"), subtitle: @site.name %>
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><%= render "form", customer: @customer, site: @site %></div>
+</div>

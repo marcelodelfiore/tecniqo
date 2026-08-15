@@ -1,0 +1,14 @@
+<nav aria-label="<%= t('shared.breadcrumbs') %>">
+  <ol class="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+    <% items.each_with_index do |item, index| %>
+      <li class="flex items-center gap-2">
+        <% if item[:path] %>
+          <%= link_to item[:label], item[:path], class: "font-medium text-blue-700 hover:text-blue-800" %>
+        <% else %>
+          <span class="text-gray-500" aria-current="page"><%= item[:label] %></span>
+        <% end %>
+        <% unless index == items.length - 1 %><span aria-hidden="true">/</span><% end %>
+      </li>
+    <% end %>
+  </ol>
+</nav>

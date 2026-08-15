@@ -1,0 +1,23 @@
+<%= form_with model: customer, class: "space-y-6" do |form| %>
+  <%= render "shared/form_errors", object: customer %>
+
+  <div>
+    <%= form.label :name, t("labels.name"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :name, required: true, autofocus: true, autocomplete: "organization",
+          class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div><%= form.label :legal_name, t("labels.legal_name"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.text_field :legal_name, class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+    <div><%= form.label :business_identifier, t("labels.business_identifier"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.text_field :business_identifier, autocomplete: "off", class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+    <div><%= form.label :email, t("labels.email"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.email_field :email, autocomplete: "email", class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+    <div><%= form.label :phone, t("labels.phone"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.telephone_field :phone, autocomplete: "tel", class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+  </div>
+
+  <div><%= form.label :notes, t("labels.notes"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.text_area :notes, rows: 4, class: "block w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+
+  <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+    <%= link_to t("actions.cancel"), customer.persisted? ? customer_path(customer) : customers_path, class: "inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100" %>
+    <%= form.submit class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-blue-700" %>
+  </div>
+<% end %>

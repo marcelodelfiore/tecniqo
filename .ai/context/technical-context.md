@@ -63,6 +63,20 @@ evaluated but not selected; its
 centralized ability DSL and automatic loading offer less clarity for contextual,
 tenant-sensitive rules than explicit policies and scopes.
 
+## Phase 2 operational context
+
+- `Customer` belongs to Organization and owns Sites; `Site` directly belongs to Organization
+  and Customer; `Asset` directly belongs to Organization and Site.
+- Composite tenant/parent foreign keys enforce nested ownership in PostgreSQL.
+- Customer routes are top-level; Site and Asset routes remain fully nested so server-rendered
+  pages and future Hotwire Native shells retain explicit operational context.
+- Customer/Site/Asset controllers use policy-scoped parent and record loading plus explicit
+  Pundit authorization. Administrator and Supervisor manage, Engineer reads, and Technician
+  remains excluded until assignment-based scoping exists.
+- Asset Type uses the fixed translated `Asset::TYPES` vocabulary with `other` as its default.
+- Product UI remains server-rendered, Turbo-compatible, responsive cards and compact forms;
+  Phase 2 adds no Stimulus behavior because normal navigation and submission are sufficient.
+
 ## Local environment
 
 Prerequisites are Ruby 4.0.6, PostgreSQL, and an SMTP catcher such as Mailpit on `127.0.0.1:1025`.

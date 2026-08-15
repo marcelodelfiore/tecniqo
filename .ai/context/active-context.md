@@ -2,7 +2,7 @@
 
 ## Current objective
 
-Phase 1 — Identity, Organization, Roles, and Authorization Foundation.
+Phase 2 — Customer → Site → Asset operational-context vertical slice.
 
 ## Current branch
 
@@ -20,20 +20,19 @@ implemented. Invitation-only sign-in enforcement and secure invitation acceptanc
 implemented, including Administrator-authorized issue/resend/revoke UI and queued SMTP delivery.
 Membership administration, transactionally locked last-active-Administrator protection,
 and an internationalized `en`/`pt-BR`/`es` frontend/mail foundation are implemented.
-Tenant-owned domain resource policies do not exist yet because those records remain deferred.
-ADRs 0001, 0002, and 0003 define the accepted boundaries.
+Customer, Site, and Asset persistence, composite tenant integrity, policies, nested routes,
+responsive translated UI, factories, seeds, and focused tests are implemented. ADRs 0001
+through 0004 define the accepted boundaries.
 
 ## In progress
 
-- Phase 1 foundation review and browser smoke testing.
+- Phase 2 responsive browser smoke testing and acceptance review.
 
 ## Next actions
 
-1. Browser smoke-test membership management and all three locale selections.
-2. Review Phase 1 acceptance criteria and close remaining foundation defects.
-3. Begin the Customer → Site → Asset vertical slice after Phase 1 review.
-
-Do not start Customer → Site → Asset until this foundation is implemented and validated.
+1. Browser smoke-test the Customer → Site → Asset workflow at desktop and phone widths.
+2. Review Phase 2 acceptance criteria and commit the slice after approval.
+3. Plan Service Type → Work Order → Assignment without implementing it automatically.
 
 ## Acceptance criteria for the current activity
 
@@ -48,6 +47,10 @@ Do not start Customer → Site → Asset until this foundation is implemented an
 - [x] Administrator-authorized invitation management UI and delivery implemented.
 - [x] Membership administration and concurrent last-active-Administrator protection implemented.
 - [x] Existing frontend and mail localized for English, Brazilian Portuguese, and Spanish.
+- [x] Customer, Site, and Asset persistence and database tenant integrity implemented.
+- [x] Role-aware policies and policy-scoped nested loading implemented.
+- [x] Responsive translated Customer → Site → Asset workflow implemented.
+- [x] Phase 2 factories, realistic development seeds, and focused specs implemented.
 
 ## Important findings and decisions
 
@@ -68,27 +71,32 @@ Do not start Customer → Site → Asset until this foundation is implemented an
   including concurrent demotion attempts.
 - Locale is allowlisted, session-persisted, preserved across authentication resets, and
   propagated through emailed links without changing stable routes.
-- The last active administrator needs transactional protection in the implementation slice.
+- Direct Organization ownership plus composite parent foreign keys protects nested domain data.
+- Asset Type is curated with Other as the default; Asset name and tag remain flexible.
+- Phase 2 deliberately exposes no delete/archive action pending historical lifecycle semantics.
+- Engineer is read-only; Technician has no broad operational scope before assignments exist.
 - Root `.ai/` is operational; `docs/.ai/` and `docs/docs/decisions/` are copied artifacts.
 
 ## Risks and blockers
 
-- Browser smoke testing should verify translations and membership management ergonomics.
+- Browser smoke testing should verify Phase 2 ergonomics at desktop and phone widths.
 
 ## Validation status
 
-- Ruby 4.0.6 `bundle exec rspec`: 154 examples, 0 failures.
-- Ruby 4.0.6 `bin/rubocop`: 85 files, no offenses.
+- Ruby 4.0.6 `bundle exec rspec`: 178 examples, 0 failures.
+- Ruby 4.0.6 `bin/rubocop`: 105 files, no offenses.
 - Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
 - Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings.
 - `bin/bundler-audit`, `bin/importmap audit`, and `npm run verify:preline`: passed.
+- `npm audit --audit-level=high`: passed with no vulnerabilities.
 - `bin/rails db:migrate:status`: all migrations up.
+- Development seeds ran twice successfully, confirming idempotent Phase 2 demo data.
 - `git diff --check`: passed.
-- `bin/ci`: all steps through Importmap Audit passed; the final Brakeman wrapper stopped
-  because locked Brakeman 8.0.5 is not the latest 8.0.6. The direct 8.0.5 scan has no warnings.
+- `bin/ci`: tests, style, JavaScript setup, Preline, NPM, gem, and Importmap audits passed;
+  the final wrapper stopped only because Brakeman 8.0.5 is not the latest 8.0.6. The direct
+  locked-version scan completed with no warnings.
 
 ## Handoff note
 
-Phase 1 identity, tenancy, onboarding, membership management, authorization foundation,
-and I18n are implemented. Review and smoke-test before beginning Customer → Site → Asset;
-every tenant-owned slice must use policy-scoped loading and explicit action authorization.
+Phase 1 is complete and browser-smoke-tested. Phase 2 implements the first tenant-owned domain
+slice using direct ownership, policy-scoped nested loading, and explicit action authorization.

@@ -2,12 +2,27 @@
 
 ## Current milestone
 
-- **Name:** Phase 1 — Identity, Organization, Roles, and Authorization Foundation
-- **Status:** Foundation implemented; review and smoke testing pending
-- **Target outcome:** Explicit, testable tenant isolation and contextual authorization on
-  top of the existing authentication system
+- **Name:** Phase 2 — Customer → Site → Asset
+- **Status:** Implementation and automated validation complete; browser smoke testing pending
+- **Target outcome:** Secure, low-friction operational context for future maintenance work
 
 ## Completed
+
+### 2026-08-15 — Implement Customer → Site → Asset operational context
+
+- Added Customer, Site, and Asset with direct Organization ownership and composite tenant/parent
+  foreign keys that reject cross-tenant nesting in PostgreSQL.
+- Added concise fields, case-insensitive Customer/Site naming rules, flexible Asset identity,
+  and a curated translated Asset Type vocabulary defaulting to Other.
+- Added role-aware Pundit policies: Founder/Administrator/Supervisor manage, Engineer reads,
+  and Technician remains denied until assignment-based scope exists.
+- Added fully nested, policy-scoped Rails routes and responsive English/Portuguese/Spanish UI,
+  Customer search and aggregate counts, factories, deterministic development seeds, and focused
+  model/policy/request coverage.
+- Recorded tenant, Asset Type, uniqueness, and lifecycle decisions in ADR 0004.
+- Validation: 178 RSpec examples, RuboCop, Zeitwerk, direct Brakeman, dependency audits,
+  Preline verification, migration status, seed rerun, and diff checks passed. Canonical CI
+  passed through Importmap Audit and stopped only on its existing Brakeman latest-version gate.
 
 ### 2026-08-15 — Add membership administration and three-locale I18n
 
@@ -98,12 +113,12 @@
 
 ## In progress
 
-- Phase 1 browser smoke testing and acceptance review.
+- Phase 2 responsive browser smoke testing and acceptance review.
 
 ## Planned
 
-- Add resource-specific tenant policies/scopes with each future vertical slice.
-- After Phase 1 passes security checks, begin the Customer → Site → Asset vertical slice.
+- Browser smoke-test Phase 2 at desktop and phone widths in all supported locales.
+- Plan Phase 3 Service Type → Work Order → Assignment after Phase 2 acceptance.
 
 ## Known defects and technical debt
 

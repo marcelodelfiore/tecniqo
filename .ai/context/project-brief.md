@@ -28,13 +28,12 @@ not the product's strategic endpoint.
 
 ## Current development focus
 
-Phase 1 — Identity, Organization, Roles, and Authorization Foundation.
+Phase 2 — Customer → Site → Asset operational-context vertical slice.
 
 ## Success criteria
 
 - Existing passwordless authentication remains intact.
-- Organization tenancy, multi-role membership, and Founder privilege have explicit,
-  testable boundaries before business-domain tables are introduced.
+- Customer, Site, and Asset have explicit, testable tenant and role boundaries.
 - New UI remains responsive, Turbo-compatible, and ready to serve future thin
   Hotwire Native shells.
 
