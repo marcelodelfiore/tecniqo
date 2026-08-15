@@ -2,11 +2,27 @@
 
 ## Current milestone
 
-- **Name:** Phase 2 — Customer → Site → Asset
+- **Name:** Phase 3 — Service Type → Work Order → Assignment
 - **Status:** Implementation and automated validation complete; browser smoke testing pending
-- **Target outcome:** Secure, low-friction operational context for future maintenance work
+- **Target outcome:** Secure, low-friction creation, scheduling, and assignment of operational work
 
 ## Completed
+
+### 2026-08-15 — Implement Service Type → Work Order → Assignment
+
+- Added tenant-owned Service Types with case-insensitive naming and explicit activation lifecycle.
+- Added Work Orders with required operational context, optional Asset, compact priorities, scheduling,
+  creator metadata, and concurrency-safe `OS-YYYY-NNNNNN` tenant identifiers used in routes.
+- Added first-class Assignment history with active Technician Membership eligibility, automatic actor/
+  timestamps, atomic reassignment, and a database-enforced single current assignment.
+- Added composite database constraints across Organization, Customer, Site, Asset, Service Type,
+  Work Order, and Membership ownership.
+- Added responsive Work Order/Service Type screens, contextual creation links, policy-scoped dependent
+  selectors, three-locale copy, realistic seeds, factories, and model/policy/request coverage.
+- Recorded Phase 3 identity, lifecycle, assignment, and selector decisions in ADR 0005.
+- Validation: 207 RSpec examples, RuboCop, Zeitwerk, direct Brakeman, dependency audits,
+  Preline verification, migration status, seed rerun, and diff checks passed. Canonical CI
+  passed through Importmap Audit and stopped only on its existing Brakeman latest-version gate.
 
 ### 2026-08-15 — Implement Customer → Site → Asset operational context
 
@@ -113,12 +129,12 @@
 
 ## In progress
 
-- Phase 2 responsive browser smoke testing and acceptance review.
+- Phase 3 responsive browser smoke testing and acceptance review.
 
 ## Planned
 
-- Browser smoke-test Phase 2 at desktop and phone widths in all supported locales.
-- Plan Phase 3 Service Type → Work Order → Assignment after Phase 2 acceptance.
+- Browser smoke-test Phase 3 at desktop and phone widths in all supported locales.
+- Plan Phase 4 Execution → Participants → Execution Events after Phase 3 acceptance.
 
 ## Known defects and technical debt
 

@@ -4,6 +4,8 @@ class Asset < ApplicationRecord
   belongs_to :organization
   belongs_to :site
 
+  has_many :work_orders, dependent: :restrict_with_exception
+
   normalizes :name, :tag, :manufacturer, :model, :serial_number,
              with: ->(value) { value.to_s.strip.presence }
 

@@ -10,8 +10,14 @@
 
       <% if authenticated? %>
         <%= link_to t("nav.dashboard"), dashboard_path, class: nav_link_classes(dashboard_path) %>
+        <% if policy(WorkOrder).index? %>
+          <%= link_to t("nav.work_orders"), work_orders_path, class: nav_link_classes(work_orders_path) %>
+        <% end %>
         <% if policy(Customer).index? %>
           <%= link_to t("nav.customers"), customers_path, class: nav_link_classes(customers_path) %>
+        <% end %>
+        <% if policy(ServiceType).index? %>
+          <%= link_to t("nav.service_types"), service_types_path, class: nav_link_classes(service_types_path) %>
         <% end %>
         <% if policy(Invitation).index? %>
           <%= link_to t("nav.invitations"), invitations_path, class: nav_link_classes(invitations_path) %>

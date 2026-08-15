@@ -2,7 +2,7 @@
 
 ## Current objective
 
-Phase 2 — Customer → Site → Asset operational-context vertical slice.
+Phase 3 — Service Type → Work Order → Assignment operational-work vertical slice.
 
 ## Current branch
 
@@ -22,17 +22,19 @@ Membership administration, transactionally locked last-active-Administrator prot
 and an internationalized `en`/`pt-BR`/`es` frontend/mail foundation are implemented.
 Customer, Site, and Asset persistence, composite tenant integrity, policies, nested routes,
 responsive translated UI, factories, seeds, and focused tests are implemented. ADRs 0001
-through 0004 define the accepted boundaries.
+through 0004 define those accepted boundaries. Service Type management, Work Order issuance,
+scheduling, optional Asset context, assignment history, role-aware visibility, responsive UI,
+and dependent selectors are implemented. ADR 0005 defines the Phase 3 boundaries.
 
 ## In progress
 
-- Phase 2 responsive browser smoke testing and acceptance review.
+- Phase 3 responsive browser smoke testing and acceptance review.
 
 ## Next actions
 
-1. Browser smoke-test the Customer → Site → Asset workflow at desktop and phone widths.
-2. Review Phase 2 acceptance criteria and commit the slice after approval.
-3. Plan Service Type → Work Order → Assignment without implementing it automatically.
+1. Browser smoke-test Service Type → Work Order → Assignment at desktop and phone widths.
+2. Review Phase 3 acceptance criteria and commit the slice after approval.
+3. Plan Execution → Participants → Execution Events without implementing Phase 4 automatically.
 
 ## Acceptance criteria for the current activity
 
@@ -51,6 +53,10 @@ through 0004 define the accepted boundaries.
 - [x] Role-aware policies and policy-scoped nested loading implemented.
 - [x] Responsive translated Customer → Site → Asset workflow implemented.
 - [x] Phase 2 factories, realistic development seeds, and focused specs implemented.
+- [x] Tenant-owned Service Type activation/deactivation implemented.
+- [x] Work Order issuance, public identifier, priority, optional Asset, and scheduling implemented.
+- [x] Eligible Technician assignment and atomic reassignment history implemented.
+- [x] Phase 3 policies, responsive UI, dependent selectors, seeds, and focused specs implemented.
 
 ## Important findings and decisions
 
@@ -75,28 +81,37 @@ through 0004 define the accepted boundaries.
 - Asset Type is curated with Other as the default; Asset name and tag remain flexible.
 - Phase 2 deliberately exposes no delete/archive action pending historical lifecycle semantics.
 - Engineer is read-only; Technician has no broad operational scope before assignments exist.
+- Work Order identifiers use a locked Organization sequence and stable `OS-YYYY-NNNNNN` URLs.
+- Service Types deactivate without invalidating existing Work Orders.
+- Assignment references Technician Membership and preserves one current plus historical records.
+- Technician visibility is now limited to currently assigned Work Orders.
+- Work Orders have no premature status/cancellation field; Asset remains optional and singular for MVP.
+- Dependent selectors are a small progressive enhancement over tenant-scoped server-rendered options.
 - Root `.ai/` is operational; `docs/.ai/` and `docs/docs/decisions/` are copied artifacts.
 
 ## Risks and blockers
 
-- Browser smoke testing should verify Phase 2 ergonomics at desktop and phone widths.
+- Browser smoke testing should verify Phase 3 creation/reassignment ergonomics and dependent
+  selectors at desktop and phone widths.
 
 ## Validation status
 
-- Ruby 4.0.6 `bundle exec rspec`: 178 examples, 0 failures.
-- Ruby 4.0.6 `bin/rubocop`: 105 files, no offenses.
+- Ruby 4.0.6 `bundle exec rspec`: 207 examples, 0 failures.
+- Ruby 4.0.6 `bin/rubocop`: 126 files, no offenses.
 - Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
 - Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings.
 - `bin/bundler-audit`, `bin/importmap audit`, and `npm run verify:preline`: passed.
 - `npm audit --audit-level=high`: passed with no vulnerabilities.
 - `bin/rails db:migrate:status`: all migrations up.
-- Development seeds ran twice successfully, confirming idempotent Phase 2 demo data.
+- Development seeds ran twice successfully, confirming idempotent Phase 3 demo data.
 - `git diff --check`: passed.
-- `bin/ci`: tests, style, JavaScript setup, Preline, NPM, gem, and Importmap audits passed;
-  the final wrapper stopped only because Brakeman 8.0.5 is not the latest 8.0.6. The direct
-  locked-version scan completed with no warnings.
+- `bin/ci`: 206 tests at the time of its run, style, JavaScript setup, Preline, NPM, gem,
+  and Importmap audits passed; the final 207-example suite also passes after adding one database
+  integrity assertion. The final wrapper stopped only because Brakeman 8.0.5 is not the latest
+  8.0.6. The direct locked-version scan completed with no warnings.
 
 ## Handoff note
 
-Phase 1 is complete and browser-smoke-tested. Phase 2 implements the first tenant-owned domain
-slice using direct ownership, policy-scoped nested loading, and explicit action authorization.
+Phases 1 and 2 are complete. Phase 3 connects operational context to scheduled, assigned Work
+Orders without implementing field Execution. Phase 4 must keep Work Order, Assignment, Execution,
+and Execution Participant responsibilities distinct.

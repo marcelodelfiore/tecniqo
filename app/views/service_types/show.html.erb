@@ -1,0 +1,6 @@
+<% content_for :title, @service_type.name %>
+<div class="space-y-6">
+  <%= render "shared/breadcrumbs", items: [ { label: t("service_types.index.title"), path: service_types_path }, { label: @service_type.name } ] %>
+  <%= render "shared/page_header", title: @service_type.name, subtitle: @service_type.description,
+        action: (link_to(t("actions.edit"), edit_service_type_path(@service_type), class: "inline-flex min-h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700") if policy(@service_type).update?) %>
+</div>

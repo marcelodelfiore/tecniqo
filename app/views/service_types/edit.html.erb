@@ -1,0 +1,6 @@
+<% content_for :title, t("service_types.edit.title") %>
+<div class="mx-auto max-w-2xl space-y-6">
+  <%= render "shared/breadcrumbs", items: [ { label: t("service_types.index.title"), path: service_types_path }, { label: @service_type.name } ] %>
+  <%= render "shared/page_header", title: t("service_types.edit.title"), subtitle: @service_type.name %>
+  <div class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"><%= render "form", service_type: @service_type %></div>
+</div>

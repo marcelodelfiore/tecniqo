@@ -13,6 +13,11 @@ if Rails.env.development?
   membership.update!(active: true)
   membership.membership_roles.find_or_create_by!(role: "administrator")
 
+  technician_user = User.find_or_create_by!(email: "joao.technician@tecniqo.local")
+  technician_membership = Membership.find_or_create_by!(organization: organization, user: technician_user)
+  technician_membership.update!(active: true)
+  technician_membership.membership_roles.find_or_create_by!(role: "technician")
+
   customer = Customer.find_or_create_by!(organization: organization, name: "Indústria ABC")
   betim = Site.find_or_create_by!(organization: organization, customer: customer, name: "Betim Plant")
   contagem = Site.find_or_create_by!(organization: organization, customer: customer, name: "Contagem Plant")
@@ -30,4 +35,37 @@ if Rails.env.development?
     asset.asset_type = "transformer"
     asset.tag = "TR-02"
   end
+
+  service_type_names = [
+    "Corrective Electrical Maintenance",
+    "Preventive Electrical Maintenance",
+    "Electrical Panel Inspection",
+    "Thermographic Inspection",
+    "Motor Inspection",
+    "Emergency Electrical Service"
+  ]
+  service_type_names.each do |name|
+    ServiceType.find_or_create_by!(organization: organization, name: name)
+  end
+
+  motor = Asset.find_by!(organization: organization, site: betim, name: "Motor M-21")
+  corrective = ServiceType.find_by!(organization: organization, name: "Corrective Electrical Maintenance")
+  requested_work = "Motor protection trips after operating for a few minutes."
+  work_order = WorkOrder.find_by(organization: organization, customer: customer, site: betim,
+                                 asset: motor, service_type: corrective, requested_work: requested_work)
+  work_order ||= WorkOrder.issue!(
+    organization: organization,
+    attributes: {
+      customer: customer,
+      site: betim,
+      asset: motor,
+      service_type: corrective,
+      requested_work: requested_work,
+      priority: "high",
+      scheduled_start: 1.week.from_now.change(hour: 8, min: 0)
+    },
+    created_by: founder,
+    assignee_membership: technician_membership
+  )
+  work_order.assign_to!(technician_membership, assigned_by: founder) unless work_order.current_assignment
 end

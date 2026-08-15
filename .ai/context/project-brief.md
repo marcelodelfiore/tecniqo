@@ -28,12 +28,12 @@ not the product's strategic endpoint.
 
 ## Current development focus
 
-Phase 2 — Customer → Site → Asset operational-context vertical slice.
+Phase 3 — Service Type → Work Order → Assignment operational-work vertical slice.
 
 ## Success criteria
 
 - Existing passwordless authentication remains intact.
-- Customer, Site, and Asset have explicit, testable tenant and role boundaries.
+- Service Types, Work Orders, and Assignment history have explicit, testable tenant and role boundaries.
 - New UI remains responsive, Turbo-compatible, and ready to serve future thin
   Hotwire Native shells.
 

@@ -5,6 +5,7 @@ en:
       invalid: "is invalid"
       taken: "has already been taken"
       invalid_invitation_roles: "must contain at least one valid role"
+      invalid_assignee: "must be an active Technician in this organization"
   app:
     tagline: "Industrial maintenance engineering"
   locales:
@@ -16,6 +17,8 @@ en:
     home: "Home"
     dashboard: "Dashboard"
     customers: "Customers"
+    work_orders: "Work orders"
+    service_types: "Service types"
     invitations: "Invitations"
     members: "Members"
     logout: "Sign out"
@@ -28,6 +31,8 @@ en:
     resend: "Resend"
     revoke: "Revoke"
     search: "Search"
+    activate: "Activate"
+    deactivate: "Deactivate"
   labels:
     email: "Email"
     roles: "Roles"
@@ -43,6 +48,15 @@ en:
     manufacturer: "Manufacturer"
     model: "Model"
     serial_number: "Serial number"
+    description: "Description"
+    customer: "Customer"
+    site: "Site"
+    asset: "Asset"
+    service_type: "Service type"
+    requested_work: "What needs to be done?"
+    scheduled_start: "Scheduled"
+    priority: "Priority"
+    assigned_technician: "Assigned technician"
   activerecord:
     attributes:
       invitation:
@@ -68,6 +82,18 @@ en:
         manufacturer: "Manufacturer"
         model: "Model"
         serial_number: "Serial number"
+      service_type:
+        name: "Name"
+        description: "Description"
+      work_order:
+        customer: "Customer"
+        site: "Site"
+        asset: "Asset"
+        service_type: "Service type"
+        requested_work: "What needs to be done?"
+        scheduled_start: "Scheduled"
+        priority: "Priority"
+        assignments: "Assignment"
   support:
     array:
       words_connector: ", "
@@ -111,6 +137,16 @@ en:
     assets:
       created: "Asset created."
       updated: "Asset updated."
+    service_types:
+      created: "Service type created."
+      updated: "Service type updated."
+      activated: "Service type activated."
+      deactivated: "Service type deactivated."
+    work_orders:
+      created: "Work order created."
+      updated: "Work order updated."
+    assignments:
+      updated: "Assignment updated."
   home:
     eyebrow: "Maintenance engineering platform"
     description: "Connect field maintenance work to structured engineering facts, evidence, review, and reports."
@@ -230,6 +266,65 @@ en:
     spda: "SPDA"
     capacitor_bank: "Capacitor bank"
     other: "Other"
+  priorities:
+    normal: "Normal"
+    high: "High"
+    urgent: "Urgent"
+  service_types:
+    index:
+      title: "Service types"
+      subtitle: "Services provided by %{organization}."
+      new: "New service type"
+      empty_title: "No service types yet"
+      empty_message: "Add a service type before creating work orders."
+    new:
+      title: "New service type"
+      subtitle: "Define a clear kind of technical work."
+    edit:
+      title: "Edit service type"
+    status:
+      active: "Active"
+      inactive: "Inactive"
+  work_orders:
+    index:
+      title: "Work orders"
+      subtitle: "Operational work for %{organization}."
+      new: "New work order"
+      search_label: "Search work orders"
+      search_placeholder: "Search by OS number or customer"
+      unscheduled: "Not scheduled"
+      unassigned: "Unassigned"
+      empty_title: "No work orders yet"
+      empty_message: "Create the first work order when there is work to coordinate."
+      no_results_title: "No work orders found"
+      no_results_message: "Try another OS number or customer name."
+    new:
+      title: "New work order"
+      subtitle: "Describe the job with only the context needed to coordinate it."
+    edit:
+      title: "Edit work order"
+    form:
+      select_customer: "Select a customer"
+      select_site: "Select a site"
+      no_asset: "No specific asset"
+      select_service_type: "Select a service type"
+      unassigned: "Assign later"
+      select_technician: "Select a technician"
+      requested_work_hint: "Describe the customer request or the result expected."
+      technician_hint: "Only active members with Technician responsibility are available."
+    show:
+      requested_work: "Requested work"
+      assignment: "Current assignment"
+      assigned_at: "Assigned %{date}"
+      reassign_to: "Assign or reassign"
+      assign: "Update assignment"
+      assignment_history: "Assignment history"
+      assignment_period: "%{start} → %{finish} · assigned by %{actor}"
+      current: "Current"
+    context:
+      from_customer: "Create work order for this customer"
+      from_site: "Create work order for this site"
+      from_asset: "Create work order for this asset"
   mailers:
     greeting: "Hello,"
     auth:
@@ -250,4 +345,5 @@ en:
       other: "%{count} errors prevented this form from being saved:"
   time:
     formats:
+      short: "%b %-d, %Y at %H:%M"
       long: "%B %-d, %Y at %H:%M"

@@ -5,11 +5,13 @@ class Membership < ApplicationRecord
   belongs_to :user
 
   has_many :membership_roles, dependent: :destroy
+  has_many :assignments, dependent: :restrict_with_exception
 
   validates :user_id, uniqueness: { scope: :organization_id }
   validates :active, inclusion: { in: [ true, false ] }
 
   scope :active, -> { where(active: true) }
+  scope :technicians, -> { active.joins(:membership_roles).where(membership_roles: { role: "technician" }).distinct }
 
   def update_access!(active:, roles:)
     normalized_roles = Array(roles).map(&:to_s).uniq

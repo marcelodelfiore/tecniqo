@@ -1,0 +1,44 @@
+<%= form_with model: work_order, class: "space-y-6", data: { controller: "dependent-selects" } do |form| %>
+  <%= render "shared/form_errors", object: work_order %>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <%= form.label :customer_id, t("labels.customer"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.select :customer_id, options_from_collection_for_select(@customers, :id, :name, work_order.customer_id), { include_blank: t("work_orders.form.select_customer") }, required: true, class: "block min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm", data: { dependent_selects_target: "customer", action: "dependent-selects#customerChanged" } %>
+    </div>
+    <div>
+      <%= form.label :site_id, t("labels.site"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <% site_options = @sites.map { |site| ["#{site.customer.name} · #{site.name}", site.id, { data: { customer_id: site.customer_id } }] } %>
+      <%= form.select :site_id, options_for_select(site_options, work_order.site_id), { include_blank: t("work_orders.form.select_site") }, required: true, class: "block min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm", data: { dependent_selects_target: "site", action: "dependent-selects#siteChanged" } %>
+    </div>
+    <div>
+      <%= form.label :asset_id, t("labels.asset"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <% asset_options = @assets.map { |asset| ["#{asset.site.name} · #{asset.name}", asset.id, { data: { site_id: asset.site_id } }] } %>
+      <%= form.select :asset_id, options_for_select(asset_options, work_order.asset_id), { include_blank: t("work_orders.form.no_asset") }, class: "block min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm", data: { dependent_selects_target: "asset" } %>
+    </div>
+    <div>
+      <%= form.label :service_type_id, t("labels.service_type"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= form.collection_select :service_type_id, @service_types, :id, :name, { include_blank: t("work_orders.form.select_service_type") }, required: true, class: "block min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm" %>
+    </div>
+  </div>
+
+  <div><%= form.label :requested_work, t("labels.requested_work"), class: "mb-1 block text-sm font-medium text-gray-700" %><p class="mb-2 text-sm text-gray-500"><%= t("work_orders.form.requested_work_hint") %></p><%= form.text_area :requested_work, required: true, rows: 5, class: "block w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" %></div>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div><%= form.label :scheduled_start, t("labels.scheduled_start"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.datetime_local_field :scheduled_start, class: "block min-h-11 w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm" %></div>
+    <div><%= form.label :priority, t("labels.priority"), class: "mb-1 block text-sm font-medium text-gray-700" %><%= form.select :priority, WorkOrder::PRIORITIES.map { |priority| [t("priorities.#{priority}"), priority] }, {}, class: "block min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm" %></div>
+  </div>
+
+  <% if work_order.new_record? %>
+    <div>
+      <%= label_tag "work_order_technician_membership_id", t("labels.assigned_technician"), class: "mb-1 block text-sm font-medium text-gray-700" %>
+      <%= select_tag "work_order[technician_membership_id]", options_from_collection_for_select(@technicians, :id, ->(membership) { membership.user.email }, params.dig(:work_order, :technician_membership_id)), include_blank: t("work_orders.form.unassigned"), class: "block min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm" %>
+      <p class="mt-2 text-sm text-gray-500"><%= t("work_orders.form.technician_hint") %></p>
+    </div>
+  <% end %>
+
+  <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+    <%= link_to t("actions.cancel"), work_order.persisted? ? work_order_path(work_order) : work_orders_path, class: "inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100" %>
+    <%= form.submit class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white" %>
+  </div>
+<% end %>

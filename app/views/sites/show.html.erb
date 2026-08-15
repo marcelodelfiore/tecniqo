@@ -4,6 +4,11 @@
   <%= render "shared/page_header", title: @site.name, subtitle: @customer.name,
         action: (link_to(t("actions.edit"), edit_customer_site_path(@customer, @site), class: "inline-flex min-h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50") if policy(@site).update?) %>
 
+  <% contextual_work_order = Current.organization.work_orders.new(customer: @customer, site: @site) %>
+  <% if policy(contextual_work_order).create? %>
+    <%= link_to t("work_orders.context.from_site"), new_work_order_path(customer_id: @customer.id, site_id: @site.id), class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white" %>
+  <% end %>
+
   <% if [@site.address, @site.contact_name, @site.phone, @site.notes].any?(&:present?) %>
     <dl class="grid gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:grid-cols-2 sm:p-6">
       <% { address: @site.address, contact_name: @site.contact_name, phone: @site.phone, notes: @site.notes }.each do |label, value| %>

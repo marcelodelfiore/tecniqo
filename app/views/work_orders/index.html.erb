@@ -1,0 +1,32 @@
+<% content_for :title, t("work_orders.index.title") %>
+<div class="space-y-6">
+  <%= render "shared/page_header", title: t("work_orders.index.title"),
+        subtitle: t("work_orders.index.subtitle", organization: Current.organization.name),
+        action: (link_to(t("work_orders.index.new"), new_work_order_path, class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white") if policy(WorkOrder).create?) %>
+
+  <%= form_with url: work_orders_path, method: :get, class: "flex flex-col gap-3 sm:flex-row", role: "search" do |form| %>
+    <%= form.label :query, t("work_orders.index.search_label"), class: "sr-only" %>
+    <%= form.search_field :query, value: params[:query], placeholder: t("work_orders.index.search_placeholder"), class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+    <%= form.submit t("actions.search"), class: "inline-flex min-h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700" %>
+  <% end %>
+
+  <% if @work_orders.any? %>
+    <div class="grid gap-4 lg:grid-cols-2">
+      <% @work_orders.each do |work_order| %>
+        <%= link_to work_order_path(work_order), class: "block rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-blue-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500" do %>
+          <div class="flex flex-wrap items-start justify-between gap-3">
+            <div><p class="font-semibold text-blue-700"><%= work_order.public_identifier %></p><h2 class="mt-1 text-lg font-semibold text-gray-900"><%= work_order.customer.name %></h2><p class="text-sm text-gray-600"><%= work_order.site.name %><% if work_order.asset %> · <%= work_order.asset.name %><% end %></p></div>
+            <span class="rounded-full px-2.5 py-1 text-xs font-semibold <%= work_order.priority == 'urgent' ? 'bg-red-100 text-red-800' : work_order.priority == 'high' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-700' %>"><%= t("priorities.#{work_order.priority}") %></span>
+          </div>
+          <p class="mt-4 text-sm font-medium text-gray-800"><%= work_order.service_type.name %></p>
+          <dl class="mt-4 grid gap-3 border-t border-gray-100 pt-4 text-sm sm:grid-cols-2">
+            <div><dt class="text-gray-500"><%= t("labels.scheduled_start") %></dt><dd class="mt-1 font-medium text-gray-900"><%= work_order.scheduled_start ? l(work_order.scheduled_start, format: :short) : t("work_orders.index.unscheduled") %></dd></div>
+            <div><dt class="text-gray-500"><%= t("labels.assigned_technician") %></dt><dd class="mt-1 break-all font-medium text-gray-900"><%= work_order.current_assignment&.assignee&.email || t("work_orders.index.unassigned") %></dd></div>
+          </dl>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render "shared/empty_state", title: t(params[:query].present? ? "work_orders.index.no_results_title" : "work_orders.index.empty_title"), message: t(params[:query].present? ? "work_orders.index.no_results_message" : "work_orders.index.empty_message") %>
+  <% end %>
+</div>

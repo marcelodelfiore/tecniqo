@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_020000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_15_030000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -25,10 +25,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_020000) do
     t.bigint "site_id", null: false
     t.string "tag"
     t.datetime "updated_at", null: false
+    t.index ["id", "site_id", "organization_id"], name: "index_assets_on_id_and_site_id_and_organization_id", unique: true
     t.index ["organization_id"], name: "index_assets_on_organization_id"
     t.index ["site_id", "organization_id"], name: "index_assets_on_site_id_and_organization_id"
     t.index ["site_id"], name: "index_assets_on_site_id"
     t.check_constraint "asset_type::text = ANY (ARRAY['motor'::character varying, 'electrical_panel'::character varying, 'transformer'::character varying, 'generator'::character varying, 'vfd'::character varying, 'ups'::character varying, 'spda'::character varying, 'capacitor_bank'::character varying, 'other'::character varying]::text[])", name: "assets_asset_type_check"
+  end
+
+  create_table "assignments", force: :cascade do |t|
+    t.datetime "assigned_at", null: false
+    t.bigint "assigned_by_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "ended_at"
+    t.bigint "membership_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "work_order_id", null: false
+    t.index ["assigned_by_id"], name: "index_assignments_on_assigned_by_id"
+    t.index ["membership_id", "organization_id"], name: "index_assignments_on_membership_id_and_organization_id"
+    t.index ["membership_id"], name: "index_assignments_on_membership_id"
+    t.index ["organization_id"], name: "index_assignments_on_organization_id"
+    t.index ["work_order_id", "organization_id"], name: "index_assignments_on_work_order_id_and_organization_id"
+    t.index ["work_order_id"], name: "index_assignments_on_current_work_order", unique: true, where: "(ended_at IS NULL)"
+    t.index ["work_order_id"], name: "index_assignments_on_work_order_id"
+    t.check_constraint "ended_at IS NULL OR ended_at >= assigned_at", name: "assignments_timeline_check"
   end
 
   create_table "customers", force: :cascade do |t|
@@ -92,6 +112,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_020000) do
     t.bigint "organization_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
+    t.index ["id", "organization_id"], name: "index_memberships_on_id_and_organization_id", unique: true
     t.index ["organization_id", "user_id"], name: "index_memberships_on_organization_id_and_user_id", unique: true
     t.index ["organization_id"], name: "index_memberships_on_organization_id"
     t.index ["user_id"], name: "index_memberships_on_user_id"
@@ -101,6 +122,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_020000) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
+    t.bigint "work_order_sequence", default: 0, null: false
+    t.check_constraint "work_order_sequence >= 0", name: "organizations_work_order_sequence_check"
+  end
+
+  create_table "service_types", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.string "name", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "updated_at", null: false
+    t.index "organization_id, lower((name)::text)", name: "index_service_types_on_organization_and_lower_name", unique: true
+    t.index ["id", "organization_id"], name: "index_service_types_on_id_and_organization_id", unique: true
+    t.index ["organization_id"], name: "index_service_types_on_organization_id"
   end
 
   create_table "sites", force: :cascade do |t|
@@ -116,6 +151,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_020000) do
     t.index "customer_id, lower((name)::text)", name: "index_sites_on_customer_and_lower_name", unique: true
     t.index ["customer_id", "organization_id"], name: "index_sites_on_customer_id_and_organization_id"
     t.index ["customer_id"], name: "index_sites_on_customer_id"
+    t.index ["id", "customer_id", "organization_id"], name: "index_sites_on_id_and_customer_id_and_organization_id", unique: true
     t.index ["id", "organization_id"], name: "index_sites_on_id_and_organization_id", unique: true
     t.index ["organization_id"], name: "index_sites_on_organization_id"
   end
@@ -129,8 +165,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_020000) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "work_orders", force: :cascade do |t|
+    t.bigint "asset_id"
+    t.datetime "created_at", null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "customer_id", null: false
+    t.bigint "organization_id", null: false
+    t.string "priority", default: "normal", null: false
+    t.string "public_identifier", null: false
+    t.text "requested_work", null: false
+    t.datetime "scheduled_start"
+    t.bigint "sequence_number", null: false
+    t.bigint "service_type_id", null: false
+    t.bigint "site_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["asset_id"], name: "index_work_orders_on_asset_id"
+    t.index ["created_by_id"], name: "index_work_orders_on_created_by_id"
+    t.index ["customer_id"], name: "index_work_orders_on_customer_id"
+    t.index ["id", "organization_id"], name: "index_work_orders_on_id_and_organization_id", unique: true
+    t.index ["organization_id", "public_identifier"], name: "index_work_orders_on_organization_id_and_public_identifier", unique: true
+    t.index ["organization_id", "scheduled_start"], name: "index_work_orders_on_organization_id_and_scheduled_start"
+    t.index ["organization_id", "sequence_number"], name: "index_work_orders_on_organization_id_and_sequence_number", unique: true
+    t.index ["organization_id"], name: "index_work_orders_on_organization_id"
+    t.index ["service_type_id"], name: "index_work_orders_on_service_type_id"
+    t.index ["site_id"], name: "index_work_orders_on_site_id"
+    t.check_constraint "priority::text = ANY (ARRAY['normal'::character varying, 'high'::character varying, 'urgent'::character varying]::text[])", name: "work_orders_priority_check"
+    t.check_constraint "sequence_number > 0", name: "work_orders_sequence_number_check"
+  end
+
   add_foreign_key "assets", "organizations"
   add_foreign_key "assets", "sites", column: ["site_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "assignments", "memberships", column: ["membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "assignments", "organizations"
+  add_foreign_key "assignments", "users", column: "assigned_by_id"
+  add_foreign_key "assignments", "work_orders", column: ["work_order_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "customers", "organizations"
   add_foreign_key "invitations", "organizations"
   add_foreign_key "invitations", "users", column: "invited_by_id"
@@ -138,6 +206,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_020000) do
   add_foreign_key "membership_roles", "memberships"
   add_foreign_key "memberships", "organizations"
   add_foreign_key "memberships", "users"
+  add_foreign_key "service_types", "organizations"
   add_foreign_key "sites", "customers", column: ["customer_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "sites", "organizations"
+  add_foreign_key "work_orders", "assets", column: ["asset_id", "site_id", "organization_id"], primary_key: ["id", "site_id", "organization_id"]
+  add_foreign_key "work_orders", "customers", column: ["customer_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "work_orders", "organizations"
+  add_foreign_key "work_orders", "service_types", column: ["service_type_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "work_orders", "sites", column: ["site_id", "customer_id", "organization_id"], primary_key: ["id", "customer_id", "organization_id"]
+  add_foreign_key "work_orders", "users", column: "created_by_id"
 end

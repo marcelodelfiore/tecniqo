@@ -5,6 +5,7 @@ es:
       invalid: "no es válido"
       taken: "ya está en uso"
       invalid_invitation_roles: "debe contener al menos un rol válido"
+      invalid_assignee: "debe ser un Técnico activo en esta organización"
   app:
     tagline: "Ingeniería de mantenimiento industrial"
   locales:
@@ -16,6 +17,8 @@ es:
     home: "Inicio"
     dashboard: "Panel"
     customers: "Clientes"
+    work_orders: "Órdenes de trabajo"
+    service_types: "Tipos de servicio"
     invitations: "Invitaciones"
     members: "Miembros"
     logout: "Salir"
@@ -28,6 +31,8 @@ es:
     resend: "Reenviar"
     revoke: "Revocar"
     search: "Buscar"
+    activate: "Activar"
+    deactivate: "Desactivar"
   labels:
     email: "Correo electrónico"
     roles: "Roles"
@@ -43,6 +48,15 @@ es:
     manufacturer: "Fabricante"
     model: "Modelo"
     serial_number: "Número de serie"
+    description: "Descripción"
+    customer: "Cliente"
+    site: "Sitio"
+    asset: "Activo"
+    service_type: "Tipo de servicio"
+    requested_work: "¿Qué se necesita hacer?"
+    scheduled_start: "Programación"
+    priority: "Prioridad"
+    assigned_technician: "Técnico responsable"
   activerecord:
     attributes:
       invitation:
@@ -68,6 +82,18 @@ es:
         manufacturer: "Fabricante"
         model: "Modelo"
         serial_number: "Número de serie"
+      service_type:
+        name: "Nombre"
+        description: "Descripción"
+      work_order:
+        customer: "Cliente"
+        site: "Sitio"
+        asset: "Activo"
+        service_type: "Tipo de servicio"
+        requested_work: "¿Qué se necesita hacer?"
+        scheduled_start: "Programación"
+        priority: "Prioridad"
+        assignments: "Asignación"
   support:
     array:
       words_connector: ", "
@@ -111,6 +137,16 @@ es:
     assets:
       created: "Activo creado."
       updated: "Activo actualizado."
+    service_types:
+      created: "Tipo de servicio creado."
+      updated: "Tipo de servicio actualizado."
+      activated: "Tipo de servicio activado."
+      deactivated: "Tipo de servicio desactivado."
+    work_orders:
+      created: "Orden de trabajo creada."
+      updated: "Orden de trabajo actualizada."
+    assignments:
+      updated: "Asignación actualizada."
   home:
     eyebrow: "Plataforma de ingeniería de mantenimiento"
     description: "Conecta el trabajo de mantenimiento en campo con datos de ingeniería estructurados, evidencia, revisión e informes."
@@ -230,6 +266,65 @@ es:
     spda: "SPDA"
     capacitor_bank: "Banco de capacitores"
     other: "Otro"
+  priorities:
+    normal: "Normal"
+    high: "Alta"
+    urgent: "Urgente"
+  service_types:
+    index:
+      title: "Tipos de servicio"
+      subtitle: "Servicios prestados por %{organization}."
+      new: "Nuevo tipo de servicio"
+      empty_title: "Aún no hay tipos de servicio"
+      empty_message: "Agrega un tipo de servicio antes de crear órdenes de trabajo."
+    new:
+      title: "Nuevo tipo de servicio"
+      subtitle: "Define un tipo claro de trabajo técnico."
+    edit:
+      title: "Editar tipo de servicio"
+    status:
+      active: "Activo"
+      inactive: "Inactivo"
+  work_orders:
+    index:
+      title: "Órdenes de trabajo"
+      subtitle: "Trabajos operativos de %{organization}."
+      new: "Nueva orden de trabajo"
+      search_label: "Buscar órdenes de trabajo"
+      search_placeholder: "Buscar por número de OS o cliente"
+      unscheduled: "Sin programar"
+      unassigned: "Sin responsable"
+      empty_title: "Aún no hay órdenes de trabajo"
+      empty_message: "Crea la primera orden cuando haya un trabajo que coordinar."
+      no_results_title: "No se encontraron órdenes de trabajo"
+      no_results_message: "Prueba con otro número de OS o nombre de cliente."
+    new:
+      title: "Nueva orden de trabajo"
+      subtitle: "Describe el trabajo solo con el contexto necesario para coordinarlo."
+    edit:
+      title: "Editar orden de trabajo"
+    form:
+      select_customer: "Selecciona un cliente"
+      select_site: "Selecciona un sitio"
+      no_asset: "Sin activo específico"
+      select_service_type: "Selecciona un tipo de servicio"
+      unassigned: "Asignar después"
+      select_technician: "Selecciona un técnico"
+      requested_work_hint: "Describe la solicitud del cliente o el resultado esperado."
+      technician_hint: "Solo están disponibles miembros activos con responsabilidad de Técnico."
+    show:
+      requested_work: "Trabajo solicitado"
+      assignment: "Asignación actual"
+      assigned_at: "Asignado el %{date}"
+      reassign_to: "Asignar o reasignar"
+      assign: "Actualizar asignación"
+      assignment_history: "Historial de asignaciones"
+      assignment_period: "%{start} → %{finish} · asignado por %{actor}"
+      current: "Actual"
+    context:
+      from_customer: "Crear orden para este cliente"
+      from_site: "Crear orden para este sitio"
+      from_asset: "Crear orden para este activo"
   mailers:
     greeting: "Hola,"
     auth:
@@ -250,4 +345,5 @@ es:
       other: "%{count} errores impidieron guardar este formulario:"
   time:
     formats:
+      short: "%d/%m/%Y %H:%M"
       long: "%d/%m/%Y a las %H:%M"

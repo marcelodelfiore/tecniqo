@@ -77,6 +77,25 @@ tenant-sensitive rules than explicit policies and scopes.
 - Product UI remains server-rendered, Turbo-compatible, responsive cards and compact forms;
   Phase 2 adds no Stimulus behavior because normal navigation and submission are sufficient.
 
+## Phase 3 operational work management
+
+- `ServiceType` is Organization-owned, case-insensitively unique, and explicitly active/inactive;
+  inactive records remain valid history but are excluded from new Work Orders.
+- `WorkOrder` directly belongs to Organization, Customer, Site, Service Type, creator, and an
+  optional Asset. Composite foreign keys enforce tenant and Customer/Site/Asset consistency.
+- Work Order identifiers use a locked per-Organization sequence formatted as
+  `OS-YYYY-NNNNNN`; public routes resolve this identifier rather than exposing database IDs.
+- Priorities are `normal`, `high`, and `urgent`; scheduling is one optional `scheduled_start`.
+  Phase 3 deliberately adds no status or cancellation workflow.
+- `Assignment` preserves responsibility history using Technician Membership, assigning User,
+  `assigned_at`, and `ended_at`. Reassignment is atomic and a partial unique index permits one
+  current Assignment per Work Order.
+- Work Order forms server-render policy-scoped options and use one small Stimulus controller to
+  filter Site by Customer and Asset by Site. Server/model/database validation remains authoritative.
+- Administrator and Supervisor manage Work Orders; Engineer reads; Technician reads only current
+  assignments. Founder manages but is assignable only with an eligible Technician Membership.
+- ADR 0005 records identifier, lifecycle, assignment-history, and dependent-selector decisions.
+
 ## Local environment
 
 Prerequisites are Ruby 4.0.6, PostgreSQL, and an SMTP catcher such as Mailpit on `127.0.0.1:1025`.

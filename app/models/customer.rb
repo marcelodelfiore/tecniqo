@@ -3,6 +3,7 @@ class Customer < ApplicationRecord
 
   has_many :sites, dependent: :restrict_with_exception
   has_many :assets, through: :sites
+  has_many :work_orders, dependent: :restrict_with_exception
 
   normalizes :name, :legal_name, :business_identifier, :email, :phone,
              with: ->(value) { value.to_s.strip.presence }

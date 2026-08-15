@@ -3,6 +3,7 @@ class Site < ApplicationRecord
   belongs_to :customer
 
   has_many :assets, dependent: :restrict_with_exception
+  has_many :work_orders, dependent: :restrict_with_exception
 
   normalizes :name, :contact_name, :phone, with: ->(value) { value.to_s.strip.presence }
 

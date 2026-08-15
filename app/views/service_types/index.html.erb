@@ -1,0 +1,36 @@
+<% content_for :title, t("service_types.index.title") %>
+<div class="space-y-6">
+  <%= render "shared/page_header", title: t("service_types.index.title"),
+        subtitle: t("service_types.index.subtitle", organization: Current.organization.name),
+        action: (link_to(t("service_types.index.new"), new_service_type_path, class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white") if policy(ServiceType).create?) %>
+
+  <% if @service_types.any? %>
+    <div class="space-y-3">
+      <% @service_types.each do |service_type| %>
+        <article class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div class="min-w-0">
+              <div class="flex flex-wrap items-center gap-2">
+                <h2 class="font-semibold text-gray-900"><%= service_type.name %></h2>
+                <span class="rounded-full px-2.5 py-1 text-xs font-medium <%= service_type.active? ? 'bg-emerald-100 text-emerald-800' : 'bg-gray-100 text-gray-700' %>"><%= t("service_types.status.#{service_type.active? ? 'active' : 'inactive'}") %></span>
+              </div>
+              <% if service_type.description.present? %><p class="mt-2 text-sm text-gray-600"><%= service_type.description %></p><% end %>
+            </div>
+            <% if policy(service_type).update? %>
+              <div class="flex flex-col gap-2 sm:flex-row">
+                <%= link_to t("actions.edit"), edit_service_type_path(service_type), class: "inline-flex min-h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700" %>
+                <% if service_type.active? %>
+                  <%= button_to t("actions.deactivate"), deactivate_service_type_path(service_type), method: :patch, class: "inline-flex min-h-11 w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-amber-700 hover:bg-amber-50" %>
+                <% else %>
+                  <%= button_to t("actions.activate"), activate_service_type_path(service_type), method: :patch, class: "inline-flex min-h-11 w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-emerald-700 hover:bg-emerald-50" %>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  <% else %>
+    <%= render "shared/empty_state", title: t("service_types.index.empty_title"), message: t("service_types.index.empty_message") %>
+  <% end %>
+</div>

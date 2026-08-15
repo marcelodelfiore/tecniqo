@@ -17,6 +17,13 @@ Rails.application.routes.draw do
     post :resend, on: :member
   end
   resources :memberships, only: %i[index edit update]
+  resources :service_types, except: :destroy do
+    patch :activate, on: :member
+    patch :deactivate, on: :member
+  end
+  resources :work_orders, except: :destroy do
+    resource :assignment, only: :create
+  end
 
   resources :customers, except: :destroy do
     resources :sites, except: %i[index destroy] do

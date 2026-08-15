@@ -149,6 +149,32 @@ Founder, Administrator, and Supervisor may manage operational context. Engineer 
 access. Technician receives no organization-wide Customer/Site/Asset scope until Work Order
 assignment supplies the contextual visibility boundary.
 
+## Operational work management
+
+```text
+Organization
+  ├── Service Type
+  └── Work Order
+        ├── Customer → Site → optional Asset
+        └── Assignment history → Technician Membership
+```
+
+Service Types are tenant configuration with explicit activation/deactivation. Work Orders are the
+requested body of work and remain distinct from future Executions. They use a concurrency-safe,
+Organization-local `OS-YYYY-NNNNNN` identifier, a compact fixed priority vocabulary, and one
+optional scheduled start. The optional single Asset is an MVP input simplification, not a permanent
+cardinality decision.
+
+Assignments are first-class historical records. One partial unique index permits a single current
+Assignment; reassignment locks the Work Order, ends the current record, and creates another in one
+transaction. Eligibility derives from an active same-Organization Membership carrying Technician
+responsibility. Assignment never represents future Execution participation.
+
+Administrator and Supervisor manage Work Orders and assignments; Engineer reads them; Technician
+scope is limited to currently assigned Work Orders. Founder retains the management bypass but is
+not an assignment candidate without normal Technician membership. Phase 3 has no Work Order status,
+cancellation, deletion, Execution, or generic audit framework. ADR 0005 records these boundaries.
+
 ## Development and testing strategy
 
 - Implement vertical business slices against realistic scenarios, not table-by-table CRUD.

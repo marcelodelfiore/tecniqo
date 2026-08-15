@@ -4,6 +4,10 @@ class User < ApplicationRecord
   has_many :organizations, through: :memberships
   has_many :sent_invitations, class_name: "Invitation", foreign_key: :invited_by_id,
                               inverse_of: :invited_by, dependent: :restrict_with_exception
+  has_many :created_work_orders, class_name: "WorkOrder", foreign_key: :created_by_id,
+                                 inverse_of: :created_by, dependent: :restrict_with_exception
+  has_many :made_assignments, class_name: "Assignment", foreign_key: :assigned_by_id,
+                              inverse_of: :assigned_by, dependent: :restrict_with_exception
 
   normalizes :email, with: ->(email) { email.to_s.strip.downcase }
 
