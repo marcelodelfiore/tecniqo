@@ -28,12 +28,13 @@ not the product's strategic endpoint.
 
 ## Current development focus
 
-Phase 3 — Service Type → Work Order → Assignment operational-work vertical slice.
+Phase 4 planning — Execution → Participants → Execution Events field-operation vertical slice.
 
 ## Success criteria
 
 - Existing passwordless authentication remains intact.
-- Service Types, Work Orders, and Assignment history have explicit, testable tenant and role boundaries.
+- Executions, participants, and operational events have explicit, testable tenant, role,
+  lifecycle, and data-integrity boundaries.
 - New UI remains responsive, Turbo-compatible, and ready to serve future thin
   Hotwire Native shells.
 

@@ -2,9 +2,9 @@
 
 ## Current milestone
 
-- **Name:** Phase 3 — Service Type → Work Order → Assignment
-- **Status:** Implementation and automated validation complete; browser smoke testing pending
-- **Target outcome:** Secure, low-friction creation, scheduling, and assignment of operational work
+- **Name:** Phase 4 — Execution → Participants → Execution Events
+- **Status:** Planning
+- **Target outcome:** Simple, tenant-safe field-visit initiation, participation, and event-based operational capture
 
 ## Completed
 
@@ -23,6 +23,7 @@
 - Validation: 207 RSpec examples, RuboCop, Zeitwerk, direct Brakeman, dependency audits,
   Preline verification, migration status, seed rerun, and diff checks passed. Canonical CI
   passed through Importmap Audit and stopped only on its existing Brakeman latest-version gate.
+- Acceptance: responsive Phase 3 browser smoke testing completed successfully by the developer.
 
 ### 2026-08-15 — Implement Customer → Site → Asset operational context
 
@@ -129,12 +130,12 @@
 
 ## In progress
 
-- Phase 3 responsive browser smoke testing and acceptance review.
+- Phase 4 requirements inspection and task definition.
 
 ## Planned
 
-- Browser smoke-test Phase 3 at desktop and phone widths in all supported locales.
-- Plan Phase 4 Execution → Participants → Execution Events after Phase 3 acceptance.
+- Define Phase 4 Execution, participant, event lifecycle, authorization, integrity, UI, and test boundaries.
+- Implement Phase 4 only after its task brief and plan are reviewed.
 
 ## Known defects and technical debt
 

@@ -2,7 +2,7 @@
 
 ## Current objective
 
-Phase 3 — Service Type → Work Order → Assignment operational-work vertical slice.
+Plan Phase 4 — Execution → Participants → Execution Events field-operation vertical slice.
 
 ## Current branch
 
@@ -26,15 +26,17 @@ through 0004 define those accepted boundaries. Service Type management, Work Ord
 scheduling, optional Asset context, assignment history, role-aware visibility, responsive UI,
 and dependent selectors are implemented. ADR 0005 defines the Phase 3 boundaries.
 
+Phase 3 responsive browser smoke testing and acceptance review are complete.
+
 ## In progress
 
-- Phase 3 responsive browser smoke testing and acceptance review.
+- Phase 4 requirements inspection and task definition.
 
 ## Next actions
 
-1. Browser smoke-test Service Type → Work Order → Assignment at desktop and phone widths.
-2. Review Phase 3 acceptance criteria and commit the slice after approval.
-3. Plan Execution → Participants → Execution Events without implementing Phase 4 automatically.
+1. Inspect the canonical return-visit scenario and existing Work Order/Assignment boundaries for Phase 4.
+2. Define Execution, Execution Participant, and Execution Event lifecycle and authorization rules.
+3. Produce a bounded Phase 4 task brief and implementation plan before editing application code.
 
 ## Acceptance criteria for the current activity
 
@@ -57,6 +59,7 @@ and dependent selectors are implemented. ADR 0005 defines the Phase 3 boundaries
 - [x] Work Order issuance, public identifier, priority, optional Asset, and scheduling implemented.
 - [x] Eligible Technician assignment and atomic reassignment history implemented.
 - [x] Phase 3 policies, responsive UI, dependent selectors, seeds, and focused specs implemented.
+- [x] Phase 3 responsive browser smoke testing and acceptance review completed by the developer.
 
 ## Important findings and decisions
 
@@ -91,8 +94,7 @@ and dependent selectors are implemented. ADR 0005 defines the Phase 3 boundaries
 
 ## Risks and blockers
 
-- Browser smoke testing should verify Phase 3 creation/reassignment ergonomics and dependent
-  selectors at desktop and phone widths.
+- None currently identified; Phase 4 lifecycle and authorization rules still require planning.
 
 ## Validation status
 
@@ -112,6 +114,6 @@ and dependent selectors are implemented. ADR 0005 defines the Phase 3 boundaries
 
 ## Handoff note
 
-Phases 1 and 2 are complete. Phase 3 connects operational context to scheduled, assigned Work
-Orders without implementing field Execution. Phase 4 must keep Work Order, Assignment, Execution,
-and Execution Participant responsibilities distinct.
+Phases 1 through 3 are complete and accepted. Phase 3 connects operational context to scheduled,
+assigned Work Orders without implementing field Execution. Phase 4 planning is next and must keep
+Work Order, Assignment, Execution, and Execution Participant responsibilities distinct.
