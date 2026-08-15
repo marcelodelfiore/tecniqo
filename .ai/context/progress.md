@@ -109,8 +109,6 @@
 
 | Item | Impact | Priority | Evidence | Intended action |
 |---|---|---|---|---|
-| Starter copy remains in UI | Product identity/navigation is incomplete | P2 | layouts/home/dashboard | Replace within the first relevant UI slice |
-| Generator text remains in token confirmation | Duplicate/irrelevant sign-in content | P2 | `app/views/sessions/show.html.erb` | Fix in a focused authentication UI cleanup |
 | Duplicate copied documentation trees | Agents may edit the wrong context/ADR path | P2 | `docs/.ai/`, `docs/docs/decisions/` | Clean up only with separate approval |
 | Production infrastructure providers undecided | Deployment is incomplete | P1 | production configuration | Configure before deployment |
 
