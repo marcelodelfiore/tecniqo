@@ -52,6 +52,18 @@ kebab case, or CamelCase. The optional second argument controls the display name
 The application name shown by layouts can later be overridden with
 `APPLICATION_NAME` without renaming code.
 
+## Complete Docker stack
+
+Run Rails, PostgreSQL, Garage, and Mailpit together with:
+
+```sh
+docker compose up --build
+```
+
+Open Técniqo at <http://localhost:3000> and captured login email at
+<http://localhost:8026>. See `docs/containerized-development.md` for seeded identities,
+configuration, persistence, console/log commands, and destructive-reset guidance.
+
 ## Authentication behavior
 
 1. A visitor submits an email address.
@@ -70,7 +82,9 @@ normalized email in 15 minutes. Production rate limiting uses Solid Cache.
 |---|---|---|
 | `APPLICATION_NAME` | Visible product name | Optional after bootstrap |
 | `APP_HOST` | Host used in emailed links | Required |
+| `APP_PROTOCOL` / `APP_PORT` | Mail-link scheme and optional nonstandard port | Deployment-dependent |
 | `MAILER_FROM` | Sender mailbox | Required |
+| `SMTP_ADDRESS` / `SMTP_PORT` | SMTP delivery endpoint | Required for email delivery |
 | `FORCE_SSL` | Trust SSL termination and enforce HTTPS when `true` | Required |
 | `RAILS_MASTER_KEY` | Decrypt Rails credentials | Required |
 | `DATABASE_URL` | Primary PostgreSQL connection | Deployment-dependent |

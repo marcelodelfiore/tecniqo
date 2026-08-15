@@ -121,7 +121,7 @@
       already_signed_in: "Você já está autenticado."
       rate_limited: "Muitas tentativas. Tente novamente mais tarde."
       email_required: "Informe seu e-mail."
-      email_sent: "Verifique seu e-mail para acessar o link de entrada."
+      email_sent: "Se este e-mail estiver cadastrado, você receberá um link de acesso."
       invalid_link: "Esse link de entrada é inválido ou expirou."
       signed_in: "Entrada realizada com sucesso."
       signed_out: "Saída realizada com sucesso."

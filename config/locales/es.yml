@@ -121,7 +121,7 @@ es:
       already_signed_in: "Ya has iniciado sesión."
       rate_limited: "Demasiados intentos. Inténtalo de nuevo más tarde."
       email_required: "Ingresa tu correo electrónico."
-      email_sent: "Revisa tu correo para encontrar el enlace de acceso."
+      email_sent: "Si este correo está registrado, recibirás un enlace de acceso."
       invalid_link: "Ese enlace de acceso no es válido o ha expirado."
       signed_in: "Sesión iniciada correctamente."
       signed_out: "Sesión cerrada correctamente."

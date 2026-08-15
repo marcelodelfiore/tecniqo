@@ -108,7 +108,7 @@
           <%= form_with model: candidate, url: work_order_execution_evidences_path(@work_order, @execution),
                         class: "mt-4 space-y-3" do |form| %>
             <%= form.select :evidence_type, Evidence::TYPES.map { |type| [t("evidence_types.#{type}"), type] }, {}, required: true, class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3" %>
-            <%= form.file_field :original, required: true, class: "block min-h-11 w-full text-sm text-gray-700" %>
+            <%= form.file_field :original, required: true, class: "block min-h-12 w-full cursor-pointer rounded-xl border border-blue-200 bg-blue-50 text-sm text-gray-700 file:mr-4 file:min-h-12 file:cursor-pointer file:border-0 file:bg-blue-700 file:px-4 file:py-3 file:font-semibold file:text-white hover:file:bg-blue-800" %>
             <%= form.text_area :description, rows: 2, placeholder: t("evidences.description_optional"), class: "w-full rounded-xl border border-gray-300 px-3 py-2" %>
             <%= form.submit t("evidences.upload"), class: "min-h-12 w-full rounded-xl bg-blue-700 px-4 font-semibold text-white" %>
           <% end %>

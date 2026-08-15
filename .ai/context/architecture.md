@@ -8,6 +8,15 @@ Evidence snapshots original metadata and an independent SHA-256. Default Active 
 routes are disabled and downloads use a Pundit-authorized endpoint. See ADR 0007 and
 `docs/evidence-storage.md`.
 
+## Phase 4.6 containerized development
+
+The checked-in Compose topology runs the production Rails image with PostgreSQL 17,
+Garage 2.3, and Mailpit. Rails/Thruster waits on service health, prepares the primary,
+cache, queue, and cable databases, optionally loads explicitly gated idempotent demo data,
+and runs Solid Queue inside Puma. PostgreSQL and Garage use named volumes; only Rails,
+Mailpit UI, and Garage development APIs bind to localhost. Kamal remains the production
+deployment path, separate from local Compose defaults.
+
 ## System overview
 
 Técniqo is a conventional Rails monolith. PostgreSQL is the system of record;

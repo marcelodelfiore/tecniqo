@@ -121,7 +121,7 @@ en:
       already_signed_in: "You are already signed in."
       rate_limited: "Too many attempts. Try again later."
       email_required: "Please enter your email."
-      email_sent: "Check your email for your sign-in link."
+      email_sent: "If this email is registered, you will receive a sign-in link."
       invalid_link: "That sign-in link is invalid or expired."
       signed_in: "Signed in successfully."
       signed_out: "Signed out successfully."

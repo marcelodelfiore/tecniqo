@@ -118,6 +118,18 @@ tenant-sensitive rules than explicit policies and scopes.
 
 ## Local environment
 
+The complete containerized environment requires only Docker:
+
+```sh
+docker compose up --build
+```
+
+It provides Rails at `localhost:3000`, Mailpit at `localhost:8026`, internal PostgreSQL,
+and Garage on localhost ports 3900/3903. Rails runs its production artifact, prepares all
+Solid databases, seeds demo identities through the explicit `LOAD_DEMO_DATA` gate, and
+runs Solid Queue in Puma. Details and reset warnings are in
+`docs/containerized-development.md`.
+
 Garage is optional for normal tests. Copy `.env.example`, set its secrets, run
 `docker compose up -d garage`, and select `ACTIVE_STORAGE_SERVICE=evidence_s3` to test
 the S3 path. The persistence smoke test is in `docs/evidence-storage.md`.
@@ -152,11 +164,14 @@ bin/ci                                          # canonical pipeline
 |---|---|---|
 | `APPLICATION_NAME` | Override visible product name | No |
 | `APP_HOST` | Host in production email URLs | No |
+| `APP_PROTOCOL` / `APP_PORT` | Email-link scheme and optional port | No |
+| `SMTP_ADDRESS` / `SMTP_PORT` | SMTP endpoint | No |
 | `MAILER_FROM` | Email sender | No |
 | `FORCE_SSL` | Enable HTTPS enforcement | No |
 | `RAILS_MASTER_KEY` | Decrypt production credentials | No |
 | `DATABASE_URL` | Override PostgreSQL connection | No |
 | `RAILS_LOG_LEVEL` | Log verbosity | No |
+| `SEED_DATABASE` / `LOAD_DEMO_DATA` | Explicit local Compose demo seeding gates | No |
 
 Never record secret values in source or context.
 

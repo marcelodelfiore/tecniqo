@@ -1,4 +1,19 @@
 services:
+  db:
+    image: postgres:17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-tecniqo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-tecniqo-development}
+      POSTGRES_DB: ${POSTGRES_DB:-tecniqo_production}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
   garage:
     image: dxflrs/garage:v2.3.0
     command: /garage server --single-node --default-bucket
@@ -7,9 +22,9 @@ services:
       - "127.0.0.1:3900:3900"
       - "127.0.0.1:3903:3903"
     environment:
-      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?set GARAGE_RPC_SECRET}
-      GARAGE_DEFAULT_ACCESS_KEY: ${EVIDENCE_STORAGE_ACCESS_KEY:?set EVIDENCE_STORAGE_ACCESS_KEY}
-      GARAGE_DEFAULT_SECRET_KEY: ${EVIDENCE_STORAGE_SECRET_KEY:?set EVIDENCE_STORAGE_SECRET_KEY}
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:-0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef}
+      GARAGE_DEFAULT_ACCESS_KEY: ${EVIDENCE_STORAGE_ACCESS_KEY:-GKTECNQODEV000000000000}
+      GARAGE_DEFAULT_SECRET_KEY: ${EVIDENCE_STORAGE_SECRET_KEY:-tecniqo-development-secret-000000000000000000000000}
       GARAGE_DEFAULT_BUCKET: ${EVIDENCE_STORAGE_BUCKET:-tecniqo-evidence}
     volumes:
       - ./config/garage.toml:/etc/garage.toml:ro
@@ -21,6 +36,55 @@ services:
       timeout: 5s
       retries: 10
 
+  mailpit:
+    image: axllent/mailpit:v1.30.7
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${MAILPIT_WEB_PORT:-8026}:8025"
+
+  web:
+    build:
+      context: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      garage:
+        condition: service_healthy
+      mailpit:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${TECNIQO_WEB_PORT:-3000}:80"
+    environment:
+      RAILS_ENV: production
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:-phase-4-6-local-compose-only-secret-key-base-change-before-production}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-tecniqo}:${POSTGRES_PASSWORD:-tecniqo-development}@db:5432/${POSTGRES_DB:-tecniqo_production}
+      CACHE_DATABASE_URL: postgresql://${POSTGRES_USER:-tecniqo}:${POSTGRES_PASSWORD:-tecniqo-development}@db:5432/tecniqo_production_cache
+      QUEUE_DATABASE_URL: postgresql://${POSTGRES_USER:-tecniqo}:${POSTGRES_PASSWORD:-tecniqo-development}@db:5432/tecniqo_production_queue
+      CABLE_DATABASE_URL: postgresql://${POSTGRES_USER:-tecniqo}:${POSTGRES_PASSWORD:-tecniqo-development}@db:5432/tecniqo_production_cable
+      ACTIVE_STORAGE_SERVICE: evidence_s3
+      EVIDENCE_STORAGE_ENDPOINT: http://garage:3900
+      EVIDENCE_STORAGE_ACCESS_KEY: ${EVIDENCE_STORAGE_ACCESS_KEY:-GKTECNQODEV000000000000}
+      EVIDENCE_STORAGE_SECRET_KEY: ${EVIDENCE_STORAGE_SECRET_KEY:-tecniqo-development-secret-000000000000000000000000}
+      EVIDENCE_STORAGE_BUCKET: ${EVIDENCE_STORAGE_BUCKET:-tecniqo-evidence}
+      EVIDENCE_STORAGE_REGION: ${EVIDENCE_STORAGE_REGION:-garage}
+      EVIDENCE_STORAGE_FORCE_PATH_STYLE: "true"
+      SOLID_QUEUE_IN_PUMA: "true"
+      SEED_DATABASE: ${SEED_DATABASE:-true}
+      LOAD_DEMO_DATA: ${LOAD_DEMO_DATA:-true}
+      APP_HOST: localhost
+      APP_PROTOCOL: http
+      APP_PORT: ${TECNIQO_WEB_PORT:-3000}
+      SMTP_ADDRESS: mailpit
+      SMTP_PORT: "1025"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost/up"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
 volumes:
+  postgres-data:
   garage-metadata:
   garage-data:

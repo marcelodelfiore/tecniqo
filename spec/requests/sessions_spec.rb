@@ -91,7 +91,7 @@ RSpec.describe "Sessions", type: :request do
 
       expect(response).to redirect_to(new_session_path)
       follow_redirect!
-      expect(response.body).to include("Check your email for your sign-in link.")
+      expect(response.body).to include("If this email is registered, you will receive a sign-in link.")
     end
 
     it "redirects an authenticated user without issuing another token" do

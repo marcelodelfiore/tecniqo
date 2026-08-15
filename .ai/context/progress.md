@@ -2,11 +2,27 @@
 
 ## Current milestone
 
-- **Name:** Phase 4.5 — Secure Evidence Storage
+- **Name:** Phase 4.6 — Complete Containerized Development Infrastructure
 - **Status:** Complete and validated
-- **Target outcome:** Private, immutable, verifiable originals through provider-independent Active Storage
+- **Target outcome:** One-command Rails, PostgreSQL, Garage, and Mailpit startup
 
 ## Completed
+
+### 2026-08-15 — Add complete local Compose infrastructure
+
+- Added PostgreSQL 17, production-image Rails/Thruster, Solid Queue, and Mailpit 1.30.7
+  to the existing Garage Compose service.
+- Added health-gated startup, all four Rails database URLs, automatic `db:prepare`,
+  explicit idempotent demo-seed gates, SMTP routing, and correct container mail URLs.
+- Added persistent database/Garage volumes and localhost-only published development ports.
+- Documented one-command startup, seeded identities, logs/console, persistence, and the
+  explicitly destructive volume-reset workflow.
+- Container smoke validation: all services healthy; database preparation/seeding,
+  Rails HTTP, Solid Queue, SMTP/Mailpit, S3 upload/download, and restart persistence passed.
+- Repository validation: 242 RSpec examples, RuboCop, Zeitwerk, direct Brakeman,
+  Bundler/Importmap/NPM audits, Compose parsing, entrypoint syntax, and diff checks passed.
+  Canonical CI passed through Importmap Audit and stopped only at the existing locked
+  Brakeman latest-version gate (8.0.5 locked; 8.0.6 latest).
 
 ### 2026-08-15 — Implement secure provider-independent Evidence storage
 

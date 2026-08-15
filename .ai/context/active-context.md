@@ -2,8 +2,8 @@
 
 ## Current objective
 
-Phase 4.5 — secure, provider-independent immutable Evidence storage — is implemented
-and validated. Phase 5 structured technical field capture remains deferred.
+Phase 4.6 — complete containerized development infrastructure — is implemented and
+validated. Phase 5 structured technical field capture remains deferred.
 
 ## Current branch
 
@@ -14,6 +14,10 @@ and validated. Phase 5 structured technical field capture remains deferred.
 Phase 4 is smoke-tested. Phase 4.5 uses an Execution-owned Evidence record, Active
 Storage, independent SHA-256 fingerprints, authorized private delivery, and Garage as
 replaceable S3-compatible infrastructure.
+
+The local Compose stack now starts the production Rails image, PostgreSQL, Garage, and
+Mailpit with health ordering, database preparation, explicitly gated idempotent demo
+seeds, Solid Queue, private persistent volumes, and localhost-only published ports.
 
 The Rails application runs on Ruby 4.0.6 and provides tested passwordless authentication,
 a global User identity, `Current.user`, PostgreSQL, RSpec, and a responsive
@@ -43,13 +47,13 @@ Phase 4 responsive browser smoke testing and acceptance review are complete.
 
 ## In progress
 
-- Phase 5 requirements inspection and task definition.
+- Developer acceptance smoke testing of the Phase 4.6 stack.
 
 ## Next actions
 
-1. Inspect the canonical scenario's Findings, Measurements, Evidence, Actions, Materials, and Recommendations.
-2. Define Phase 5 structured-fact, evidence-linking, authorship, lifecycle, and authorization boundaries.
-3. Produce a bounded Phase 5 task brief and implementation plan before editing application code.
+1. Developer verifies `docker compose up --build`, login through Mailpit, and Evidence upload.
+2. Inspect the canonical scenario's Phase 5 technical field facts.
+3. Define Phase 5 relationships and authorization before editing domain code.
 
 ## Acceptance criteria for the current activity
 
