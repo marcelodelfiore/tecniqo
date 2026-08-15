@@ -28,13 +28,13 @@ not the product's strategic endpoint.
 
 ## Current development focus
 
-Phase 4 planning — Execution → Participants → Execution Events field-operation vertical slice.
+Phase 5 planning — Findings → Measurements → Evidence → Actions → Materials/Recommendations.
 
 ## Success criteria
 
 - Existing passwordless authentication remains intact.
-- Executions, participants, and operational events have explicit, testable tenant, role,
-  lifecycle, and data-integrity boundaries.
+- Structured field facts and evidence have explicit, testable tenant, authorship,
+  traceability, lifecycle, and data-integrity boundaries.
 - New UI remains responsive, Turbo-compatible, and ready to serve future thin
   Hotwire Native shells.
 

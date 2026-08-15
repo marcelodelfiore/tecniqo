@@ -35,6 +35,32 @@
     </aside>
   </div>
 
+  <section class="space-y-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div><h2 class="text-lg font-semibold text-gray-900"><%= t("executions.title") %></h2><p class="mt-1 text-sm text-gray-600"><%= t("executions.subtitle") %></p></div>
+      <% candidate_execution = @work_order.executions.new(organization: Current.organization) %>
+      <% if policy(candidate_execution).create? && @work_order.execution_creation_available? %>
+        <%= form_with url: work_order_executions_path(@work_order), class: "flex flex-col gap-2 sm:flex-row" do |form| %>
+          <%= form.datetime_local_field :scheduled_start, name: "execution[scheduled_start]", class: "min-h-11 rounded-xl border border-gray-300 px-3", aria: { label: t("labels.scheduled_start") } %>
+          <%= form.submit t(@executions.empty? ? "executions.create_first" : "executions.schedule_return"), class: "min-h-11 rounded-xl bg-blue-600 px-4 font-medium text-white" %>
+        <% end %>
+      <% end %>
+    </div>
+    <% if @executions.any? %>
+      <div class="grid gap-4 lg:grid-cols-2">
+        <% @executions.each do |execution| %>
+          <%= link_to work_order_execution_path(@work_order, execution), class: "rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" do %>
+            <div class="flex items-start justify-between gap-3"><h3 class="font-semibold text-blue-700"><%= t("executions.visit", number: execution.visit_number) %></h3><span class="rounded-full px-2.5 py-1 text-xs font-semibold <%= execution_state_classes(execution.current_state) %>"><%= t("execution_states.#{execution.current_state}") %></span></div>
+            <p class="mt-3 text-sm text-gray-600"><%= execution.scheduled_start ? l(execution.scheduled_start, format: :long) : t("work_orders.index.unscheduled") %></p>
+            <p class="mt-2 text-sm font-medium text-gray-800"><%= execution.outcome ? t("execution_outcomes.#{execution.outcome}") : t("executions.outcome_pending") %></p>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <%= render "shared/empty_state", title: t("executions.empty_title"), message: t("executions.empty_message") %>
+    <% end %>
+  </section>
+
   <% if @assignments.any? %>
     <section class="space-y-3">
       <h2 class="text-lg font-semibold text-gray-900"><%= t("work_orders.show.assignment_history") %></h2>

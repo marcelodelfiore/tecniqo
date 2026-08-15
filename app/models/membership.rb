@@ -6,6 +6,12 @@ class Membership < ApplicationRecord
 
   has_many :membership_roles, dependent: :destroy
   has_many :assignments, dependent: :restrict_with_exception
+  has_many :execution_participants, dependent: :restrict_with_exception
+  has_many :participating_executions, through: :execution_participants, source: :execution
+  has_many :execution_events, foreign_key: :actor_membership_id, dependent: :restrict_with_exception
+  has_many :recorded_execution_outcomes, class_name: "Execution",
+                                           foreign_key: :outcome_recorded_by_membership_id,
+                                           dependent: :restrict_with_exception
 
   validates :user_id, uniqueness: { scope: :organization_id }
   validates :active, inclusion: { in: [ true, false ] }

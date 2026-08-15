@@ -30,9 +30,13 @@ class WorkOrderPolicy < ApplicationPolicy
       return tenant_scope if membership.membership_roles.where(role: READ_ROLES).exists?
       return scope.none unless membership.membership_roles.exists?(role: "technician")
 
-      tenant_scope.joins(:assignments)
-                  .where(assignments: { membership_id: membership.id, ended_at: nil })
-                  .distinct
+      assigned_ids = tenant_scope.joins(:assignments)
+                                 .where(assignments: { membership_id: membership.id, ended_at: nil })
+                                 .select(:id)
+      participated_ids = tenant_scope.joins(executions: :execution_participants)
+                                     .where(execution_participants: { membership_id: membership.id })
+                                     .select(:id)
+      tenant_scope.where(id: assigned_ids).or(tenant_scope.where(id: participated_ids))
     end
   end
 
@@ -45,7 +49,9 @@ class WorkOrderPolicy < ApplicationPolicy
   def assigned_technician?
     membership = current_membership
     membership&.membership_roles&.exists?(role: "technician") &&
-      record.assignments.current.exists?(membership: membership)
+    record.assignments.current.exists?(membership: membership) ||
+      record.executions.joins(:execution_participants)
+            .exists?(execution_participants: { membership_id: membership.id })
   end
 
   def manage?

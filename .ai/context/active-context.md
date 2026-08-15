@@ -2,7 +2,7 @@
 
 ## Current objective
 
-Plan Phase 4 — Execution → Participants → Execution Events field-operation vertical slice.
+Plan Phase 5 — structured technical field capture.
 
 ## Current branch
 
@@ -26,17 +26,25 @@ through 0004 define those accepted boundaries. Service Type management, Work Ord
 scheduling, optional Asset context, assignment history, role-aware visibility, responsive UI,
 and dependent selectors are implemented. ADR 0005 defines the Phase 3 boundaries.
 
+Execution visits, multiple Technician participants, append-oriented execution events, derived
+state and durations, outcome/return handling, participant-aware technician scope, `My Work`, and
+responsive field/supervisor UI are implemented. Visit scheduling is Execution-owned while the
+existing Work Order schedule remains the initial coordination date. ADR 0006 records the Phase 4
+event/state and scheduling decisions.
+
 Phase 3 responsive browser smoke testing and acceptance review are complete.
+
+Phase 4 responsive browser smoke testing and acceptance review are complete.
 
 ## In progress
 
-- Phase 4 requirements inspection and task definition.
+- Phase 5 requirements inspection and task definition.
 
 ## Next actions
 
-1. Inspect the canonical return-visit scenario and existing Work Order/Assignment boundaries for Phase 4.
-2. Define Execution, Execution Participant, and Execution Event lifecycle and authorization rules.
-3. Produce a bounded Phase 4 task brief and implementation plan before editing application code.
+1. Inspect the canonical scenario's Findings, Measurements, Evidence, Actions, Materials, and Recommendations.
+2. Define Phase 5 structured-fact, evidence-linking, authorship, lifecycle, and authorization boundaries.
+3. Produce a bounded Phase 5 task brief and implementation plan before editing application code.
 
 ## Acceptance criteria for the current activity
 
@@ -60,6 +68,13 @@ Phase 3 responsive browser smoke testing and acceptance review are complete.
 - [x] Eligible Technician assignment and atomic reassignment history implemented.
 - [x] Phase 3 policies, responsive UI, dependent selectors, seeds, and focused specs implemented.
 - [x] Phase 3 responsive browser smoke testing and acceptance review completed by the developer.
+- [x] Work Orders support independently scheduled, Work Order-local numbered Executions.
+- [x] Assignment and multi-Technician Execution participation remain distinct.
+- [x] Fixed operational events derive state and timing without manual actor/time/status input.
+- [x] Pause/resume cycles, unable-to-execute, return-required, submission locking, and return visits work.
+- [x] Technician access is limited to current assignment or participation; field actions require participation.
+- [x] Phase 4 mobile-first field UI, supervisor visit summaries, `My Work`, translations, seeds, and tests exist.
+- [x] Phase 4 responsive browser smoke testing and acceptance review completed by the developer.
 
 ## Important findings and decisions
 
@@ -90,30 +105,37 @@ Phase 3 responsive browser smoke testing and acceptance review are complete.
 - Technician visibility is now limited to currently assigned Work Orders.
 - Work Orders have no premature status/cancellation field; Asset remains optional and singular for MVP.
 - Dependent selectors are a small progressive enhancement over tenant-scoped server-rendered options.
+- Execution event transitions lock the Execution row; visit allocation locks the Work Order row.
+- `occurred_at` is business time and `created_at` is persistence time; event chronology uses both
+  occurrence time and ID as a stable tie-breaker.
+- Execution state and durations are derived from immutable operational events, not editable status
+  or timesheet columns.
+- Only active Technician Memberships participate; Founder authorization is not field eligibility.
+- Submission is terminal for Phase 4, and return visits remain under the same Work Order.
 - Root `.ai/` is operational; `docs/.ai/` and `docs/docs/decisions/` are copied artifacts.
 
 ## Risks and blockers
 
-- None currently identified; Phase 4 lifecycle and authorization rules still require planning.
+- None currently identified; Phase 5 domain and evidence-linking rules still require planning.
+- Organization-specific time zones and offline synchronization remain intentionally deferred.
 
 ## Validation status
 
-- Ruby 4.0.6 `bundle exec rspec`: 207 examples, 0 failures.
-- Ruby 4.0.6 `bin/rubocop`: 126 files, no offenses.
+- Ruby 4.0.6 `bundle exec rspec`: 230 examples, 0 failures.
+- Ruby 4.0.6 `bin/rubocop`: 147 files, no offenses.
 - Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
 - Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings.
 - `bin/bundler-audit`, `bin/importmap audit`, and `npm run verify:preline`: passed.
 - `npm audit --audit-level=high`: passed with no vulnerabilities.
 - `bin/rails db:migrate:status`: all migrations up.
-- Development seeds ran twice successfully, confirming idempotent Phase 3 demo data.
+- Development seeds ran twice successfully, confirming idempotent Phase 4 demo data.
 - `git diff --check`: passed.
-- `bin/ci`: 206 tests at the time of its run, style, JavaScript setup, Preline, NPM, gem,
-  and Importmap audits passed; the final 207-example suite also passes after adding one database
-  integrity assertion. The final wrapper stopped only because Brakeman 8.0.5 is not the latest
-  8.0.6. The direct locked-version scan completed with no warnings.
+- `bin/ci`: setup, 230 tests, style, JavaScript setup, Preline, NPM, gem, and Importmap
+  audits passed; the wrapper stopped only because locked Brakeman 8.0.5 is not latest 8.0.6.
+  Direct `bundle exec brakeman --no-pager` completed with no warnings.
 
 ## Handoff note
 
-Phases 1 through 3 are complete and accepted. Phase 3 connects operational context to scheduled,
-assigned Work Orders without implementing field Execution. Phase 4 planning is next and must keep
-Work Order, Assignment, Execution, and Execution Participant responsibilities distinct.
+Phases 1 through 4 are complete and accepted. Phase 5 planning is next and must add technical field
+facts without weakening the Phase 4 event history or collapsing Work Order, Assignment, Execution,
+and participant responsibilities.

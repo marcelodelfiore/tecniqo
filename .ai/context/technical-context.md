@@ -96,6 +96,24 @@ tenant-sensitive rules than explicit policies and scopes.
   assignments. Founder manages but is assignable only with an eligible Technician Membership.
 - ADR 0005 records identifier, lifecycle, assignment-history, and dependent-selector decisions.
 
+## Phase 4 field execution
+
+- `Execution` is a Work Order visit with a concurrency-safe Work Order-local visit number and its
+  own optional schedule. Visit 1 defaults from the existing Work Order schedule.
+- `ExecutionParticipant` references an eligible active Technician Membership. Assignment seeds the
+  first participant but remains a separate responsibility-history concept.
+- Fixed `ExecutionEvent` actions store server-derived actor Membership and `occurred_at`; Rails
+  `created_at` separately records persistence. Events are ordered by occurrence plus ID.
+- Execution state and operational durations derive from append-oriented event history. Row locks
+  serialize transitions and reject duplicate/concurrent actions.
+- Outcomes are `completed`, `return_required`, and `unable_to_execute`; return/unable reasons use a
+  small fixed vocabulary. Submission is terminal for Phase 4.
+- Technician access is limited to current Work Order assignment or Execution participation; field
+  actions require actual participation. `My Work` provides the minimal technician entry point.
+- Rails persists timestamps in its configured UTC convention and renders them through the active
+  Rails time zone. Organization-specific zones remain deferred.
+- ADR 0006 records event/state, occurrence timestamp, participant, and visit-scheduling decisions.
+
 ## Local environment
 
 Prerequisites are Ruby 4.0.6, PostgreSQL, and an SMTP catcher such as Mailpit on `127.0.0.1:1025`.

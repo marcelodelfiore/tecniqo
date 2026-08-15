@@ -12,6 +12,7 @@ class WorkOrder < ApplicationRecord
                                                                inverse_of: :work_order
   has_one :current_assignment, -> { where(ended_at: nil) }, class_name: "Assignment",
                                                           inverse_of: :work_order
+  has_many :executions, -> { order(:visit_number) }, dependent: :restrict_with_exception
 
   normalizes :requested_work, with: ->(value) { value.to_s.strip.presence }
 
@@ -56,6 +57,11 @@ class WorkOrder < ApplicationRecord
 
   def to_param
     public_identifier
+  end
+
+  def execution_creation_available?
+    previous = executions.order(visit_number: :desc).first
+    previous.nil? || (previous.submitted? && previous.outcome == "return_required")
   end
 
   private

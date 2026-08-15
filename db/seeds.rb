@@ -68,4 +68,9 @@ if Rails.env.development?
     assignee_membership: technician_membership
   )
   work_order.assign_to!(technician_membership, assigned_by: founder) unless work_order.current_assignment
+
+  unless work_order.executions.exists?
+    Execution.create_for!(work_order: work_order, created_by: founder,
+                          scheduled_start: work_order.scheduled_start)
+  end
 end

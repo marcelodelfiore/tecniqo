@@ -175,6 +175,36 @@ scope is limited to currently assigned Work Orders. Founder retains the manageme
 not an assignment candidate without normal Technician membership. Phase 3 has no Work Order status,
 cancellation, deletion, Execution, or generic audit framework. ADR 0005 records these boundaries.
 
+## Field execution
+
+```text
+Work Order
+  └── Execution [1..N]
+        ├── Execution Participant [1..N] → Technician Membership
+        └── Execution Event [0..N] → actor Membership
+```
+
+Work Order is the requested overall job; Execution is one numbered field visit. Assignment records
+current responsibility, while Execution Participant records who actually joined a visit. A new
+Execution uses the current assigned Technician as a convenience seed, but the records never become
+equivalent. Visit numbering and event transitions lock the appropriate parent row for concurrency.
+
+Execution state is derived from immutable, append-oriented operational events rather than an
+editable status. Named POST actions record server-derived actor and `occurred_at`; `created_at`
+remains persistence time for future delayed/offline evolution. Pause/resume is repeatable, duration
+metrics are calculated from event history, and submission locks the Phase 4 operational record.
+Unable-to-execute records an outcome without inventing asset work. Return-required submissions may
+create another independently scheduled Execution beneath the same Work Order.
+
+Only active Memberships carrying Technician responsibility are participant candidates and field
+actors. Administrator and Supervisor manage visits/participants, Engineer reads, and Founder has
+administrative visibility without implicit field eligibility. Technician scope is current Work
+Order assignment or recorded visit participation; action permission requires participation.
+
+The execution view is phone-first with one prominent valid business action, while the Work Order
+view provides supervisor-oriented visit summaries. Conventional server-authorized routes preserve
+Turbo and future Hotwire Native compatibility. See ADR 0006.
+
 ## Development and testing strategy
 
 - Implement vertical business slices against realistic scenarios, not table-by-table CRUD.

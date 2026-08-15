@@ -1,0 +1,118 @@
+<% content_for :title, t("executions.visit", number: @execution.visit_number) %>
+<div class="space-y-6">
+  <%= render "shared/breadcrumbs", items: [
+        { label: t("work_orders.index.title"), path: work_orders_path },
+        { label: @work_order.public_identifier, path: work_order_path(@work_order) },
+        { label: t("executions.visit", number: @execution.visit_number) }
+      ] %>
+
+  <header class="rounded-2xl bg-slate-900 p-5 text-white shadow-sm sm:p-6">
+    <div class="flex flex-wrap items-start justify-between gap-3">
+      <div>
+        <p class="text-sm font-semibold text-blue-300"><%= @work_order.public_identifier %></p>
+        <h1 class="mt-1 text-2xl font-semibold"><%= t("executions.visit", number: @execution.visit_number) %></h1>
+      </div>
+      <span class="rounded-full px-3 py-1 text-sm font-semibold <%= execution_state_classes(@execution.current_state) %>"><%= t("execution_states.#{@execution.current_state}") %></span>
+    </div>
+    <div class="mt-5 grid gap-2 text-sm text-slate-200 sm:grid-cols-2">
+      <p><strong class="text-white"><%= @work_order.customer.name %></strong> · <%= @work_order.site.name %></p>
+      <p><%= @work_order.asset&.name || t("work_orders.form.no_asset") %> · <%= @work_order.service_type.name %></p>
+    </div>
+    <p class="mt-4 text-sm leading-6 text-slate-200"><%= @work_order.requested_work %></p>
+    <% if @execution.scheduled_start %><p class="mt-4 text-sm font-medium"><%= t("executions.scheduled", date: l(@execution.scheduled_start, format: :long)) %></p><% end %>
+  </header>
+
+  <% if policy(@execution).perform_event? && !@execution.submitted? %>
+    <section class="rounded-2xl border-2 border-blue-200 bg-blue-50 p-5 shadow-sm sm:p-6">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-blue-800"><%= t("executions.current_action") %></h2>
+      <div class="mt-4 space-y-4">
+        <% case @execution.current_state %>
+        <% when "planned" %>
+          <%= button_to t("execution_actions.arrive"), work_order_execution_arrive_path(@work_order, @execution), class: "min-h-14 w-full rounded-2xl bg-blue-600 px-5 py-3 text-base font-bold text-white shadow-sm" %>
+        <% when "onsite_waiting" %>
+          <%= button_to t("execution_actions.start_work"), work_order_execution_start_work_path(@work_order, @execution), class: "min-h-14 w-full rounded-2xl bg-green-600 px-5 py-3 text-base font-bold text-white shadow-sm" %>
+          <details class="rounded-xl border border-gray-200 bg-white p-4">
+            <summary class="cursor-pointer font-medium text-gray-800"><%= t("execution_actions.unable") %></summary>
+            <%= form_with url: work_order_execution_unable_path(@work_order, @execution), class: "mt-4 space-y-3" do |form| %>
+              <%= form.select :outcome_reason, Execution::OUTCOME_REASONS.map { |reason| [t("outcome_reasons.#{reason}"), reason] }, { include_blank: t("executions.select_reason") }, required: true, class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3" %>
+              <%= form.text_area :outcome_note, placeholder: t("executions.optional_note"), rows: 3, class: "w-full rounded-xl border border-gray-300 px-3 py-2" %>
+              <%= form.submit t("execution_actions.confirm_unable"), class: "min-h-11 w-full rounded-xl bg-red-600 px-4 font-semibold text-white", data: { turbo_confirm: t("executions.confirm_unable") } %>
+            <% end %>
+          </details>
+        <% when "working" %>
+          <%= form_with url: work_order_execution_pause_path(@work_order, @execution), class: "space-y-3" do |form| %>
+            <%= form.select :reason, ExecutionEvent::PAUSE_REASONS.map { |reason| [t("pause_reasons.#{reason}"), reason] }, { include_blank: t("executions.pause_reason_optional") }, class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3" %>
+            <%= form.submit t("execution_actions.pause"), class: "min-h-14 w-full rounded-2xl bg-amber-500 px-5 py-3 text-base font-bold text-gray-950" %>
+          <% end %>
+          <details class="rounded-xl border border-gray-200 bg-white p-4">
+            <summary class="cursor-pointer font-medium text-gray-800"><%= t("execution_actions.finish_work") %></summary>
+            <%= form_with url: work_order_execution_finish_work_path(@work_order, @execution), class: "mt-4 space-y-3" do |form| %>
+              <%= form.select :outcome, %w[completed return_required].map { |outcome| [t("execution_outcomes.#{outcome}"), outcome] }, {}, required: true, class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3" %>
+              <%= form.select :outcome_reason, Execution::OUTCOME_REASONS.map { |reason| [t("outcome_reasons.#{reason}"), reason] }, { include_blank: t("executions.reason_for_return") }, class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3" %>
+              <%= form.text_area :outcome_note, placeholder: t("executions.optional_note"), rows: 3, class: "w-full rounded-xl border border-gray-300 px-3 py-2" %>
+              <%= form.submit t("execution_actions.confirm_finish"), class: "min-h-11 w-full rounded-xl bg-slate-800 px-4 font-semibold text-white", data: { turbo_confirm: t("executions.confirm_finish") } %>
+            <% end %>
+          </details>
+        <% when "paused" %>
+          <%= button_to t("execution_actions.resume"), work_order_execution_resume_path(@work_order, @execution), class: "min-h-14 w-full rounded-2xl bg-green-600 px-5 py-3 text-base font-bold text-white" %>
+        <% when "work_finished", "unable_to_execute" %>
+          <%= button_to t("execution_actions.leave"), work_order_execution_leave_path(@work_order, @execution), class: "min-h-14 w-full rounded-2xl bg-blue-600 px-5 py-3 text-base font-bold text-white" %>
+        <% when "left_site" %>
+          <%= button_to t("execution_actions.submit"), work_order_execution_submit_path(@work_order, @execution), class: "min-h-14 w-full rounded-2xl bg-blue-700 px-5 py-3 text-base font-bold text-white", data: { turbo_confirm: t("executions.confirm_submit") } %>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <section class="space-y-4 lg:col-span-2">
+      <h2 class="text-lg font-semibold text-gray-900"><%= t("executions.timeline") %></h2>
+      <% if @events.any? %>
+        <ol class="space-y-3">
+          <% @events.each do |event| %>
+            <li class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+              <div class="flex items-start gap-4">
+                <time class="shrink-0 font-mono text-sm font-semibold text-blue-700"><%= event.occurred_at.strftime("%H:%M") %></time>
+                <div><p class="font-medium text-gray-900"><%= t("execution_events.types.#{event.event_type}") %></p><p class="mt-1 text-sm text-gray-500"><%= event.actor.email %><% if event.reason %> · <%= t("pause_reasons.#{event.reason}") %><% end %></p></div>
+              </div>
+            </li>
+          <% end %>
+        </ol>
+      <% else %>
+        <%= render "shared/empty_state", title: t("executions.no_events"), message: t("executions.no_events_message") %>
+      <% end %>
+    </section>
+
+    <aside class="space-y-6">
+      <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-semibold text-gray-900"><%= t("executions.participants") %></h2>
+        <ul class="mt-3 space-y-2"><% @participants.each do |participant| %><li class="flex items-center justify-between gap-2 text-sm"><span class="break-all"><%= participant.user.email %></span><% if policy(participant).destroy? && @participants.many? %><%= button_to t("actions.remove"), work_order_execution_participant_path(@work_order, @execution, participant), method: :delete, class: "text-red-700" %><% end %></li><% end %></ul>
+        <% candidate = @execution.execution_participants.new(organization: Current.organization) %>
+        <% if policy(candidate).create? %>
+          <%= form_with url: work_order_execution_participants_path(@work_order, @execution), class: "mt-4 space-y-2" do |form| %>
+            <%= form.collection_select :membership_id, @eligible_participants, :id, ->(membership) { membership.user.email }, { include_blank: t("executions.select_participant") }, required: true, class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3" %>
+            <%= form.submit t("executions.add_participant"), class: "min-h-11 w-full rounded-xl border border-blue-600 px-4 font-medium text-blue-700" %>
+          <% end %>
+        <% end %>
+      </section>
+
+      <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <h2 class="text-lg font-semibold text-gray-900"><%= t("executions.durations.title") %></h2>
+        <dl class="mt-4 space-y-3 text-sm">
+          <% { site_presence: @execution.site_presence_duration, pre_work_wait: @execution.pre_work_wait_duration, effective_work: @execution.effective_work_duration, paused: @execution.paused_duration, post_work_onsite: @execution.post_work_onsite_duration }.each do |name, duration| %>
+            <div class="flex justify-between gap-3"><dt class="text-gray-500"><%= t("executions.durations.#{name}") %></dt><dd class="font-medium text-gray-900"><%= duration_label(duration) %></dd></div>
+          <% end %>
+        </dl>
+      </section>
+
+      <% if @execution.outcome %>
+        <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <h2 class="text-lg font-semibold text-gray-900"><%= t("executions.outcome") %></h2>
+          <p class="mt-3 font-medium"><%= t("execution_outcomes.#{@execution.outcome}") %></p>
+          <% if @execution.outcome_reason %><p class="mt-1 text-sm text-gray-600"><%= t("outcome_reasons.#{@execution.outcome_reason}") %></p><% end %>
+          <% if @execution.outcome_note %><p class="mt-3 text-sm text-gray-700"><%= @execution.outcome_note %></p><% end %>
+        </section>
+      <% end %>
+    </aside>
+  </div>
+</div>

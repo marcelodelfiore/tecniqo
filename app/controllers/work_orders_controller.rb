@@ -23,6 +23,8 @@ class WorkOrdersController < ApplicationController
   def show
     authorize @work_order
     @assignments = @work_order.assignments.includes(:assigned_by, membership: :user)
+    @executions = policy_scope(Execution).where(work_order: @work_order)
+                                         .includes(:execution_events, execution_participants: { membership: :user })
     @technicians = policy_scope(Membership, policy_scope_class: AssignmentPolicy::AssignableScope)
   end
 

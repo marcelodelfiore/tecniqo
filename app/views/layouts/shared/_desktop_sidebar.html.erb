@@ -10,6 +10,9 @@
 
       <% if authenticated? %>
         <%= link_to t("nav.dashboard"), dashboard_path, class: nav_link_classes(dashboard_path) %>
+        <% if policy(:my_work).show? %>
+          <%= link_to t("nav.my_work"), my_work_index_path, class: nav_link_classes(my_work_index_path) %>
+        <% end %>
         <% if policy(WorkOrder).index? %>
           <%= link_to t("nav.work_orders"), work_orders_path, class: nav_link_classes(work_orders_path) %>
         <% end %>

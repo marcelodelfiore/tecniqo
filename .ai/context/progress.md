@@ -2,11 +2,30 @@
 
 ## Current milestone
 
-- **Name:** Phase 4 — Execution → Participants → Execution Events
+- **Name:** Phase 5 — Structured Technical Field Capture
 - **Status:** Planning
-- **Target outcome:** Simple, tenant-safe field-visit initiation, participation, and event-based operational capture
+- **Target outcome:** Simple, traceable capture of findings, measurements, evidence, actions, materials, and recommendations
 
 ## Completed
+
+### 2026-08-15 — Implement Execution → Participants → Execution Events
+
+- Added Work Order-local numbered Executions with independent visit scheduling and current-assignment
+  participant seeding while keeping Assignment and participation separate.
+- Added multiple eligible Technician participants, participant-aware historical Work Order access,
+  fixed append-oriented events, automatic actor/time capture, row-locked transitions, and submission locking.
+- Added derived state and timing for site presence, pre-work waiting, pause cycles, effective work,
+  and post-work onsite time without status or duration columns.
+- Added completed, return-required, and unable-to-execute outcomes, a natural return-visit workflow,
+  and explicit handling that does not fabricate asset-work events.
+- Added mobile-first field actions/timeline, supervisor visit summaries, minimal `My Work`, three-locale
+  copy, canonical scenario seeds, factories, and model/policy/request/concurrency coverage.
+- Recorded event/state, occurrence-time, participant, and scheduling decisions in ADR 0006.
+- Validation: 230 RSpec examples, RuboCop, Zeitwerk, direct Brakeman, Bundler/NPM/Importmap audits,
+  Preline verification, idempotent seed rerun, and diff checks passed. Canonical CI passed every
+  step except its existing Brakeman latest-version gate (8.0.5 locked; 8.0.6 latest).
+- Acceptance: responsive supervisor and Technician browser smoke testing completed successfully
+  by the developer, including the seeded visit workflow.
 
 ### 2026-08-15 — Implement Service Type → Work Order → Assignment
 
@@ -130,12 +149,13 @@
 
 ## In progress
 
-- Phase 4 requirements inspection and task definition.
+- Phase 5 requirements inspection and task definition.
 
 ## Planned
 
-- Define Phase 4 Execution, participant, event lifecycle, authorization, integrity, UI, and test boundaries.
-- Implement Phase 4 only after its task brief and plan are reviewed.
+- Define Phase 5 structured-fact, evidence-linking, authorship, lifecycle, authorization, UI,
+  and test boundaries.
+- Implement Phase 5 only after its task brief and plan are reviewed.
 
 ## Known defects and technical debt
 

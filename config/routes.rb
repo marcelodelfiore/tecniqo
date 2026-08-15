@@ -23,7 +23,20 @@ Rails.application.routes.draw do
   end
   resources :work_orders, except: :destroy do
     resource :assignment, only: :create
+    resources :executions, only: %i[show create] do
+      resources :participants, controller: "execution_participants", only: %i[create destroy]
+      post :arrive, to: "execution_events#arrive"
+      post :start_work, to: "execution_events#start_work"
+      post :pause, to: "execution_events#pause"
+      post :resume, to: "execution_events#resume"
+      post :finish_work, to: "execution_events#finish_work"
+      post :unable, to: "execution_events#unable"
+      post :leave, to: "execution_events#leave"
+      post :submit, to: "execution_events#submit"
+    end
   end
+
+  resources :my_work, only: :index
 
   resources :customers, except: :destroy do
     resources :sites, except: %i[index destroy] do
