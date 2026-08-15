@@ -1,8 +1,8 @@
-Hello,
+<%= t("mailers.greeting") %>
 
-You have been invited to join <%= @invitation.organization.name %> on Técniqo.
+<%= t("mailers.invitation.instruction_text", organization: @invitation.organization.name) %>
 
-Review invitation:
+<%= t("mailers.invitation.action") %>:
 <%= @accept_url %>
 
-This invitation expires in seven days and can only be accepted once.
+<%= t("mailers.invitation.expiry") %>

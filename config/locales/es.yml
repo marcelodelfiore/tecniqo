@@ -1,0 +1,151 @@
+es:
+  errors:
+    messages:
+      blank: "no puede estar vacío"
+      invalid: "no es válido"
+      taken: "ya está en uso"
+      invalid_invitation_roles: "debe contener al menos un rol válido"
+  app:
+    tagline: "Ingeniería de mantenimiento industrial"
+  locales:
+    label: "Idioma"
+    en: "English"
+    pt-BR: "Português (Brasil)"
+    es: "Español"
+  nav:
+    home: "Inicio"
+    dashboard: "Panel"
+    invitations: "Invitaciones"
+    members: "Miembros"
+    logout: "Salir"
+    open_menu: "Abrir menú"
+    close_menu: "Cerrar menú"
+  actions:
+    cancel: "Cancelar"
+    edit: "Editar"
+    save: "Guardar cambios"
+    resend: "Reenviar"
+    revoke: "Revocar"
+  labels:
+    email: "Correo electrónico"
+    roles: "Roles"
+  activerecord:
+    attributes:
+      invitation:
+        email: "Correo electrónico"
+        roles: "Roles"
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " y "
+      last_word_connector: " y "
+  roles:
+    administrator: "Administrador"
+    supervisor: "Supervisor"
+    technician: "Técnico"
+    engineer: "Ingeniero"
+  flash:
+    authorization:
+      denied: "No tienes autorización para acceder a esa organización."
+    authentication:
+      required: "Inicia sesión para continuar."
+      already_signed_in: "Ya has iniciado sesión."
+      rate_limited: "Demasiados intentos. Inténtalo de nuevo más tarde."
+      email_required: "Ingresa tu correo electrónico."
+      email_sent: "Revisa tu correo para encontrar el enlace de acceso."
+      invalid_link: "Ese enlace de acceso no es válido o ha expirado."
+      signed_in: "Sesión iniciada correctamente."
+      signed_out: "Sesión cerrada correctamente."
+    organizations:
+      selected: "Organización seleccionada."
+    invitations:
+      sent: "Invitación enviada."
+      resent: "Invitación reenviada."
+      revoked: "Invitación revocada."
+      invalid: "Esa invitación no es válida o ha expirado."
+      accepted: "Invitación aceptada."
+    memberships:
+      updated: "Acceso del miembro actualizado."
+      last_administrator: "Esta organización debe conservar al menos un Administrador activo."
+      invalid_roles: "Selecciona al menos un rol válido."
+  home:
+    eyebrow: "Plataforma de ingeniería de mantenimiento"
+    description: "Conecta el trabajo de mantenimiento en campo con datos de ingeniería estructurados, evidencia, revisión e informes."
+    open_dashboard: "Abrir panel"
+    sign_in: "Iniciar sesión"
+  sessions:
+    new:
+      title: "Iniciar sesión"
+      description: "Ingresa tu correo y te enviaremos un enlace de acceso."
+      submit: "Enviar enlace de acceso"
+    show:
+      title: "Confirmar acceso"
+      description: "Continúa para finalizar el acceso de forma segura. Este enlace solo puede usarse una vez."
+      submit: "Continuar al panel"
+  organizations:
+    selection:
+      title: "Elegir organización"
+      description: "Selecciona la organización con la que deseas trabajar."
+      unavailable: "Tu cuenta no tiene acceso a una organización activa. Contacta a un administrador."
+  dashboard:
+    title: "Panel"
+    subtitle: "Tu espacio de trabajo autenticado."
+    manage_invitations: "Gestionar invitaciones"
+    current_user: "Usuario actual"
+    current_user_hint: "Usuario de la sesión iniciada"
+    current_organization: "Organización actual"
+    current_organization_hint: "Contexto de organización validado"
+    platform_status: "Plataforma"
+    ready: "Lista"
+    platform_hint: "La identidad y el acceso a la organización están configurados"
+    next_steps: "Próximos pasos"
+    next_steps_description: "Usa las invitaciones y la gestión de miembros para configurar el equipo de tu organización."
+  invitations:
+    index:
+      title: "Invitaciones"
+      subtitle: "Invitaciones pendientes de %{organization}."
+      invite_member: "Invitar miembro"
+      expires: "Expira el %{date}"
+      empty_title: "No hay invitaciones pendientes"
+      empty_message: "Invita a un miembro para darle acceso a esta organización."
+    new:
+      title: "Invitar miembro"
+      subtitle: "Invita a alguien a %{organization}."
+      roles_hint: "Selecciona al menos una responsabilidad."
+      submit: "Enviar invitación"
+    show:
+      title: "Aceptar invitación"
+      heading: "Unirse a %{organization}"
+      description: "Acepta esta invitación para %{email}."
+      submit: "Aceptar invitación"
+  memberships:
+    index:
+      title: "Miembros"
+      subtitle: "Acceso a la organización %{organization}."
+    edit:
+      title: "Editar miembro"
+      active: "Acceso activo"
+      roles_hint: "Selecciona al menos una responsabilidad."
+    status:
+      active: "Activo"
+      inactive: "Inactivo"
+  mailers:
+    greeting: "Hola,"
+    auth:
+      subject: "Tu enlace de acceso"
+      instruction: "Usa el siguiente enlace para iniciar sesión:"
+      action: "Iniciar sesión"
+      expiry: "Este enlace expirará en 15 minutos y solo puede usarse una vez."
+    invitation:
+      subject: "Has sido invitado a %{organization}"
+      instruction_html: "Has sido invitado a unirte a %{organization} en Técniqo."
+      instruction_text: "Has sido invitado a unirte a %{organization} en Técniqo."
+      action: "Revisar invitación"
+      expiry: "Esta invitación expira en siete días y solo puede aceptarse una vez."
+  shared:
+    form_errors:
+      one: "1 error impidió guardar este formulario:"
+      other: "%{count} errores impidieron guardar este formulario:"
+  time:
+    formats:
+      long: "%d/%m/%Y a las %H:%M"

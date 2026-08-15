@@ -1,32 +1,24 @@
-<% content_for :title, t("invitations.new.title") %>
+<% content_for :title, t("memberships.edit.title") %>
 
 <div class="mx-auto max-w-2xl space-y-6">
-  <%= render "shared/page_header",
-        title: t("invitations.new.title"),
-        subtitle: t("invitations.new.subtitle", organization: Current.organization.name) %>
+  <%= render "shared/page_header", title: t("memberships.edit.title"), subtitle: @membership.user.email %>
 
   <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-    <%= render "shared/form_errors", object: @invitation %>
-
-    <%= form_with model: @invitation, url: invitations_path, class: "space-y-6" do |form| %>
-      <div>
-        <%= form.label :email, t("labels.email"), class: "mb-1 block text-sm font-medium text-gray-700" %>
-        <%= form.email_field :email,
-              required: true,
-              autofocus: true,
-              autocomplete: "email",
-              class: "block w-full rounded-xl border border-gray-300 px-3 py-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" %>
-      </div>
+    <%= form_with model: @membership, class: "space-y-6" do |form| %>
+      <label class="flex min-h-11 items-center gap-3 rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-700">
+        <%= form.check_box :active, class: "size-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+        <span><%= t("memberships.edit.active") %></span>
+      </label>
 
       <fieldset>
         <legend class="text-sm font-medium text-gray-700"><%= t("labels.roles") %></legend>
-        <p class="mt-1 text-sm text-gray-500"><%= t("invitations.new.roles_hint") %></p>
+        <p class="mt-1 text-sm text-gray-500"><%= t("memberships.edit.roles_hint") %></p>
 
         <div class="mt-3 grid gap-3 sm:grid-cols-2">
           <% MembershipRole::ROLES.each do |role| %>
             <label class="flex min-h-11 items-center gap-3 rounded-xl border border-gray-200 px-4 py-3 text-sm text-gray-700">
-              <%= check_box_tag "invitation[roles][]", role, @invitation.roles.include?(role),
-                    id: "invitation_role_#{role}",
+              <%= check_box_tag "membership[roles][]", role, @membership.membership_roles.any? { |assignment| assignment.role == role },
+                    id: "membership_role_#{role}",
                     class: "size-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
               <span><%= t("roles.#{role}") %></span>
             </label>
@@ -35,9 +27,9 @@
       </fieldset>
 
       <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-        <%= link_to t("actions.cancel"), invitations_path,
+        <%= link_to t("actions.cancel"), memberships_path,
               class: "inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2" %>
-        <%= form.submit t("invitations.new.submit"),
+        <%= form.submit t("actions.save"),
               class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
       </div>
     <% end %>

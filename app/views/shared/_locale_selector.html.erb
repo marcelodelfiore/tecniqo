@@ -1,0 +1,9 @@
+<%= form_with url: locale_path, method: :patch, class: "flex items-center gap-2" do |form| %>
+  <%= form.label :locale, t("locales.label"), class: "sr-only" %>
+  <%= form.select :locale,
+        I18n.available_locales.map { |locale| [ t("locales.#{locale}"), locale ] },
+        { selected: I18n.locale.to_s },
+        class: "rounded-lg border border-gray-300 bg-white px-2 py-2 text-sm text-gray-700" %>
+  <%= form.submit t("locales.label"),
+        class: "rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50" %>
+<% end %>

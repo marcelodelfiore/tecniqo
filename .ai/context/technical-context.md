@@ -11,6 +11,15 @@
 - **Tests:** RSpec 3.13 / RSpec Rails 8 with Factory Bot
 - **Observability:** Rails logging; provider undecided
 
+## Internationalization
+
+- Supported locales are `en`, `pt-BR`, and `es`; English is the default and fallback.
+- A dedicated allowlisted locale action stores the browser preference in the Rails session.
+- Authentication session resets preserve locale, and emailed security links carry the locale.
+- Requests and mailers use `I18n.with_locale` so locale state does not leak.
+- All new user-facing UI, flash, role, validation-facing, and email copy must be added to all
+  three locale dictionaries. ADR 0003 records the boundary.
+
 ## Existing authentication
 
 Authentication is custom, passwordless, and must be preserved:

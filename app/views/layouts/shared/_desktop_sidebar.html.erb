@@ -2,14 +2,20 @@
   <div class="flex h-full flex-col">
     <div class="border-b border-gray-200 px-6 py-5">
       <h2 class="text-lg font-semibold text-gray-900"><%= application_name %></h2>
-      <p class="mt-1 text-sm text-gray-500">Reusable Rails starter</p>
+      <p class="mt-1 text-sm text-gray-500"><%= t("app.tagline") %></p>
     </div>
 
     <nav class="flex-1 space-y-1 px-4 py-4">
-      <%= link_to "Home", root_path, class: "block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100" %>
+      <%= link_to t("nav.home"), root_path, class: nav_link_classes(root_path) %>
 
       <% if authenticated? %>
-        <%= link_to "Dashboard", dashboard_path, class: "block rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100" %>
+        <%= link_to t("nav.dashboard"), dashboard_path, class: nav_link_classes(dashboard_path) %>
+        <% if policy(Invitation).index? %>
+          <%= link_to t("nav.invitations"), invitations_path, class: nav_link_classes(invitations_path) %>
+        <% end %>
+        <% if policy(Membership).index? %>
+          <%= link_to t("nav.members"), memberships_path, class: nav_link_classes(memberships_path) %>
+        <% end %>
       <% end %>
     </nav>
   </div>

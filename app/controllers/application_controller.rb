@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
 
+  around_action :switch_locale
   before_action :set_current_user
   before_action :set_current_organization
 
@@ -15,6 +16,20 @@ class ApplicationController < ActionController::Base
   helper_method :authenticated?
 
   private
+
+  def switch_locale(&action)
+    available_locales = I18n.available_locales.map(&:to_s)
+    requested_locale = params[:locale].to_s.presence_in(available_locales)
+    session[:locale] = requested_locale if requested_locale
+    locale = session[:locale].presence_in(available_locales) || I18n.default_locale
+    I18n.with_locale(locale, &action)
+  end
+
+  def reset_session_preserving_locale
+    locale = session[:locale]
+    reset_session
+    session[:locale] = locale if locale
+  end
 
   def pundit_user
     Current.user
@@ -45,7 +60,7 @@ class ApplicationController < ActionController::Base
   end
 
   def handle_unauthorized_access
-    redirect_to organization_selection_path, alert: "You are not authorized to access that organization."
+    redirect_to organization_selection_path, alert: t("flash.authorization.denied")
   end
 
   def authenticated?
@@ -55,12 +70,12 @@ class ApplicationController < ActionController::Base
   def require_authentication
     return if authenticated?
 
-    redirect_to new_session_path, alert: "Please sign in to continue."
+    redirect_to new_session_path, alert: t("flash.authentication.required")
   end
 
   def redirect_if_authenticated
     return unless authenticated?
 
-    redirect_to dashboard_path, notice: "You are already signed in."
+    redirect_to dashboard_path, notice: t("flash.authentication.already_signed_in")
   end
 end

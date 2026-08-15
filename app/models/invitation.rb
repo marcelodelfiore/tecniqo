@@ -82,6 +82,6 @@ class Invitation < ApplicationRecord
   def roles_are_valid
     return if roles.present? && roles.all? { |role| MembershipRole::ROLES.include?(role) }
 
-    errors.add(:roles, "must contain at least one valid role")
+    errors.add(:roles, :invalid_invitation_roles)
   end
 end

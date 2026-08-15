@@ -1,0 +1,151 @@
+"pt-BR":
+  errors:
+    messages:
+      blank: "não pode ficar em branco"
+      invalid: "não é válido"
+      taken: "já está em uso"
+      invalid_invitation_roles: "deve conter ao menos uma função válida"
+  app:
+    tagline: "Engenharia de manutenção industrial"
+  locales:
+    label: "Idioma"
+    en: "English"
+    pt-BR: "Português (Brasil)"
+    es: "Español"
+  nav:
+    home: "Início"
+    dashboard: "Painel"
+    invitations: "Convites"
+    members: "Membros"
+    logout: "Sair"
+    open_menu: "Abrir menu"
+    close_menu: "Fechar menu"
+  actions:
+    cancel: "Cancelar"
+    edit: "Editar"
+    save: "Salvar alterações"
+    resend: "Reenviar"
+    revoke: "Revogar"
+  labels:
+    email: "E-mail"
+    roles: "Funções"
+  activerecord:
+    attributes:
+      invitation:
+        email: "E-mail"
+        roles: "Funções"
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " e "
+      last_word_connector: " e "
+  roles:
+    administrator: "Administrador"
+    supervisor: "Supervisor"
+    technician: "Técnico"
+    engineer: "Engenheiro"
+  flash:
+    authorization:
+      denied: "Você não tem autorização para acessar essa organização."
+    authentication:
+      required: "Entre para continuar."
+      already_signed_in: "Você já está autenticado."
+      rate_limited: "Muitas tentativas. Tente novamente mais tarde."
+      email_required: "Informe seu e-mail."
+      email_sent: "Verifique seu e-mail para acessar o link de entrada."
+      invalid_link: "Esse link de entrada é inválido ou expirou."
+      signed_in: "Entrada realizada com sucesso."
+      signed_out: "Saída realizada com sucesso."
+    organizations:
+      selected: "Organização selecionada."
+    invitations:
+      sent: "Convite enviado."
+      resent: "Convite reenviado."
+      revoked: "Convite revogado."
+      invalid: "Esse convite é inválido ou expirou."
+      accepted: "Convite aceito."
+    memberships:
+      updated: "Acesso do membro atualizado."
+      last_administrator: "Esta organização precisa manter ao menos um Administrador ativo."
+      invalid_roles: "Selecione ao menos uma função válida."
+  home:
+    eyebrow: "Plataforma de engenharia de manutenção"
+    description: "Conecte o trabalho de manutenção em campo a fatos de engenharia estruturados, evidências, revisão e relatórios."
+    open_dashboard: "Abrir painel"
+    sign_in: "Entrar"
+  sessions:
+    new:
+      title: "Entrar"
+      description: "Informe seu e-mail e enviaremos um link de acesso."
+      submit: "Enviar link de acesso"
+    show:
+      title: "Confirmar entrada"
+      description: "Continue para concluir sua entrada com segurança. Este link só pode ser usado uma vez."
+      submit: "Continuar para o painel"
+  organizations:
+    selection:
+      title: "Escolher organização"
+      description: "Selecione a organização com a qual deseja trabalhar."
+      unavailable: "Sua conta não tem acesso a uma organização ativa. Contate um administrador."
+  dashboard:
+    title: "Painel"
+    subtitle: "Seu espaço de trabalho autenticado."
+    manage_invitations: "Gerenciar convites"
+    current_user: "Usuário atual"
+    current_user_hint: "Usuário da sessão autenticada"
+    current_organization: "Organização atual"
+    current_organization_hint: "Contexto de organização validado"
+    platform_status: "Plataforma"
+    ready: "Pronta"
+    platform_hint: "Identidade e acesso à organização estão configurados"
+    next_steps: "Próximos passos"
+    next_steps_description: "Use convites e gerenciamento de membros para configurar a equipe da organização."
+  invitations:
+    index:
+      title: "Convites"
+      subtitle: "Convites pendentes de %{organization}."
+      invite_member: "Convidar membro"
+      expires: "Expira em %{date}"
+      empty_title: "Nenhum convite pendente"
+      empty_message: "Convide um membro para dar acesso a esta organização."
+    new:
+      title: "Convidar membro"
+      subtitle: "Convide alguém para %{organization}."
+      roles_hint: "Selecione ao menos uma responsabilidade."
+      submit: "Enviar convite"
+    show:
+      title: "Aceitar convite"
+      heading: "Entrar em %{organization}"
+      description: "Aceite este convite para %{email}."
+      submit: "Aceitar convite"
+  memberships:
+    index:
+      title: "Membros"
+      subtitle: "Acesso à organização %{organization}."
+    edit:
+      title: "Editar membro"
+      active: "Acesso ativo"
+      roles_hint: "Selecione ao menos uma responsabilidade."
+    status:
+      active: "Ativo"
+      inactive: "Inativo"
+  mailers:
+    greeting: "Olá,"
+    auth:
+      subject: "Seu link de acesso"
+      instruction: "Use o link abaixo para entrar:"
+      action: "Entrar"
+      expiry: "Este link expira em 15 minutos e só pode ser usado uma vez."
+    invitation:
+      subject: "Você foi convidado para %{organization}"
+      instruction_html: "Você foi convidado para participar de %{organization} no Técniqo."
+      instruction_text: "Você foi convidado para participar de %{organization} no Técniqo."
+      action: "Revisar convite"
+      expiry: "Este convite expira em sete dias e só pode ser aceito uma vez."
+  shared:
+    form_errors:
+      one: "1 erro impediu que este formulário fosse salvo:"
+      other: "%{count} erros impediram que este formulário fosse salvo:"
+  time:
+    formats:
+      long: "%d/%m/%Y às %H:%M"

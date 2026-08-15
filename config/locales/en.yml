@@ -1,31 +1,151 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  errors:
+    messages:
+      blank: "can't be blank"
+      invalid: "is invalid"
+      taken: "has already been taken"
+      invalid_invitation_roles: "must contain at least one valid role"
+  app:
+    tagline: "Industrial maintenance engineering"
+  locales:
+    label: "Language"
+    en: "English"
+    pt-BR: "Português (Brasil)"
+    es: "Español"
+  nav:
+    home: "Home"
+    dashboard: "Dashboard"
+    invitations: "Invitations"
+    members: "Members"
+    logout: "Sign out"
+    open_menu: "Open menu"
+    close_menu: "Close menu"
+  actions:
+    cancel: "Cancel"
+    edit: "Edit"
+    save: "Save changes"
+    resend: "Resend"
+    revoke: "Revoke"
+  labels:
+    email: "Email"
+    roles: "Roles"
+  activerecord:
+    attributes:
+      invitation:
+        email: "Email"
+        roles: "Roles"
+  support:
+    array:
+      words_connector: ", "
+      two_words_connector: " and "
+      last_word_connector: ", and "
+  roles:
+    administrator: "Administrator"
+    supervisor: "Supervisor"
+    technician: "Technician"
+    engineer: "Engineer"
+  flash:
+    authorization:
+      denied: "You are not authorized to access that organization."
+    authentication:
+      required: "Please sign in to continue."
+      already_signed_in: "You are already signed in."
+      rate_limited: "Too many attempts. Try again later."
+      email_required: "Please enter your email."
+      email_sent: "Check your email for your sign-in link."
+      invalid_link: "That sign-in link is invalid or expired."
+      signed_in: "Signed in successfully."
+      signed_out: "Signed out successfully."
+    organizations:
+      selected: "Organization selected."
+    invitations:
+      sent: "Invitation sent."
+      resent: "Invitation resent."
+      revoked: "Invitation revoked."
+      invalid: "That invitation is invalid or expired."
+      accepted: "Invitation accepted."
+    memberships:
+      updated: "Member access updated."
+      last_administrator: "This organization must retain at least one active Administrator."
+      invalid_roles: "Select at least one valid role."
+  home:
+    eyebrow: "Maintenance engineering platform"
+    description: "Connect field maintenance work to structured engineering facts, evidence, review, and reports."
+    open_dashboard: "Open dashboard"
+    sign_in: "Sign in"
+  sessions:
+    new:
+      title: "Sign in"
+      description: "Enter your email and we will send you a magic link."
+      submit: "Send sign-in link"
+    show:
+      title: "Confirm sign in"
+      description: "Continue to securely finish signing in. This link can only be used once."
+      submit: "Continue to dashboard"
+  organizations:
+    selection:
+      title: "Choose organization"
+      description: "Select the organization you want to work with."
+      unavailable: "Your account does not have access to an active organization. Contact an administrator."
+  dashboard:
+    title: "Dashboard"
+    subtitle: "Your authenticated workspace."
+    manage_invitations: "Manage invitations"
+    current_user: "Current user"
+    current_user_hint: "Signed-in session user"
+    current_organization: "Current organization"
+    current_organization_hint: "Validated tenant context"
+    platform_status: "Platform"
+    ready: "Ready"
+    platform_hint: "Identity and organization access are configured"
+    next_steps: "Next steps"
+    next_steps_description: "Use invitation and membership management to configure your organization team."
+  invitations:
+    index:
+      title: "Invitations"
+      subtitle: "Pending invitations for %{organization}."
+      invite_member: "Invite member"
+      expires: "Expires %{date}"
+      empty_title: "No pending invitations"
+      empty_message: "Invite a member to give them access to this organization."
+    new:
+      title: "Invite member"
+      subtitle: "Invite someone to %{organization}."
+      roles_hint: "Select at least one responsibility."
+      submit: "Send invitation"
+    show:
+      title: "Accept invitation"
+      heading: "Join %{organization}"
+      description: "Accept this invitation for %{email}."
+      submit: "Accept invitation"
+  memberships:
+    index:
+      title: "Members"
+      subtitle: "Organization access for %{organization}."
+    edit:
+      title: "Edit member"
+      active: "Active access"
+      roles_hint: "Select at least one responsibility."
+    status:
+      active: "Active"
+      inactive: "Inactive"
+  mailers:
+    greeting: "Hello,"
+    auth:
+      subject: "Your sign-in link"
+      instruction: "Use the link below to sign in:"
+      action: "Sign in"
+      expiry: "This link will expire in 15 minutes and can only be used once."
+    invitation:
+      subject: "You're invited to %{organization}"
+      instruction_html: "You have been invited to join %{organization} on Técniqo."
+      instruction_text: "You have been invited to join %{organization} on Técniqo."
+      action: "Review invitation"
+      expiry: "This invitation expires in seven days and can only be accepted once."
+  shared:
+    form_errors:
+      one: "1 error prevented this form from being saved:"
+      other: "%{count} errors prevented this form from being saved:"
+  time:
+    formats:
+      long: "%B %-d, %Y at %H:%M"

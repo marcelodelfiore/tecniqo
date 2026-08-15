@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="<%= I18n.locale %>">
   <head>
     <title><%= content_for?(:title) ? yield(:title) : application_name %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -26,7 +26,7 @@
       <header class="px-4 py-6">
         <div class="mx-auto max-w-md text-center">
           <p class="text-sm font-semibold text-gray-900"><%= application_name %></p>
-          <p class="text-xs text-gray-500">Reusable Rails starter</p>
+          <p class="text-xs text-gray-500"><%= t("app.tagline") %></p>
         </div>
       </header>
 
@@ -39,7 +39,8 @@
       </main>
 
       <footer class="px-4 pb-6">
-        <div class="mx-auto max-w-md text-center text-xs text-gray-500">
+        <div class="mx-auto flex max-w-md flex-col items-center gap-3 text-center text-xs text-gray-500">
+          <%= render "shared/locale_selector" %>
           <p><%= application_name %></p>
         </div>
       </footer>

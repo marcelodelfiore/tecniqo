@@ -1,10 +1,10 @@
-<% content_for :title, "Invitations" %>
+<% content_for :title, t("invitations.index.title") %>
 
 <div class="space-y-6">
   <%= render "shared/page_header",
-        title: "Invitations",
-        subtitle: "Pending invitations for #{Current.organization.name}.",
-        action: link_to("Invite member", new_invitation_path,
+        title: t("invitations.index.title"),
+        subtitle: t("invitations.index.subtitle", organization: Current.organization.name),
+        action: link_to(t("invitations.index.invite_member"), new_invitation_path,
           class: "inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2") %>
 
   <% if @invitations.any? %>
@@ -15,16 +15,16 @@
             <div class="min-w-0">
               <p class="truncate font-medium text-gray-900"><%= invitation.email %></p>
               <p class="mt-1 text-sm text-gray-600">
-                <%= invitation.roles.map(&:humanize).to_sentence %>
-                · Expires <%= time_tag invitation.expires_at, invitation.expires_at.to_fs(:long) %>
+                <%= invitation.roles.map { |role| t("roles.#{role}") }.to_sentence %>
+                · <%= t("invitations.index.expires", date: time_tag(invitation.expires_at, l(invitation.expires_at, format: :long))) %>
               </p>
             </div>
 
             <div class="flex flex-col gap-2 sm:flex-row">
-              <%= button_to "Resend", resend_invitation_path(invitation),
+              <%= button_to t("actions.resend"), resend_invitation_path(invitation),
                     method: :post,
                     class: "inline-flex min-h-11 items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
-              <%= button_to "Revoke", invitation_path(invitation),
+              <%= button_to t("actions.revoke"), invitation_path(invitation),
                     method: :delete,
                     class: "inline-flex min-h-11 items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2" %>
             </div>
@@ -34,7 +34,7 @@
     </div>
   <% else %>
     <%= render "shared/empty_state",
-          title: "No pending invitations",
-          message: "Invite a member to give them access to this organization." %>
+          title: t("invitations.index.empty_title"),
+          message: t("invitations.index.empty_message") %>
   <% end %>
 </div>

@@ -1,7 +1,7 @@
 <% if object.errors.any? %>
   <div class="rounded-xl border border-red-200 bg-red-50 p-4">
     <h2 class="text-sm font-semibold text-red-800">
-      <%= pluralize(object.errors.count, "error") %> prevented this form from being saved:
+      <%= t("shared.form_errors", count: object.errors.count) %>
     </h2>
     <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-red-700">
       <% object.errors.full_messages.each do |message| %>

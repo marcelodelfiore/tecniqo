@@ -3,11 +3,24 @@
 ## Current milestone
 
 - **Name:** Phase 1 — Identity, Organization, Roles, and Authorization Foundation
-- **Status:** Browser invitation workflow implemented; membership administration pending
+- **Status:** Foundation implemented; review and smoke testing pending
 - **Target outcome:** Explicit, testable tenant isolation and contextual authorization on
   top of the existing authentication system
 
 ## Completed
+
+### 2026-08-15 — Add membership administration and three-locale I18n
+
+- Added tenant-scoped membership list/edit/update UI for active Administrators and Founder
+  within a selected Organization.
+- Added atomic lifecycle/role synchronization and Organization-row locking that preserves
+  the last active Administrator, proven with a real concurrent PostgreSQL test.
+- Added session-persisted, allowlisted `en`, `pt-BR`, and `es` locale selection, preserving
+  locale through authentication resets and propagating it in emailed security links.
+- Translated all reachable pages, navigation, flashes, roles, validation-facing copy, and
+  authentication/invitation mail; removed unused generated session templates.
+- Recorded the I18n boundary in ADR 0003.
+- Validation: 154 RSpec examples passed; RuboCop, Zeitwerk, Brakeman, and diff checks passed.
 
 ### 2026-08-15 — Add authorized invitation management UI
 
@@ -85,11 +98,10 @@
 
 ## In progress
 
-- Membership administration and last-active-Administrator invariant planning.
+- Phase 1 browser smoke testing and acceptance review.
 
 ## Planned
 
-- Implement membership administration with last-active-Administrator protection.
 - Add resource-specific tenant policies/scopes with each future vertical slice.
 - After Phase 1 passes security checks, begin the Customer → Site → Asset vertical slice.
 

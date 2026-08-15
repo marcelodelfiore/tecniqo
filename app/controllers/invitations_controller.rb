@@ -24,9 +24,9 @@ class InvitationsController < ApplicationController
       roles: invitation_params[:roles],
       invited_by: Current.user
     )
-    InvitationMailer.organization_invitation(invitation, raw_token).deliver_later
+    InvitationMailer.with(locale: I18n.locale.to_s).organization_invitation(invitation, raw_token).deliver_later
 
-    redirect_to invitations_path, notice: "Invitation sent."
+    redirect_to invitations_path, notice: t("flash.invitations.sent")
   rescue ActiveRecord::RecordInvalid => error
     @invitation = error.record
     render :new, status: :unprocessable_content
@@ -40,16 +40,16 @@ class InvitationsController < ApplicationController
       roles: @invitation.roles,
       invited_by: Current.user
     )
-    InvitationMailer.organization_invitation(invitation, raw_token).deliver_later
+    InvitationMailer.with(locale: I18n.locale.to_s).organization_invitation(invitation, raw_token).deliver_later
 
-    redirect_to invitations_path, notice: "Invitation resent."
+    redirect_to invitations_path, notice: t("flash.invitations.resent")
   end
 
   def destroy
     authorize @invitation
     @invitation.revoke!
 
-    redirect_to invitations_path, notice: "Invitation revoked."
+    redirect_to invitations_path, notice: t("flash.invitations.revoked")
   end
 
   def show
@@ -57,7 +57,7 @@ class InvitationsController < ApplicationController
     @invitation = Invitation.find_active(@raw_token)
 
     unless @invitation
-      return redirect_to new_session_path, alert: "That invitation is invalid or expired."
+      return redirect_to new_session_path, alert: t("flash.invitations.invalid")
     end
 
     response.headers["Cache-Control"] = "no-store"
@@ -68,15 +68,15 @@ class InvitationsController < ApplicationController
     result = Invitation.accept(params[:token].to_s)
 
     unless result
-      return redirect_to new_session_path, alert: "That invitation is invalid or expired."
+      return redirect_to new_session_path, alert: t("flash.invitations.invalid")
     end
 
     _invitation, user = result
-    reset_session
+    reset_session_preserving_locale
     session[:user_id] = user.id
     user.update!(last_seen_at: Time.current)
 
-    redirect_to dashboard_path, notice: "Invitation accepted."
+    redirect_to dashboard_path, notice: t("flash.invitations.accepted")
   end
 
   private

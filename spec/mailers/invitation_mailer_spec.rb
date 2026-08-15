@@ -12,7 +12,20 @@ RSpec.describe InvitationMailer, type: :mailer do
 
       expect(mail.to).to eq([ "person@example.com" ])
       expect(mail.subject).to eq("You're invited to Técniqo Services")
-      expect(mail.text_part.body.decoded).to include(invitation_acceptance_url(token: "raw-token"))
+      expect(mail.text_part.body.decoded).to include(invitation_acceptance_url(token: "raw-token", locale: :en))
+    end
+
+    it "renders in the requested locale" do
+      invitation = build_stubbed(
+        :invitation,
+        email: "person@example.com",
+        organization: build_stubbed(:organization, name: "Técniqo Services")
+      )
+      mail = described_class.with(locale: "es").organization_invitation(invitation, "raw-token")
+
+      expect(mail.subject).to eq("Has sido invitado a Técniqo Services")
+      expect(mail.text_part.body.decoded).to include("Esta invitación expira en siete días")
+      expect(mail.text_part.body.decoded).to include("locale=es")
     end
   end
 end

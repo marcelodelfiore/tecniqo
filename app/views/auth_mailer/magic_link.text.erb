@@ -1,7 +1,7 @@
-Hello,
+<%= t("mailers.greeting") %>
 
-Use the link below to sign in:
+<%= t("mailers.auth.instruction") %>
 
 <%= @magic_link %>
 
-This link will expire in 15 minutes and can only be used once.
+<%= t("mailers.auth.expiry") %>

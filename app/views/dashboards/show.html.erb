@@ -1,34 +1,33 @@
-<% content_for :title, 'Dashboard' %>
+<% content_for :title, t("dashboard.title") %>
 
 <div class="space-y-6">
   <%= render 'shared/page_header',
-      title: 'Dashboard',
-      subtitle: 'Your authenticated area is working correctly.',
-      action: (link_to('Manage invitations', invitations_path,
+      title: t("dashboard.title"),
+      subtitle: t("dashboard.subtitle"),
+      action: (link_to(t("dashboard.manage_invitations"), invitations_path,
         class: 'inline-flex min-h-11 items-center justify-center rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2') if policy(Invitation).index?) %>
 
   <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
     <%= render 'shared/stat_card',
-        label: 'Current user',
+        label: t("dashboard.current_user"),
         value: Current.user.email,
-        hint: 'Signed-in session user' %>
+        hint: t("dashboard.current_user_hint") %>
 
     <%= render 'shared/stat_card',
-        label: 'Current organization',
+        label: t("dashboard.current_organization"),
         value: Current.organization.name,
-        hint: 'Validated tenant context' %>
+        hint: t("dashboard.current_organization_hint") %>
 
     <%= render 'shared/stat_card',
-        label: 'Starter kit',
-        value: 'Ready',
-        hint: 'Base shell and auth baseline are in place' %>
+        label: t("dashboard.platform_status"),
+        value: t("dashboard.ready"),
+        hint: t("dashboard.platform_hint") %>
   </div>
 
   <div class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-    <h2 class="text-lg font-semibold text-gray-900">Next steps</h2>
+    <h2 class="text-lg font-semibold text-gray-900"><%= t("dashboard.next_steps") %></h2>
     <p class="mt-2 text-sm text-gray-600">
-      This dashboard is the first protected page of your starter kit.
-      Future apps can replace or extend it with domain-specific content.
+      <%= t("dashboard.next_steps_description") %>
     </p>
   </div>
 </div>

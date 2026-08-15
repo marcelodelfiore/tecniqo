@@ -19,6 +19,6 @@ class OrganizationSelectionsController < ApplicationController
     session[:organization_id] = organization.id
     Current.organization = organization
 
-    redirect_to dashboard_path, notice: "Organization selected."
+    redirect_to dashboard_path, notice: t("flash.organizations.selected")
   end
 end

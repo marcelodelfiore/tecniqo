@@ -45,6 +45,7 @@ technical revision, and report issuance.
 - Complexity follows responsibility; navigation may differ by role.
 - Field-facing workflows use mobile usability as the stricter acceptance criterion.
 - New UI is responsive, accessible, touch-friendly, and compatible with Turbo.
+- Product UI and email support English, Brazilian Portuguese, and Spanish through Rails I18n.
 - Rails HTML + Turbo + Stimulus remains the primary UI; do not introduce a parallel SPA.
 - Técniqo will be the web core of future thin Hotwire Native iOS/Android shells with
   native navigation and selected bridge integrations.

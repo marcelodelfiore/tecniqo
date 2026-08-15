@@ -113,6 +113,16 @@ proves insufficient.
 - Avoid critical browser-only APIs, JavaScript-only route state, hover-only behavior,
   fixed wide tables, and modal-heavy workflows.
 - Retain PWA scaffolding; advanced PWA/offline behavior and native shells are deferred.
+- Localize server-rendered UI and mail through Rails I18n dictionaries for `en`, `pt-BR`,
+  and `es`. Locale is allowlisted, session-persisted, and independent of authorization.
+
+## Membership administration
+
+Membership management is policy-scoped to the selected Organization and limited to active
+Administrators plus Founder within an explicitly selected tenant. Lifecycle and fixed-role
+changes run through `Membership#update_access!`. The transaction locks the Organization row
+before the Membership, serializing all Administrator demotions/deactivations and refusing a
+change that would leave no active Administrator.
 
 ## Development and testing strategy
 

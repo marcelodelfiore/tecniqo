@@ -1,10 +1,10 @@
-<% content_for :title, "Choose organization" %>
+<% content_for :title, t("organizations.selection.title") %>
 
 <div class="space-y-6">
   <div class="space-y-2">
-    <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Choose organization</h1>
+    <h1 class="text-2xl font-semibold tracking-tight text-gray-900"><%= t("organizations.selection.title") %></h1>
     <p class="text-sm text-gray-600">
-      Select the organization you want to work with.
+      <%= t("organizations.selection.description") %>
     </p>
   </div>
 
@@ -20,11 +20,11 @@
     </div>
   <% else %>
     <p class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">
-      Your account does not have access to an active organization. Contact an administrator.
+      <%= t("organizations.selection.unavailable") %>
     </p>
   <% end %>
 
-  <%= button_to "Sign out",
+  <%= button_to t("nav.logout"),
         session_path,
         method: :delete,
         class: "inline-flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2" %>
