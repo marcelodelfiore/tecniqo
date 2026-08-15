@@ -36,6 +36,27 @@ class ApplicationPolicy
     false
   end
 
+  private
+
+  def founder?
+    user.founder?
+  end
+
+  def current_organization
+    Current.organization
+  end
+
+  def current_membership
+    return unless current_organization
+
+    user.memberships.active.find_by(organization: current_organization)
+  end
+
+  def same_organization?
+    current_organization && record.respond_to?(:organization_id) &&
+      record.organization_id == current_organization.id
+  end
+
   class Scope
     def initialize(user, scope)
       raise Pundit::NotAuthorizedError, "authentication required" unless user

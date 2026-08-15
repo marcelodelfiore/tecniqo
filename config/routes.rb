@@ -9,5 +9,6 @@ Rails.application.routes.draw do
   post "/session/confirm", to: "sessions#update", as: :consume_magic_session
   delete "/session", to: "sessions#destroy"
 
+  resource :organization_selection, only: %i[show update]
   resource :dashboard, only: %i[show]
 end

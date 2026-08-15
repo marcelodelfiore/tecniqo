@@ -1,0 +1,31 @@
+<% content_for :title, "Choose organization" %>
+
+<div class="space-y-6">
+  <div class="space-y-2">
+    <h1 class="text-2xl font-semibold tracking-tight text-gray-900">Choose organization</h1>
+    <p class="text-sm text-gray-600">
+      Select the organization you want to work with.
+    </p>
+  </div>
+
+  <% if @organizations.any? %>
+    <div class="space-y-3">
+      <% @organizations.each do |organization| %>
+        <%= button_to organization.name,
+              organization_selection_path,
+              method: :patch,
+              params: { organization_id: organization.id },
+              class: "inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-900 shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="rounded-xl bg-gray-50 p-4 text-sm text-gray-600">
+      Your account does not have access to an active organization. Contact an administrator.
+    </p>
+  <% end %>
+
+  <%= button_to "Sign out",
+        session_path,
+        method: :delete,
+        class: "inline-flex w-full items-center justify-center rounded-xl px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2" %>
+</div>

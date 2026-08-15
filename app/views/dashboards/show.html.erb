@@ -12,9 +12,9 @@
         hint: 'Signed-in session user' %>
 
     <%= render 'shared/stat_card',
-        label: 'Session status',
-        value: 'Active',
-        hint: 'Passwordless authentication is working' %>
+        label: 'Current organization',
+        value: Current.organization.name,
+        hint: 'Validated tenant context' %>
 
     <%= render 'shared/stat_card',
         label: 'Starter kit',

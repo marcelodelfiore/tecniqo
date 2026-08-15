@@ -3,11 +3,23 @@
 ## Current milestone
 
 - **Name:** Phase 1 — Identity, Organization, Roles, and Authorization Foundation
-- **Status:** Persistence foundation implemented; tenant-context authorization pending
+- **Status:** Persistence and tenant-context authorization implemented; membership administration pending
 - **Target outcome:** Explicit, testable tenant isolation and contextual authorization on
   top of the existing authentication system
 
 ## Completed
+
+### 2026-08-15 — Establish validated tenant context and foundational authorization
+
+- Added `Current.organization` with session-backed selection revalidated against active
+  membership visibility on every request.
+- Auto-selects one available organization, requires an explicit choice when ambiguous,
+  clears stale/inactive selections, and keeps Founder tenant selection explicit.
+- Added a policy-scoped organization-selection flow, Organization and Dashboard policies,
+  controller verification hooks, and safe HTML denial handling.
+- Added request and policy coverage for guests, non-members, inactive memberships,
+  cross-tenant IDs, multiple organizations, stale selections, and Founder behavior.
+- Validation: 91 RSpec examples passed; RuboCop, Zeitwerk, Brakeman, and diff checks passed.
 
 ### 2026-08-15 — Implement Phase 1 persistence and Pundit foundation
 
@@ -48,16 +60,13 @@
 
 ## In progress
 
-- Design and implementation planning for validated current-organization context,
-  resource policies/scopes, controller verification, and denial handling.
+- Product decision for invitation/provisioning behavior and planning membership administration.
 
 ## Planned
 
-- Establish validated current-organization context and denial behavior.
-- Add tenant-aware policy and scope coverage, including inactive membership, cross-tenant,
-  multi-role, and Founder cases.
 - Implement membership administration with last-active-Administrator protection after
   provisioning behavior is decided.
+- Add resource-specific tenant policies/scopes with each future vertical slice.
 - After Phase 1 passes security checks, begin the Customer → Site → Asset vertical slice.
 
 ## Known defects and technical debt

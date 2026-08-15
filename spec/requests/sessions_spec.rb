@@ -121,6 +121,7 @@ RSpec.describe "Sessions", type: :request do
   describe "POST /session/:token" do
     it "consumes a valid token and signs the user in" do
       user = create(:user, last_seen_at: nil)
+      create(:membership, user: user)
       login_token, raw_token = LoginToken.issue_for!(user)
 
       expect do

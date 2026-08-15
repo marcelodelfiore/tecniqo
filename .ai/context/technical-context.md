@@ -38,9 +38,12 @@ rule before organization invitations are exposed; do not silently change it.
   ordinary examples for scopes and cross-tenant isolation.
 
 The default `ApplicationPolicy` and scope deny every action/record and reject missing
-users. Resource policies, controller verification hooks, denial handling, and
-current-organization-aware helpers remain for the next authorization slice. CanCanCan
-3.6.1 was evaluated but not selected; its
+users. `Current.organization` is established from a server-side session selection that is
+revalidated through `OrganizationPolicy::Scope` on every request; a sole available
+organization is selected automatically. The dashboard and organization-selection flow
+use Pundit verification and safe HTML denial handling. Resource-specific policies/scopes
+remain mandatory as tenant-owned domain records are introduced. CanCanCan 3.6.1 was
+evaluated but not selected; its
 centralized ability DSL and automatic loading offer less clarity for contextual,
 tenant-sensitive rules than explicit policies and scopes.
 

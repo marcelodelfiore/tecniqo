@@ -25,8 +25,9 @@ Authentication → tenant context → membership/roles → resource policy → p
 ```
 
 The Organization, Membership, fixed membership-role, and Founder persistence foundation
-is implemented. Current-organization selection and resource-specific policies/scopes are
-not yet implemented.
+is implemented. Current-organization selection, foundational policies/scopes, verification,
+and denial handling are implemented. Resource-specific policies/scopes must accompany each
+future tenant-owned vertical slice.
 
 - One User may belong to multiple Organizations.
 - A Membership represents one User's relationship with one Organization.
@@ -43,12 +44,12 @@ not yet implemented.
 
 ## Current organization context
 
-An explicit `Current.organization` is necessary when tenant records are introduced.
-Resolve it from a server-controlled stable route/session selection and validate the
-signed-in user's active membership on every request. Do not trust a submitted
-organization ID, and do not silently fall back when a multi-organization choice is
-ambiguous. A single-membership user may be selected automatically. Organization
-switching UI is deferred, but routes and policy APIs must not assume a user has only one.
+`Current.organization` is resolved from a server-controlled session selection and the
+signed-in user's active membership is validated on every request through the Organization
+policy scope. A submitted organization ID establishes context only after scoped lookup and
+authorization. One available organization is selected automatically; an ambiguous choice
+requires the organization-selection route. Founder may select any organization but still
+selects a tenant for normal workflows. A broader organization-switching UI remains deferred.
 
 ## Role representation and data integrity
 

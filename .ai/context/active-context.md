@@ -14,21 +14,21 @@ The Rails application runs on Ruby 4.0.6 and provides tested passwordless authen
 a global User identity, `Current.user`, PostgreSQL, RSpec, and a responsive
 Tailwind/Preline/Hotwire shell.
 Organization, Membership, fixed membership-role assignments, the Founder flag, Pundit
-integration, and a default-deny application policy are implemented. Current-organization
-selection, resource policies/scopes, controller verification, and denial handling are not
-yet implemented. ADR 0001 defines their accepted boundaries.
+integration, default-deny policy behavior, validated current-organization selection,
+foundational policies/scopes, controller verification, and safe denial handling are
+implemented. Tenant-owned domain resource policies do not exist yet because those records
+remain deferred. ADR 0001 defines the accepted boundaries.
 
 ## In progress
 
-- Planning the current-organization and tenant-authorization slice.
+- Planning membership provisioning and administration boundaries.
 
 ## Next actions
 
-1. Implement current-organization establishment and foundational policies/scopes with
-   cross-tenant, unauthorized, multi-role, and Founder tests.
-2. Define invitations/provisioning and whether unknown-email auto-registration remains valid.
-3. Implement membership administration and transactional protection for the last active
+1. Define invitations/provisioning and whether unknown-email auto-registration remains valid.
+2. Implement membership administration and transactional protection for the last active
    Administrator.
+3. Begin Customer → Site → Asset only after the remaining Phase 1 management invariants pass.
 
 Do not start Customer → Site → Asset until this foundation is implemented and validated.
 
@@ -40,6 +40,7 @@ Do not start Customer → Site → Asset until this foundation is implemented an
 - [x] Responsive Rails/Hotwire Native readiness recorded.
 - [x] No speculative business-domain models or native applications introduced.
 - [x] Pundit and the Organization/Membership/fixed-role/Founder persistence foundation implemented.
+- [x] Validated current-organization selection and foundational authorization implemented.
 
 ## Important findings and decisions
 
@@ -50,20 +51,20 @@ Do not start Customer → Site → Asset until this foundation is implemented an
 - Fixed MVP role values avoid speculative editable permission infrastructure.
 - Membership lifecycle is an explicit non-null active state; users and organizations with
   memberships cannot be deleted through their associations.
+- Current organization is revalidated through the Organization policy scope on every request;
+  one option auto-selects, several require a choice, and Founder still selects a tenant.
 - The last active administrator needs transactional protection in the implementation slice.
 - Root `.ai/` is operational; `docs/.ai/` and `docs/docs/decisions/` are copied artifacts.
 
 ## Risks and blockers
 
-- User provisioning/invitations and current-organization selection behavior need a product
-  decision before management UI is exposed.
-- Current-organization establishment and resource authorization remain a security boundary;
-  tenant-owned product routes must not be introduced before that slice is complete.
+- User provisioning/invitations need a product decision before membership management UI is exposed.
+- Last-active-Administrator protection must be implemented with membership management.
 
 ## Validation status
 
-- Ruby 4.0.6 `bundle exec rspec`: 70 examples, 0 failures.
-- Ruby 4.0.6 `bin/rubocop`: 60 files, no offenses.
+- Ruby 4.0.6 `bundle exec rspec`: 91 examples, 0 failures.
+- Ruby 4.0.6 `bin/rubocop`: 66 files, no offenses.
 - Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
 - Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings.
 - `bin/bundler-audit`, `bin/importmap audit`, and `npm run verify:preline`: passed.
@@ -74,6 +75,6 @@ Do not start Customer → Site → Asset until this foundation is implemented an
 
 ## Handoff note
 
-The next code task should establish validated current-organization context and prove
-tenant isolation through policies, scopes, and request specs before adding Customer,
-Site, or Asset.
+The next task should decide provisioning and implement membership administration with
+last-active-Administrator protection. Every future tenant-owned slice must use policy-scoped
+loading and explicit action authorization from its first route.
