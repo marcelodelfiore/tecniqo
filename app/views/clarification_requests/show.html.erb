@@ -1,0 +1,20 @@
+<% content_for :title, t("clarifications.show.title", identifier: @work_order.public_identifier) %>
+<div class="mx-auto max-w-3xl space-y-6">
+  <%= render "shared/breadcrumbs", items: [ { label: t("my_work.title"), path: my_work_index_path }, { label: @work_order.public_identifier } ] %>
+  <header class="rounded-2xl bg-slate-900 p-5 text-white"><p class="text-sm font-semibold text-blue-300"><%= @work_order.public_identifier %></p><h1 class="mt-1 text-2xl font-semibold"><%= t("clarifications.needs_information") %></h1><p class="mt-2 text-sm text-slate-300"><%= @work_order.asset&.name || @work_order.site.name %></p></header>
+  <section class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"><p class="text-xs font-semibold uppercase tracking-wide text-gray-500"><%= clarification_target_title(@clarification.target) %></p><p class="mt-1 text-sm text-gray-700"><%= clarification_target_summary(@clarification.target) %></p><p class="mt-5 text-sm font-medium text-gray-900"><%= t("clarifications.question_from", name: @clarification.requested_by.email) %></p><blockquote class="mt-2 border-l-4 border-amber-300 pl-4 text-base leading-7 text-gray-950"><%= @clarification.question %></blockquote></section>
+
+  <% if policy(@clarification).add_evidence? %>
+    <details class="rounded-2xl border border-blue-200 bg-blue-50 p-5"><summary class="cursor-pointer font-semibold text-blue-950"><%= t("clarifications.add_evidence") %></summary><%= form_with url: clarification_request_evidences_path(@clarification), scope: :evidence, class: "mt-4 space-y-3" do |form| %><%= form.select :evidence_type, Evidence::TYPES.map { |type| [t("evidence_types.#{type}"), type] }, {}, required: true, class: "min-h-11 w-full rounded-xl border border-gray-300 bg-white px-3" %><%= form.file_field :original, required: true, class: "block min-h-12 w-full rounded-xl border border-blue-200 bg-white text-sm" %><%= form.text_area :description, rows: 2, placeholder: t("evidences.description_optional"), class: "w-full rounded-xl border border-gray-300 px-3 py-2" %><%= form.submit t("evidences.upload"), class: "min-h-11 rounded-xl bg-blue-700 px-4 font-semibold text-white" %><% end %></details>
+  <% end %>
+
+  <% if policy(@clarification).respond? %>
+    <%= form_with model: @clarification, url: clarification_request_path(@clarification), class: "space-y-5 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm" do |form| %>
+      <div><%= form.label :response, t("clarifications.your_response"), class: "block text-sm font-medium text-gray-700" %><%= form.text_area :response, rows: 5, required: true, class: "mt-1 w-full rounded-xl border border-gray-300 px-3 py-2" %></div>
+      <% if @available_evidences.any? %><fieldset><legend class="text-sm font-medium text-gray-700"><%= t("clarifications.link_evidence") %></legend><div class="mt-2 space-y-2"><%= form.collection_check_boxes :evidence_ids, @available_evidences, :id, :original_filename do |box| %><label class="flex min-h-11 items-center gap-3 rounded-xl border border-gray-200 px-3"><%= box.check_box %><span class="break-all text-sm"><%= box.text %></span></label><% end %></div></fieldset><% end %>
+      <%= form.submit t("clarifications.send_response"), class: "min-h-12 w-full rounded-xl bg-blue-700 px-5 font-semibold text-white" %>
+    <% end %>
+  <% elsif @clarification.response %>
+    <section class="rounded-2xl border border-blue-200 bg-blue-50 p-5"><h2 class="font-semibold text-blue-950"><%= t("clarifications.response") %></h2><p class="mt-2 text-sm leading-6 text-gray-900"><%= @clarification.response %></p><p class="mt-3 text-xs text-gray-500"><%= t("clarifications.awaiting_reviewer") unless @clarification.state == "resolved" %></p></section>
+  <% end %>
+</div>

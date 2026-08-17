@@ -18,6 +18,11 @@ if Rails.env.development? || ENV["LOAD_DEMO_DATA"] == "true"
   technician_membership.update!(active: true)
   technician_membership.membership_roles.find_or_create_by!(role: "technician")
 
+  engineer_user = User.find_or_create_by!(email: "maria.engineer@tecniqo.local")
+  engineer_membership = Membership.find_or_create_by!(organization: organization, user: engineer_user)
+  engineer_membership.update!(active: true)
+  engineer_membership.membership_roles.find_or_create_by!(role: "engineer")
+
   customer = Customer.find_or_create_by!(organization: organization, name: "Indústria ABC")
   betim = Site.find_or_create_by!(organization: organization, customer: customer, name: "Betim Plant")
   contagem = Site.find_or_create_by!(organization: organization, customer: customer, name: "Contagem Plant")
@@ -103,4 +108,6 @@ if Rails.env.development? || ENV["LOAD_DEMO_DATA"] == "true"
       record.assign_attributes(technical_attributes.merge(recorded_at: Time.current))
     end
   end
+
+  EngineeringReview.create_for_ready_work_order!(work_order) if work_order.ready_for_engineering_review?
 end

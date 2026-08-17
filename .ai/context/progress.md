@@ -2,11 +2,34 @@
 
 ## Current milestone
 
-- **Name:** Phase 5 — Structured Technical Field Capture
-- **Status:** Automated validation complete; responsive acceptance pending
-- **Target outcome:** Simple field actions produce evidence-backed structured engineering facts
+- **Name:** Phase 6 — Engineering Review, Clarification & Technical Approval
+- **Status:** Complete, validated, and accepted
+- **Target outcome:** Submitted multi-visit field facts become explicitly reviewed, clarified,
+  and technically approved without silent history mutation
 
 ## Completed
+
+### 2026-08-17 — Implement engineering review, clarification, and technical approval
+
+- Added one Work Order-level Engineering Review with an explicit included-Execution set,
+  idempotent readiness creation on final submission, and a deployment backfill.
+- Added locked pending/in-review/changes-requested/approved actions, one responsible Engineer,
+  automatic start/approval provenance, concurrent claim serialization, and approval preconditions.
+- Added contextual Clarification Requests targeting Work Order, Execution, field facts, or Evidence,
+  defaulting to an eligible author/participant, with one response and explicit reviewer resolution.
+- Reused immutable same-Execution Evidence for clarification responses and added one narrowly
+  authorized post-submission Evidence append path without reopening submitted facts.
+- Added a responsive Engineer queue and assembled multi-visit workspace plus a mobile-first
+  Technician Needs Information inbox/response flow in English, Portuguese, and Spanish.
+- Enforced technical-role separation, tenant isolation, review/clarification database constraints,
+  unresolved-clarification approval blocking, and Work Order locking after approval.
+- Recorded the review scope, clarification lifecycle, approval boundary, and Phase 7 seam in ADR 0009.
+- Validation: 270 RSpec examples, 208-file RuboCop, Zeitwerk, direct Brakeman with zero warnings,
+  Bundler/Importmap/NPM audits, Preline verification, migrations, two seed runs, and diff checks
+  passed. Canonical CI passed every step except the existing Brakeman latest-version gate
+  (8.0.5 locked; 8.0.6 latest).
+- Acceptance: responsive Engineer review and Technician clarification smoke testing completed
+  successfully by the developer, including the clarification-form regression fix.
 
 ### 2026-08-15 — Implement structured technical field capture
 
@@ -22,6 +45,8 @@
 - Validation: 259 RSpec examples, RuboCop, Zeitwerk, direct Brakeman, dependency audits,
   Preline verification, migrations, idempotent seeds, and diff checks passed. Canonical CI
   passed every step except its existing Brakeman latest-version gate (8.0.5 locked; 8.0.6 latest).
+- Acceptance: responsive Phase 5 Technician and Engineer smoke testing completed successfully
+  by the developer.
 
 ### 2026-08-15 — Add complete local Compose infrastructure
 
@@ -195,12 +220,12 @@
 
 ## In progress
 
-- Phase 5 responsive browser acceptance.
+- Phase 7 requirements inspection and task definition.
 
 ## Planned
 
-- Phase 6 investigation: Engineering Review, clarification/correction workflow, technical
-  revisions, and report-ready structured records.
+- Phase 7: approved technical-state snapshots, Technical Revisions, reproducible metadata,
+  and report-generation foundations without implementing premature regulatory templates.
 
 ## Known defects and technical debt
 

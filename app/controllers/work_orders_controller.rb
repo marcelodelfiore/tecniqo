@@ -26,6 +26,7 @@ class WorkOrdersController < ApplicationController
     @executions = policy_scope(Execution).where(work_order: @work_order)
                                          .includes(:execution_events, execution_participants: { membership: :user })
     @technicians = policy_scope(Membership, policy_scope_class: AssignmentPolicy::AssignableScope)
+    @engineering_review = policy_scope(EngineeringReview).find_by(work_order: @work_order)
   end
 
   def new

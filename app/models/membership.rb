@@ -14,6 +14,12 @@ class Membership < ApplicationRecord
   has_many :recorded_execution_outcomes, class_name: "Execution",
                                            foreign_key: :outcome_recorded_by_membership_id,
                                            dependent: :restrict_with_exception
+  has_many :received_clarification_requests, class_name: "ClarificationRequest",
+                                             foreign_key: :recipient_membership_id,
+                                             dependent: :restrict_with_exception
+  has_many :clarification_responses, class_name: "ClarificationRequest",
+                                     foreign_key: :responded_by_membership_id,
+                                     dependent: :restrict_with_exception
 
   validates :user_id, uniqueness: { scope: :organization_id }
   validates :active, inclusion: { in: [ true, false ] }

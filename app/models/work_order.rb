@@ -13,6 +13,7 @@ class WorkOrder < ApplicationRecord
   has_one :current_assignment, -> { where(ended_at: nil) }, class_name: "Assignment",
                                                           inverse_of: :work_order
   has_many :executions, -> { order(:visit_number) }, dependent: :restrict_with_exception
+  has_one :engineering_review, dependent: :restrict_with_exception
 
   normalizes :requested_work, with: ->(value) { value.to_s.strip.presence }
 
@@ -22,6 +23,7 @@ class WorkOrder < ApplicationRecord
   validates :priority, presence: true, inclusion: { in: PRIORITIES }
   validate :relationships_belong_to_organization
   validate :asset_belongs_to_site
+  validate :approved_technical_context_is_unchanged, on: :update
 
   def self.issue!(organization:, attributes:, created_by:, assignee_membership: nil)
     transaction do
@@ -64,6 +66,11 @@ class WorkOrder < ApplicationRecord
     previous.nil? || (previous.submitted? && previous.outcome == "return_required")
   end
 
+  def ready_for_engineering_review?
+    visits = Execution.where(work_order: self).order(:visit_number).to_a
+    visits.any? && visits.all?(&:submitted?) && visits.last.outcome != "return_required"
+  end
+
   private
 
   def relationships_belong_to_organization
@@ -85,5 +92,12 @@ class WorkOrder < ApplicationRecord
 
     errors.add(:assignments, :invalid_assignee)
     raise ActiveRecord::RecordInvalid, self
+  end
+
+  def approved_technical_context_is_unchanged
+    return unless engineering_review&.state == "approved"
+    return if changes_to_save.except("updated_at").empty?
+
+    errors.add(:base, :technical_content_approved)
   end
 end

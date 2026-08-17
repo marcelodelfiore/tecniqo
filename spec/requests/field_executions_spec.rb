@@ -113,6 +113,7 @@ RSpec.describe "Field executions", type: :request do
 
     expect(execution.reload).to have_attributes(outcome: "unable_to_execute", current_state: "submitted")
     expect(execution.execution_events.pluck(:event_type)).to eq(%w[arrived_at_site left_site submitted])
+    expect(work_order.reload.engineering_review).to have_attributes(state: "pending")
   end
 
   it "allows participant history to preserve Work Order access after reassignment" do

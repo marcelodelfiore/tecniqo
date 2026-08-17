@@ -22,6 +22,7 @@ class Evidence < ApplicationRecord
   belongs_to :uploaded_by_membership, class_name: "Membership"
   has_one_attached :original
   has_many :evidence_references, dependent: :restrict_with_exception
+  has_many :clarification_evidences, dependent: :restrict_with_exception
 
   normalizes :description, with: ->(value) { value.to_s.strip.presence }
 

@@ -130,6 +130,23 @@ tenant-sensitive rules than explicit policies and scopes.
 - The Execution page provides focused mobile-first capture and grouped responsive technical
   presentation. ADR 0008 records vocabulary, lifecycle, and linking decisions.
 
+## Phase 6 engineering review
+
+- `EngineeringReview` belongs to a Work Order and explicitly includes its ready submitted
+  Executions; one review is allowed per Work Order.
+- Reviews are created automatically after the final current visit is submitted, with a deployment
+  backfill for already-ready Work Orders. States are pending, in review, changes requested, and
+  approved; transitions are explicit locked actions.
+- One Engineer claims responsibility. Founder must explicitly perform the same action;
+  Administrator and Supervisor visibility never implies technical approval authority.
+- `ClarificationRequest` targets useful Work Order/Execution/fact/Evidence context, defaults to the
+  original Technician author where possible, records one response, and requires explicit reviewer
+  resolution. Unresolved requests block approval.
+- Clarification responses may link existing Evidence or append a new immutable original to the same
+  submitted Execution through a dedicated recipient-authorized endpoint.
+- Approval records actor/time, retains submission immutability, and locks Work Order edits. It is
+  neither report issuance nor a reproducible metadata revision; ADR 0009 defines that Phase 7 seam.
+
 ## Local environment
 
 The complete containerized environment requires only Docker:

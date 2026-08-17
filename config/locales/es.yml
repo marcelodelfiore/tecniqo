@@ -14,6 +14,8 @@ es:
       participant_has_events: "no permite eliminar a un participante que registró eventos de campo"
       evidence_immutable: "no puede modificarse ni eliminarse después de aceptarse"
       incompatible: "no se puede usar para %{quantity}"
+      unresolved: "debe resolverse antes de la aprobación"
+      technical_content_approved: "no puede modificarse después de la aprobación técnica"
   app:
     tagline: "Ingeniería de mantenimiento industrial"
   locales:
@@ -30,6 +32,7 @@ es:
     service_types: "Tipos de servicio"
     invitations: "Invitaciones"
     members: "Miembros"
+    engineering_reviews: "Revisión técnica"
     logout: "Salir"
     open_menu: "Abrir menú"
     close_menu: "Cerrar menú"
@@ -173,6 +176,14 @@ es:
       created: "%{record} agregado."
       updated: "%{record} actualizado."
       destroyed: "%{record} eliminado."
+    engineering_reviews:
+      started: "Revisión técnica iniciada."
+      approved: "Contenido técnico aprobado."
+    clarifications:
+      created: "Aclaración solicitada."
+      responded: "Respuesta enviada a Ingeniería."
+      resolved: "Aclaración resuelta."
+      evidence_added: "Evidencia añadida a la aclaración."
   evidences:
     title: "Evidencias"
     empty: "No se ha enviado evidencia para esta visita."
@@ -513,3 +524,61 @@ es:
   measurement_units: { mV: "mV", V: "V", kV: "kV", mA: "mA", A: "A", Hz: "Hz", ohm: "Ω", kohm: "kΩ", Mohm: "MΩ", Gohm: "GΩ", degC: "°C" }
   material_units: { piece: "pieza(s)", m: "m", cm: "cm", mm: "mm", kg: "kg", g: "g", L: "L", mL: "mL" }
   evidence_reference_roles: { supporting: "Evidencia", before: "Antes", after: "Después" }
+  engineering_reviews:
+    technical_review: "Revisión técnica"
+    open: "Abrir revisión"
+    visit_count: { one: "1 visita", other: "%{count} visitas" }
+    reviewer: "Revisor: %{name}"
+    updated: "Actualizada %{date}"
+    states: { pending: "Pendiente de revisión", in_review: "En revisión", changes_requested: "Necesita información", approved: "Contenido técnico aprobado" }
+    index:
+      title: "Revisión técnica"
+      subtitle: "Órdenes de Trabajo que requieren atención de Ingeniería."
+      empty_title: "Sin revisiones técnicas"
+      empty_message: "El trabajo de campo completado y enviado aparecerá aquí."
+    show:
+      title: "Revisión técnica — %{identifier}"
+    ready_to_start: "Lista para revisión técnica"
+    start_hint: "Al iniciar, usted queda asignado como revisor técnico responsable."
+    start: "Iniciar revisión"
+    field_history: "Historial de campo"
+    field_history_hint: "Visitas enviadas, hechos estructurados y Evidencias de respaldo en una historia técnica."
+    submitted_at: "Enviada %{date}"
+    operational_timeline: "Cronología operativa"
+    unlinked_evidence: "Evidencia general de la visita"
+    integrity_recorded: "Huella de integridad del original registrada"
+    approval_title: "Aprobación técnica"
+    approval_hint: "La aprobación acepta el contenido técnico enviado. No emite un informe."
+    approve: "Aprobar contenido técnico"
+    confirm_approval: "¿Aprobar este contenido técnico? Esto no genera un informe."
+    approved_title: "Contenido técnico aprobado"
+    approved_meta: "Aprobado por %{name} el %{date}."
+    no_report: "No se generó ningún informe. Las revisiones aprobadas y los informes pertenecen a la próxima fase."
+    targets: { work_order: "Orden de Trabajo", evidence: "Evidencia" }
+  clarifications:
+    title: "Aclaraciones"
+    request: "Solicitar aclaración"
+    request_about_work_order: "Preguntar sobre la Orden de Trabajo"
+    request_about_visit: "Preguntar sobre esta visita"
+    review_hint: "Preguntas técnicas, respuestas, Evidencias de respaldo y resolución del revisor."
+    states: { requested: "Respuesta solicitada", responded: "Respuesta recibida", resolved: "Resuelta" }
+    response: "Respuesta del técnico"
+    requested_meta: "Solicitada por %{name} el %{date} · Destinatario: %{recipient}"
+    responded_meta: "Respondida por %{name} el %{date}"
+    resolve: "Resolver aclaración"
+    needs_information: "Necesita información"
+    technician_hint: "Preguntas de Ingeniería que necesitan su conocimiento de campo."
+    question_from: "Pregunta de %{name}:"
+    recipient: "Técnico responsable"
+    question: "Pregunta"
+    send: "Enviar solicitud"
+    add_evidence: "Añadir nueva Evidencia"
+    your_response: "Su respuesta"
+    link_evidence: "Vincular Evidencia de esta visita"
+    send_response: "Enviar respuesta"
+    awaiting_reviewer: "Su respuesta espera la resolución del revisor."
+    new:
+      title: "Solicitar aclaración"
+      subtitle: "Haga una pregunta técnica explícita dentro de su contexto de campo."
+    show:
+      title: "Aclaración — %{identifier}"

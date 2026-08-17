@@ -14,6 +14,8 @@ en:
       participant_has_events: "cannot remove a participant who recorded field events"
       evidence_immutable: "cannot be changed or removed after acceptance"
       incompatible: "cannot be used for %{quantity}"
+      unresolved: "must be resolved before approval"
+      technical_content_approved: "cannot be changed after technical approval"
   app:
     tagline: "Industrial maintenance engineering"
   locales:
@@ -30,6 +32,7 @@ en:
     service_types: "Service types"
     invitations: "Invitations"
     members: "Members"
+    engineering_reviews: "Technical review"
     logout: "Sign out"
     open_menu: "Open menu"
     close_menu: "Close menu"
@@ -173,6 +176,14 @@ en:
       created: "%{record} added."
       updated: "%{record} updated."
       destroyed: "%{record} removed."
+    engineering_reviews:
+      started: "Technical review started."
+      approved: "Technical content approved."
+    clarifications:
+      created: "Clarification requested."
+      responded: "Response sent to Engineering."
+      resolved: "Clarification resolved."
+      evidence_added: "Evidence added to the clarification."
   evidences:
     title: "Evidence"
     empty: "No evidence has been uploaded for this visit."
@@ -513,3 +524,61 @@ en:
   measurement_units: { mV: "mV", V: "V", kV: "kV", mA: "mA", A: "A", Hz: "Hz", ohm: "Ω", kohm: "kΩ", Mohm: "MΩ", Gohm: "GΩ", degC: "°C" }
   material_units: { piece: "piece(s)", m: "m", cm: "cm", mm: "mm", kg: "kg", g: "g", L: "L", mL: "mL" }
   evidence_reference_roles: { supporting: "Evidence", before: "Before", after: "After" }
+  engineering_reviews:
+    technical_review: "Technical review"
+    open: "Open review"
+    visit_count: { one: "1 visit", other: "%{count} visits" }
+    reviewer: "Reviewer: %{name}"
+    updated: "Updated %{date}"
+    states: { pending: "Needs review", in_review: "In review", changes_requested: "Needs information", approved: "Technical content approved" }
+    index:
+      title: "Technical review"
+      subtitle: "Work Orders requiring engineering attention."
+      empty_title: "No technical reviews"
+      empty_message: "Completed submitted field work will appear here."
+    show:
+      title: "Technical review — %{identifier}"
+    ready_to_start: "Ready for technical review"
+    start_hint: "Starting assigns you as the responsible technical reviewer."
+    start: "Start review"
+    field_history: "Field history"
+    field_history_hint: "Submitted visits, structured facts, and supporting Evidence in one technical story."
+    submitted_at: "Submitted %{date}"
+    operational_timeline: "Operational timeline"
+    unlinked_evidence: "General visit Evidence"
+    integrity_recorded: "Original integrity fingerprint recorded"
+    approval_title: "Technical approval"
+    approval_hint: "Approval accepts the submitted technical content. It does not issue a report."
+    approve: "Approve technical content"
+    confirm_approval: "Approve this technical content? This does not generate a report."
+    approved_title: "Technical content approved"
+    approved_meta: "Approved by %{name} on %{date}."
+    no_report: "No report has been generated. Approved revisions and reports belong to the next phase."
+    targets: { work_order: "Work Order", evidence: "Evidence" }
+  clarifications:
+    title: "Clarifications"
+    request: "Request clarification"
+    request_about_work_order: "Ask about the Work Order"
+    request_about_visit: "Ask about this visit"
+    review_hint: "Technical questions, responses, supporting Evidence, and reviewer resolution."
+    states: { requested: "Response requested", responded: "Response received", resolved: "Resolved" }
+    response: "Technician response"
+    requested_meta: "Requested by %{name} on %{date} · Recipient: %{recipient}"
+    responded_meta: "Responded by %{name} on %{date}"
+    resolve: "Resolve clarification"
+    needs_information: "Needs information"
+    technician_hint: "Engineering questions that need your field knowledge."
+    question_from: "Question from %{name}:"
+    recipient: "Technician responsible"
+    question: "Question"
+    send: "Send request"
+    add_evidence: "Add new Evidence"
+    your_response: "Your response"
+    link_evidence: "Link Evidence from this visit"
+    send_response: "Send response"
+    awaiting_reviewer: "Your response is waiting for reviewer resolution."
+    new:
+      title: "Request clarification"
+      subtitle: "Ask one explicit technical question in its field context."
+    show:
+      title: "Clarification — %{identifier}"

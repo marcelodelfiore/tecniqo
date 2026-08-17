@@ -1,0 +1,57 @@
+<% content_for :title, t("engineering_reviews.show.title", identifier: @work_order.public_identifier) %>
+<div class="space-y-6">
+  <%= render "shared/breadcrumbs", items: [ { label: t("engineering_reviews.index.title"), path: engineering_reviews_path }, { label: @work_order.public_identifier } ] %>
+
+  <header class="rounded-2xl bg-slate-900 p-5 text-white shadow-sm sm:p-6">
+    <div class="flex flex-wrap items-start justify-between gap-4"><div><p class="text-sm font-semibold text-blue-300"><%= @work_order.public_identifier %></p><h1 class="mt-1 text-2xl font-semibold"><%= t("engineering_reviews.technical_review") %></h1><p class="mt-2 text-sm text-slate-300"><%= @work_order.customer.name %> · <%= @work_order.site.name %><% if @work_order.asset %> · <%= @work_order.asset.name %><% end %></p></div><span class="rounded-full px-3 py-1 text-sm font-semibold <%= review_state_classes(@review.state) %>"><%= t("engineering_reviews.states.#{@review.state}") %></span></div>
+    <p class="mt-5 text-sm leading-6 text-slate-200"><%= @work_order.requested_work %></p>
+    <p class="mt-3 text-sm font-medium text-white"><%= @work_order.service_type.name %></p>
+    <% if policy(@review).request_clarification? %><%= link_to t("clarifications.request_about_work_order"), clarification_request_path_for(@review, @executions.first, @work_order), class: "mt-4 inline-flex min-h-10 items-center rounded-lg border border-amber-300 px-3 text-xs font-semibold text-amber-200" %><% end %>
+  </header>
+
+  <% if policy(@review).start? %>
+    <section class="rounded-2xl border-2 border-blue-200 bg-blue-50 p-5"><h2 class="font-semibold text-blue-950"><%= t("engineering_reviews.ready_to_start") %></h2><p class="mt-1 text-sm text-blue-800"><%= t("engineering_reviews.start_hint") %></p><%= button_to t("engineering_reviews.start"), start_engineering_review_path(@review), class: "mt-4 min-h-12 rounded-xl bg-blue-700 px-5 font-semibold text-white" %></section>
+  <% end %>
+
+  <% if @clarifications.any? %>
+    <section class="space-y-3"><div><h2 class="text-xl font-semibold text-gray-950"><%= t("clarifications.title") %></h2><p class="mt-1 text-sm text-gray-600"><%= t("clarifications.review_hint") %></p></div>
+      <% @clarifications.each do |clarification| %>
+        <article id="clarification-<%= clarification.id %>" class="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+          <div class="flex flex-wrap items-start justify-between gap-3"><div><p class="text-xs font-semibold uppercase tracking-wide text-gray-500"><%= clarification_target_title(clarification.target) %></p><p class="mt-1 text-sm text-gray-700"><%= clarification_target_summary(clarification.target) %></p></div><span class="rounded-full px-2.5 py-1 text-xs font-semibold <%= clarification_state_classes(clarification.state) %>"><%= t("clarifications.states.#{clarification.state}") %></span></div>
+          <blockquote class="mt-4 border-l-4 border-amber-300 pl-4 text-sm leading-6 text-gray-900"><%= clarification.question %></blockquote>
+          <p class="mt-2 text-xs text-gray-500"><%= t("clarifications.requested_meta", name: clarification.requested_by.email, date: l(clarification.requested_at, format: :long), recipient: clarification.recipient_membership.user.email) %></p>
+          <% if clarification.response %><div class="mt-4 rounded-xl bg-blue-50 p-4"><p class="text-xs font-semibold uppercase tracking-wide text-blue-700"><%= t("clarifications.response") %></p><p class="mt-2 text-sm leading-6 text-gray-900"><%= clarification.response %></p><p class="mt-2 text-xs text-gray-500"><%= t("clarifications.responded_meta", name: clarification.responded_by_membership.user.email, date: l(clarification.responded_at, format: :long)) %></p><% if clarification.evidences.any? %><div class="mt-3 flex flex-wrap gap-2"><% clarification.evidences.each do |evidence| %><%= link_to evidence.original_filename, original_work_order_execution_evidence_path(@work_order, clarification.execution, evidence), class: "rounded-lg bg-white px-3 py-2 text-xs font-medium text-blue-800" %><% end %></div><% end %></div><% end %>
+          <% if policy(clarification).resolve? %><%= button_to t("clarifications.resolve"), resolve_clarification_request_path(clarification), class: "mt-4 min-h-11 rounded-xl bg-emerald-700 px-4 font-semibold text-white" %><% end %>
+        </article>
+      <% end %>
+    </section>
+  <% end %>
+
+  <section class="space-y-5"><div><h2 class="text-xl font-semibold text-gray-950"><%= t("engineering_reviews.field_history") %></h2><p class="mt-1 text-sm text-gray-600"><%= t("engineering_reviews.field_history_hint") %></p></div>
+    <% @executions.each do |execution| %>
+      <article class="rounded-2xl border border-gray-200 bg-gray-50 p-4 sm:p-6">
+        <div class="flex flex-wrap items-start justify-between gap-3"><div><h3 class="text-lg font-semibold text-gray-950"><%= t("executions.visit", number: execution.visit_number) %></h3><p class="mt-1 text-sm text-gray-600"><%= execution.execution_participants.map { |participant| participant.membership.user.email }.join(", ") %></p><% if policy(@review).request_clarification? %><%= link_to t("clarifications.request_about_visit"), clarification_request_path_for(@review, execution, execution), class: "mt-2 inline-flex min-h-10 items-center text-xs font-semibold text-amber-800" %><% end %></div><div class="text-right text-sm"><p class="font-medium text-gray-900"><%= t("execution_outcomes.#{execution.outcome}") %></p><p class="mt-1 text-gray-500"><%= t("engineering_reviews.submitted_at", date: l(execution.execution_events.find { |event| event.event_type == "submitted" }.occurred_at, format: :long)) %></p></div></div>
+
+        <div class="mt-5 grid gap-3 lg:grid-cols-2">
+          <% execution.findings.each do |record| %><%= render "technical_fact", execution: execution, record: record, title: t("technical_records.types.finding"), body: safe_join([record.description, content_tag(:span, t("finding_severities.#{record.severity}"), class: "ml-2 rounded bg-gray-100 px-2 py-1 text-xs")]) %><% end %>
+          <% execution.measurements.each do |record| %><%= render "technical_fact", execution: execution, record: record, title: t("measurement_quantities.#{record.quantity}"), body: "#{decimal_measurement(record.value)} #{measurement_unit_label(record.unit)} — #{record.measurement_point}" %><% end %>
+          <% execution.action_performeds.each do |record| %><%= render "technical_fact", execution: execution, record: record, title: t("technical_records.types.action_performed"), body: record.description %><% end %>
+          <% execution.materials_used.each do |record| %><%= render "technical_fact", execution: execution, record: record, title: t("technical_records.types.material_used"), body: "#{record.description} — #{decimal_measurement(record.quantity)} #{t("material_units.#{record.unit}")}" %><% end %>
+          <% execution.recommendations.each do |record| %><%= render "technical_fact", execution: execution, record: record, title: t("technical_records.types.recommendation"), body: record.description %><% end %>
+        </div>
+
+        <details class="mt-5 rounded-xl border border-gray-200 bg-white p-4"><summary class="cursor-pointer font-semibold text-gray-900"><%= t("engineering_reviews.operational_timeline") %></summary><ol class="mt-4 space-y-2"><% execution.execution_events.each do |event| %><li class="flex gap-3 text-sm"><time class="font-mono text-blue-700"><%= event.occurred_at.strftime("%H:%M") %></time><span><%= t("execution_events.types.#{event.event_type}") %></span></li><% end %></ol></details>
+
+        <% linked_ids = (execution.findings + execution.measurements + execution.action_performeds + execution.materials_used + execution.recommendations).flat_map { |record| record.evidence_references.map(&:evidence_id) } %>
+        <% unlinked = execution.evidences.reject { |evidence| linked_ids.include?(evidence.id) } %>
+        <% if unlinked.any? %><div class="mt-5"><h4 class="text-sm font-semibold text-gray-900"><%= t("engineering_reviews.unlinked_evidence") %></h4><div class="mt-2 flex flex-wrap gap-2"><% unlinked.each do |evidence| %><%= link_to evidence.original_filename, original_work_order_execution_evidence_path(@work_order, execution, evidence), class: "rounded-lg bg-white px-3 py-2 text-xs font-medium text-blue-800" %><% if policy(@review).request_clarification? %><%= link_to t("clarifications.request"), clarification_request_path_for(@review, execution, evidence), class: "rounded-lg border border-amber-300 px-3 py-2 text-xs font-medium text-amber-900" %><% end %><% end %></div></div><% end %>
+      </article>
+    <% end %>
+  </section>
+
+  <% if policy(@review).approve? %>
+    <section class="rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-5"><h2 class="font-semibold text-emerald-950"><%= t("engineering_reviews.approval_title") %></h2><p class="mt-1 text-sm text-emerald-800"><%= t("engineering_reviews.approval_hint") %></p><%= button_to t("engineering_reviews.approve"), approve_engineering_review_path(@review), class: "mt-4 min-h-12 rounded-xl bg-emerald-700 px-5 font-semibold text-white", data: { turbo_confirm: t("engineering_reviews.confirm_approval") } %></section>
+  <% elsif @review.state == "approved" %>
+    <section class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5"><h2 class="font-semibold text-emerald-950"><%= t("engineering_reviews.approved_title") %></h2><p class="mt-2 text-sm text-emerald-800"><%= t("engineering_reviews.approved_meta", name: @review.approved_by.email, date: l(@review.approved_at, format: :long)) %></p><p class="mt-2 text-sm text-emerald-800"><%= t("engineering_reviews.no_report") %></p></section>
+  <% end %>
+</div>

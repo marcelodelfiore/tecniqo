@@ -44,6 +44,16 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :engineering_reviews, only: %i[index show] do
+    post :start, on: :member
+    post :approve, on: :member
+    resources :clarification_requests, path: "clarifications", only: %i[new create]
+  end
+  resources :clarification_requests, path: "clarifications", only: %i[show update] do
+    post :resolve, on: :member
+    resources :evidences, controller: "clarification_evidences", only: :create
+  end
+
   resources :my_work, only: :index
 
   resources :customers, except: :destroy do

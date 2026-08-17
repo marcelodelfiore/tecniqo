@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_15_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_17_010100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -96,6 +96,53 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_150000) do
     t.check_constraint "ended_at IS NULL OR ended_at >= assigned_at", name: "assignments_timeline_check"
   end
 
+  create_table "clarification_evidences", force: :cascade do |t|
+    t.bigint "clarification_request_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "evidence_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["clarification_request_id", "evidence_id"], name: "index_clarification_evidences_on_request_and_evidence", unique: true
+    t.index ["clarification_request_id"], name: "index_clarification_evidences_on_clarification_request_id"
+    t.index ["evidence_id"], name: "index_clarification_evidences_on_evidence_id"
+    t.index ["organization_id"], name: "index_clarification_evidences_on_organization_id"
+  end
+
+  create_table "clarification_requests", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "engineering_review_id", null: false
+    t.bigint "execution_id", null: false
+    t.bigint "organization_id", null: false
+    t.text "question", null: false
+    t.bigint "recipient_membership_id", null: false
+    t.datetime "requested_at", null: false
+    t.bigint "requested_by_id", null: false
+    t.datetime "resolved_at"
+    t.bigint "resolved_by_id"
+    t.datetime "responded_at"
+    t.bigint "responded_by_membership_id"
+    t.text "response"
+    t.string "state", default: "requested", null: false
+    t.bigint "target_id", null: false
+    t.string "target_type", null: false
+    t.datetime "updated_at", null: false
+    t.index ["engineering_review_id", "state"], name: "idx_on_engineering_review_id_state_7fb600b7d8"
+    t.index ["engineering_review_id"], name: "index_clarification_requests_on_engineering_review_id"
+    t.index ["execution_id"], name: "index_clarification_requests_on_execution_id"
+    t.index ["id", "organization_id"], name: "index_clarification_requests_on_id_and_organization_id", unique: true
+    t.index ["organization_id"], name: "index_clarification_requests_on_organization_id"
+    t.index ["recipient_membership_id", "state", "updated_at"], name: "index_clarifications_on_recipient_state"
+    t.index ["recipient_membership_id"], name: "index_clarification_requests_on_recipient_membership_id"
+    t.index ["requested_by_id"], name: "index_clarification_requests_on_requested_by_id"
+    t.index ["resolved_by_id"], name: "index_clarification_requests_on_resolved_by_id"
+    t.index ["responded_by_membership_id"], name: "index_clarification_requests_on_responded_by_membership_id"
+    t.index ["target_type", "target_id"], name: "index_clarification_requests_on_target_type_and_target_id"
+    t.check_constraint "btrim(question) <> ''::text", name: "clarification_requests_question_present"
+    t.check_constraint "state::text = 'requested'::text AND response IS NULL AND responded_by_membership_id IS NULL AND responded_at IS NULL AND resolved_by_id IS NULL AND resolved_at IS NULL OR state::text = 'responded'::text AND btrim(response) <> ''::text AND responded_by_membership_id IS NOT NULL AND responded_at IS NOT NULL AND resolved_by_id IS NULL AND resolved_at IS NULL OR state::text = 'resolved'::text AND btrim(response) <> ''::text AND responded_by_membership_id IS NOT NULL AND responded_at IS NOT NULL AND resolved_by_id IS NOT NULL AND resolved_at IS NOT NULL", name: "clarification_requests_lifecycle_check"
+    t.check_constraint "state::text = ANY (ARRAY['requested'::character varying, 'responded'::character varying, 'resolved'::character varying]::text[])", name: "clarification_requests_state_check"
+    t.check_constraint "target_type::text = ANY (ARRAY['WorkOrder'::character varying, 'Execution'::character varying, 'Finding'::character varying, 'Measurement'::character varying, 'ActionPerformed'::character varying, 'MaterialUsed'::character varying, 'Recommendation'::character varying, 'Evidence'::character varying]::text[])", name: "clarification_requests_target_type_check"
+  end
+
   create_table "customers", force: :cascade do |t|
     t.string "business_identifier"
     t.datetime "created_at", null: false
@@ -109,6 +156,39 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_150000) do
     t.index "organization_id, lower((name)::text)", name: "index_customers_on_organization_and_lower_name", unique: true
     t.index ["id", "organization_id"], name: "index_customers_on_id_and_organization_id", unique: true
     t.index ["organization_id"], name: "index_customers_on_organization_id"
+  end
+
+  create_table "engineering_review_executions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "engineering_review_id", null: false
+    t.bigint "execution_id", null: false
+    t.bigint "organization_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["engineering_review_id", "execution_id"], name: "index_review_executions_on_review_and_execution", unique: true
+    t.index ["engineering_review_id"], name: "index_engineering_review_executions_on_engineering_review_id"
+    t.index ["execution_id"], name: "index_engineering_review_executions_on_execution_id"
+    t.index ["organization_id"], name: "index_engineering_review_executions_on_organization_id"
+  end
+
+  create_table "engineering_reviews", force: :cascade do |t|
+    t.datetime "approved_at"
+    t.bigint "approved_by_id"
+    t.datetime "created_at", null: false
+    t.bigint "organization_id", null: false
+    t.bigint "reviewer_id"
+    t.datetime "started_at"
+    t.string "state", default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "work_order_id", null: false
+    t.index ["approved_by_id"], name: "index_engineering_reviews_on_approved_by_id"
+    t.index ["id", "organization_id"], name: "index_engineering_reviews_on_id_and_organization_id", unique: true
+    t.index ["organization_id", "state", "updated_at"], name: "idx_on_organization_id_state_updated_at_3251521b2b"
+    t.index ["organization_id"], name: "index_engineering_reviews_on_organization_id"
+    t.index ["reviewer_id"], name: "index_engineering_reviews_on_reviewer_id"
+    t.index ["work_order_id"], name: "index_engineering_reviews_on_work_order_id", unique: true
+    t.check_constraint "state::text = 'approved'::text AND approved_by_id IS NOT NULL AND approved_at IS NOT NULL OR state::text <> 'approved'::text AND approved_by_id IS NULL AND approved_at IS NULL", name: "engineering_reviews_approval_state_check"
+    t.check_constraint "state::text = 'pending'::text AND reviewer_id IS NULL AND started_at IS NULL OR state::text <> 'pending'::text AND reviewer_id IS NOT NULL AND started_at IS NOT NULL", name: "engineering_reviews_reviewer_state_check"
+    t.check_constraint "state::text = ANY (ARRAY['pending'::character varying, 'in_review'::character varying, 'changes_requested'::character varying, 'approved'::character varying]::text[])", name: "engineering_reviews_state_check"
   end
 
   create_table "evidence_references", force: :cascade do |t|
@@ -437,7 +517,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_15_150000) do
   add_foreign_key "assignments", "organizations"
   add_foreign_key "assignments", "users", column: "assigned_by_id"
   add_foreign_key "assignments", "work_orders", column: ["work_order_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "clarification_evidences", "clarification_requests", column: ["clarification_request_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "clarification_evidences", "evidences", column: ["evidence_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "clarification_evidences", "organizations"
+  add_foreign_key "clarification_requests", "engineering_reviews", column: ["engineering_review_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "clarification_requests", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "clarification_requests", "memberships", column: ["recipient_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "clarification_requests", "memberships", column: ["responded_by_membership_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "clarification_requests", "organizations"
+  add_foreign_key "clarification_requests", "users", column: "requested_by_id"
+  add_foreign_key "clarification_requests", "users", column: "resolved_by_id"
   add_foreign_key "customers", "organizations"
+  add_foreign_key "engineering_review_executions", "engineering_reviews", column: ["engineering_review_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "engineering_review_executions", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
+  add_foreign_key "engineering_review_executions", "organizations"
+  add_foreign_key "engineering_reviews", "organizations"
+  add_foreign_key "engineering_reviews", "users", column: "approved_by_id"
+  add_foreign_key "engineering_reviews", "users", column: "reviewer_id"
+  add_foreign_key "engineering_reviews", "work_orders", column: ["work_order_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "evidence_references", "evidences", column: ["evidence_id", "execution_id", "organization_id"], primary_key: ["id", "execution_id", "organization_id"]
   add_foreign_key "evidence_references", "executions", column: ["execution_id", "organization_id"], primary_key: ["id", "organization_id"]
   add_foreign_key "evidence_references", "organizations"

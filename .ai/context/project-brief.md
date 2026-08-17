@@ -28,7 +28,8 @@ not the product's strategic endpoint.
 
 ## Current development focus
 
-Phase 5 validation — Findings → Measurements → Evidence → Actions → Materials/Recommendations.
+Phase 6 validation — submitted multi-visit field records → Engineering Review → clarification →
+technical approval.
 
 ## Success criteria
 

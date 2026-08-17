@@ -16,6 +16,9 @@
         <% if policy(WorkOrder).index? %>
           <%= link_to t("nav.work_orders"), work_orders_path, class: nav_link_classes(work_orders_path) %>
         <% end %>
+        <% if policy(EngineeringReview).index? %>
+          <%= link_to t("nav.engineering_reviews"), engineering_reviews_path, class: nav_link_classes(engineering_reviews_path) %>
+        <% end %>
         <% if policy(Customer).index? %>
           <%= link_to t("nav.customers"), customers_path, class: nav_link_classes(customers_path) %>
         <% end %>

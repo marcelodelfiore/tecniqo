@@ -41,4 +41,54 @@ module ApplicationHelper
   def decimal_measurement(value)
     number_with_precision(value, precision: 6, strip_insignificant_zeros: true)
   end
+
+  def review_state_classes(state)
+    case state
+    when "approved" then "bg-emerald-100 text-emerald-800"
+    when "changes_requested" then "bg-amber-100 text-amber-800"
+    when "in_review" then "bg-blue-100 text-blue-800"
+    else "bg-gray-100 text-gray-700"
+    end
+  end
+
+  def clarification_state_classes(state)
+    case state
+    when "resolved" then "bg-emerald-100 text-emerald-800"
+    when "responded" then "bg-blue-100 text-blue-800"
+    else "bg-amber-100 text-amber-800"
+    end
+  end
+
+  def clarification_target_title(target)
+    case target
+    when WorkOrder then t("engineering_reviews.targets.work_order")
+    when Execution then t("executions.visit", number: target.visit_number)
+    when Finding then t("technical_records.types.finding")
+    when Measurement then t("technical_records.types.measurement")
+    when ActionPerformed then t("technical_records.types.action_performed")
+    when MaterialUsed then t("technical_records.types.material_used")
+    when Recommendation then t("technical_records.types.recommendation")
+    when Evidence then t("engineering_reviews.targets.evidence")
+    end
+  end
+
+  def clarification_target_summary(target)
+    case target
+    when WorkOrder then target.requested_work
+    when Execution then t("execution_outcomes.#{target.outcome}")
+    when Measurement
+      "#{t("measurement_quantities.#{target.quantity}")} — " \
+        "#{decimal_measurement(target.value)} #{measurement_unit_label(target.unit)} — #{target.measurement_point}"
+    when MaterialUsed
+      "#{target.description} — #{decimal_measurement(target.quantity)} #{t("material_units.#{target.unit}")}"
+    when Evidence then target.description.presence || target.original_filename
+    else target.description
+    end
+  end
+
+  def clarification_request_path_for(review, execution, target)
+    new_engineering_review_clarification_request_path(
+      review, execution_id: execution.id, target_type: target.class.name, target_id: target.id
+    )
+  end
 end

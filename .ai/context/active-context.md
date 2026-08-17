@@ -2,7 +2,8 @@
 
 ## Current objective
 
-Phase 5 — structured technical field capture — is implemented and automated validation is complete.
+Phase 6 — Engineering Review, Clarification, and Technical Approval — is implemented,
+automatically validated, and smoke-tested.
 
 ## Current branch
 
@@ -44,14 +45,19 @@ Phase 3 responsive browser smoke testing and acceptance review are complete.
 
 Phase 4 responsive browser smoke testing and acceptance review are complete.
 
+Phase 6 adds one Work Order-level Engineering Review over an explicit set of submitted
+Executions, an Engineer claim/queue/workspace, contextual Clarification Requests with one
+Technician response and reviewer resolution, clarification Evidence append/reference support,
+and explicit technical approval provenance. ADR 0009 records the durable boundaries.
+
 ## In progress
 
-- Developer responsive acceptance testing of Phase 5 field and Engineer views.
+- Phase 7 requirements inspection and task definition.
 
 ## Next actions
 
-1. Developer smoke-tests technician capture on phone and Engineer presentation on desktop.
-2. Plan Phase 6 Engineering Review and clarification without mutating submitted facts.
+1. Plan Phase 7 approved metadata snapshots, Technical Revisions, and report foundations.
+2. Preserve the Phase 6 approval boundary while defining reproducible approved state.
 
 ## Acceptance criteria for the current activity
 
@@ -82,6 +88,13 @@ Phase 4 responsive browser smoke testing and acceptance review are complete.
 - [x] Technician access is limited to current assignment or participation; field actions require participation.
 - [x] Phase 4 mobile-first field UI, supervisor visit summaries, `My Work`, translations, seeds, and tests exist.
 - [x] Phase 4 responsive browser smoke testing and acceptance review completed by the developer.
+- [x] Ready submitted multi-visit Work Orders enter one Engineering Review idempotently.
+- [x] Engineers can claim reviews, inspect the assembled story, request clarification, resolve it,
+  and approve with server-derived provenance.
+- [x] Recipient Technicians can see, answer, and support clarifications with immutable Evidence.
+- [x] Review roles, tenant isolation, unresolved-clarification blocking, source locking,
+  idempotency, and concurrent claim serialization are tested.
+- [x] Phase 6 Engineer and Technician responsive browser smoke testing completed by the developer.
 
 ## Important findings and decisions
 
@@ -119,32 +132,38 @@ Phase 4 responsive browser smoke testing and acceptance review are complete.
   or timesheet columns.
 - Only active Technician Memberships participate; Founder authorization is not field eligibility.
 - Submission is terminal for Phase 4, and return visits remain under the same Work Order.
+- Engineering Review is Work Order-level and explicitly records its included submitted Executions.
+- The final current visit submission creates the review only when no return is outstanding.
+- Clarifications are explicit three-step requirements, not comments or chat threads.
+- Approval locks the Work Order context; submitted Executions/facts were already immutable.
+- Approval is not a revision snapshot or report issuance; those remain Phase 7 responsibilities.
 - Root `.ai/` is operational; `docs/.ai/` and `docs/docs/decisions/` are copied artifacts.
 
 ## Risks and blockers
 
-- No implementation blocker remains; responsive browser acceptance is pending.
+- No implementation blocker remains.
+- Active-review reassignment, recipient reassignment, approval reopening, and reproducible
+  master-data snapshots are intentionally deferred pending Phase 7 lifecycle design.
 - Organization-specific time zones and offline synchronization remain intentionally deferred.
 
 ## Validation status
 
-- Ruby 4.0.6 `bundle exec rspec`: 259 examples, 0 failures.
-- Ruby 4.0.6 `bin/rubocop`: 187 files, no offenses.
+- Ruby 4.0.6 `bundle exec rspec`: 270 examples, 0 failures.
+- Ruby 4.0.6 `bin/rubocop`: 208 files, no offenses.
 - Ruby 4.0.6 `bin/rails zeitwerk:check`: passed with the existing mailer-preview notice.
 - Ruby 4.0.6 `bundle exec brakeman --no-pager`: no warnings.
 - `bin/bundler-audit`, `bin/importmap audit`, and `npm run verify:preline`: passed.
 - `npm audit --audit-level=high`: passed with no vulnerabilities.
 - `bin/rails db:migrate:status`: all migrations up.
-- Development seeds ran twice successfully, preserving submitted visits and confirming
-  idempotent Phase 5 demo data for editable visits.
+- Development seeds ran twice successfully with the Phase 6 Engineer identity/review creation.
 - `git diff --check`: passed.
-- `bin/ci`: setup, 259 tests, style, JavaScript setup, Preline, NPM, gem, and Importmap
+- `bin/ci`: setup, 270 tests, style, JavaScript setup, Preline, NPM, gem, and Importmap
   audits passed; the wrapper stopped only because locked Brakeman 8.0.5 is not latest 8.0.6.
   Direct `bundle exec brakeman --no-pager` completed with no warnings.
 
 ## Handoff note
 
-Phases 1 through 4 are complete and accepted. Phase 5 is implemented with explicit technical
-facts, structured decimal Measurements, immutable-Evidence references, participant provenance,
-and submission locking. Responsive acceptance is next; Phase 6 should investigate Engineering
-Review and clarification without silently rewriting submitted field history.
+Phases 1 through 6 are complete and accepted. Phase 6 provides Work Order-level
+multi-visit review, explicit clarification, immutable clarification Evidence, technical-role
+separation, approval provenance, and protected source records. Phase 7 should create reproducible
+approved metadata revisions before report generation.

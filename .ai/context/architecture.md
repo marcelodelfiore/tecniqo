@@ -1,5 +1,23 @@
 # Architecture and Engineering Conventions
 
+## Phase 6 engineering review and technical approval
+
+One Work Order-level `EngineeringReview` assembles the complete submitted multi-visit story. An
+explicit join records the included Executions. Creation occurs idempotently when all current visits
+are submitted and the latest no longer requires a return. Review state remains separate from Work
+Order and Execution operational state.
+
+An Engineer claims one review and owns its technical actions. `ClarificationRequest` records one
+contextual question to one eligible participating Technician, one response, optional existing/new
+same-Execution Evidence, and explicit reviewer resolution. It is not a comment thread. Unresolved
+clarifications block approval. A dedicated route permits the recipient to append immutable Evidence
+after submission without reopening submitted facts.
+
+Approval records its User and time, requires an unchanged submitted Execution scope, and locks the
+approved Work Order context in addition to the existing submission lock on events and technical
+facts. It does not create a revision or report. ADR 0009 records scope, lifecycle, role, Evidence,
+and interim approval-integrity decisions.
+
 ## Phase 4.5 evidence storage
 
 Evidence is an Execution-owned, tenant-bound domain record. Its immutable original uses

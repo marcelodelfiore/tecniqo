@@ -41,6 +41,9 @@ class Execution < ApplicationRecord
   has_many :materials_used, -> { chronological }, class_name: "MaterialUsed",
                                                   dependent: :restrict_with_exception
   has_many :recommendations, -> { chronological }, dependent: :restrict_with_exception
+  has_many :engineering_review_executions, dependent: :restrict_with_exception
+  has_many :engineering_reviews, through: :engineering_review_executions
+  has_many :clarification_requests, dependent: :restrict_with_exception
 
   normalizes :outcome_note, with: ->(value) { value.to_s.strip.presence }
 
@@ -90,8 +93,10 @@ class Execution < ApplicationRecord
       ensure_actor_can_act!(actor_membership)
       validate_transition!(event_type)
       validate_chronology!(occurred_at)
-      execution_events.create!(organization: organization, actor_membership: actor_membership,
-                               event_type: event_type, occurred_at: occurred_at, reason: reason)
+      event = execution_events.create!(organization: organization, actor_membership: actor_membership,
+                                       event_type: event_type, occurred_at: occurred_at, reason: reason)
+      EngineeringReview.create_for_ready_work_order!(work_order) if event_type == "submitted"
+      event
     end
   end
 
